@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="tab_title">
+        <item>首页</item>
+        <item>地图</item>
+        <item>消息</item>
+        <item>系统</item>
+    </array>
+
+
+</resources>

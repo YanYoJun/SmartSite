@@ -35,8 +35,8 @@ public class MsgFragment extends BaseFragment {
 
     private void init() {
         mViewPager = (ViewPager) getActivity().findViewById(R.id.main_view_pager);
-        Fragment watchDevice = new WatchDeviceFragment();
-        Fragment watchEnviron = new WatchEnvironFragment();
+        Fragment watchDevice = new VcrMainFragment();
+        Fragment watchEnviron = new EnvironMainFragment();
         Fragment synergy = new SynergyFragment();
 
         mFragList.add(watchDevice);

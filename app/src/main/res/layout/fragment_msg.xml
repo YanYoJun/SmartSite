@@ -2,9 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/msg"/>
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/frag_msg_swtich_title"
+            android:id="@+id/lab_device"
+            android:text="@string/frag_msg_device_watch"
+            />
+        <TextView
+            style="@style/frag_msg_swtich_title"
+            android:text="@string/frag_msg_environment_watch"
+            android:id="@+id/lab_environ"
+            />
+        <TextView
+            android:id="@+id/lab_synergy"
+            android:text="@string/frag_msg_synergy"
+            style="@style/frag_msg_swtich_title"/>
 
+    </LinearLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="360"
+        android:id="@+id/main_view_pager"></android.support.v4.view.ViewPager>
 </LinearLayout>

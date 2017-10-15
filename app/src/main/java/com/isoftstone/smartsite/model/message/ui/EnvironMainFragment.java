@@ -11,7 +11,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.model.message.data.SynergyData;
+import com.isoftstone.smartsite.model.message.data.EnvironData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,17 +22,18 @@ import java.util.Map;
  * Created by yanyongjun on 2017/10/15.
  */
 
-public class SynergyFragment extends BaseFragment {
-    //listView中各项的名称
-    public static final String FRAG_MSG_ITEM_DETAILS = "frag_synergy_msg";
-    public static final String FRAG_MSG_ITEM_DATE = "frag_synergy_date";
+public class EnvironMainFragment extends BaseFragment {
+    //listview中各项的名称
+    public static final String FRAG_MSG_ITEM_DETAILS = "frag_environ_msg_details";
+    public static final String FRAG_MSG_ITEM_DATE = "frag_msg_environ_date";
 
     private Activity mActivity = null;
     private ListView mListView = null;
-    private List<SynergyData> mDatas = null;
+    private List<EnvironData> mDatas = null;
+
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_msg_synergy;
+        return R.layout.fragment_msg_environ;
     }
 
     @Override
@@ -42,16 +43,16 @@ public class SynergyFragment extends BaseFragment {
     }
 
     private void init() {
-        mListView = (ListView) mActivity.findViewById(R.id.listview_frag_synergy);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_synergy_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
-                new int[]{R.id.frag_synergy_msg, R.id.frag_synergy_date});
+        mListView = (ListView) mActivity.findViewById(R.id.listview_frag_environ);
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_environ_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
+                new int[]{R.id.frag_environ_msg_details, R.id.frag_msg_environ_date});
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(mActivity, DetailsActivity.class);
-                intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
+                intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_ENVIRON);
                 intent.putExtra(MsgFragment.FRAGMENT_DATA, mDatas.get(position));
                 mActivity.startActivity(intent);
             }
@@ -60,6 +61,7 @@ public class SynergyFragment extends BaseFragment {
 
     /**
      * 加载listview中的内容
+     *
      * @return
      */
     private List<Map<String, Object>> getData() {
@@ -67,17 +69,17 @@ public class SynergyFragment extends BaseFragment {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Resources res = mActivity.getResources();
 
-        List<SynergyData> datas = readDataFromSDK();
-        String sendReport = res.getString(R.string.send_report);
-        String receiveReport = res.getString(R.string.receive_report);
-        for (SynergyData data : datas) {
+        List<EnvironData> environDatas = readDataFromSDK();
+        String pmExtends = res.getString(R.string.environ_pm_exceeded);
+        String needRepair = res.getString(R.string.environ_need_repair);
+        for (EnvironData data : environDatas) {
             Map<String, Object> map = new HashMap<String, Object>();
-            if (data.getType() == SynergyData.TYPE_SEND_REPORT) {
-                map.put(FRAG_MSG_ITEM_DETAILS, sendReport);
+            if (data.getType() == EnvironData.TYPE_PM_EXTENDS) {
+                map.put(FRAG_MSG_ITEM_DETAILS, String.format(pmExtends, data.getId()));
                 map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
                 list.add(map);
-            } else if(data.getType() == SynergyData.TYPE_RECEIVE_REPORT) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(receiveReport, data.getName()));
+            } else if (data.getType() == EnvironData.TYPE_NEED_REPAIR) {
+                map.put(FRAG_MSG_ITEM_DETAILS, String.format(needRepair, data.getId()));
                 map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
                 list.add(map);
             }
@@ -87,35 +89,36 @@ public class SynergyFragment extends BaseFragment {
 
     /**
      * 测试专用，后续需要从SDK数据源中读取
+     *
      * @return
      */
-    private List<SynergyData> readDataFromSDK() {
+    private List<EnvironData> readDataFromSDK() {
         //TODO
         mDatas = new ArrayList<>();
 
-        SynergyData data = new SynergyData();
-        data.setType(SynergyData.TYPE_RECEIVE_REPORT);
-        data.setName("张珊");
+        EnvironData data = new EnvironData();
+        data.setType(EnvironData.TYPE_PM_EXTENDS);
+        data.setId(13001);
         mDatas.add(data);
 
-        data = new SynergyData();
-        data.setType(SynergyData.TYPE_SEND_REPORT);
-        data.setName("王五");
+        data = new EnvironData();
+        data.setType(EnvironData.TYPE_NEED_REPAIR);
+        data.setId(13002);
         mDatas.add(data);
 
-        data = new SynergyData();
-        data.setType(SynergyData.TYPE_RECEIVE_REPORT);
-        data.setName("赵六");
+        data = new EnvironData();
+        data.setType(EnvironData.TYPE_NEED_REPAIR);
+        data.setId(13003);
         mDatas.add(data);
 
-        data = new SynergyData();
-        data.setType(SynergyData.TYPE_SEND_REPORT);
-        data.setName("李四");
+        data = new EnvironData();
+        data.setType(EnvironData.TYPE_PM_EXTENDS);
+        data.setId(13004);
         mDatas.add(data);
 
-        data = new SynergyData();
-        data.setType(SynergyData.TYPE_RECEIVE_REPORT);
-        data.setName("Steve");
+        data = new EnvironData();
+        data.setType(EnvironData.TYPE_NEED_REPAIR);
+        data.setId(13005);
         mDatas.add(data);
 
         return mDatas;

@@ -33,12 +33,19 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="ldPcUjXQ3d4kso7P6G49XIEeETVwlbrz" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".model.message.ui.DetailsActivity"
+            android:launchMode="singleTask">
+
         </activity>
     </application>
 

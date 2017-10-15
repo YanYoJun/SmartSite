@@ -1,8 +1,11 @@
 package com.isoftstone.smartsite.model.message.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  * Created by yanyongjun on 2017/10/15.
  */
@@ -25,6 +29,7 @@ public class SynergyFragment extends BaseFragment {
 
     private Activity mActivity = null;
     private ListView mListView = null;
+    private List<SynergyData> mDatas = null;
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_msg_synergy;
@@ -41,6 +46,16 @@ public class SynergyFragment extends BaseFragment {
         SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_synergy_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
                 new int[]{R.id.frag_synergy_msg, R.id.frag_synergy_date});
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, DetailsActivity.class);
+                intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
+                intent.putExtra(MsgFragment.FRAGMENT_DATA, mDatas.get(position));
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -76,33 +91,33 @@ public class SynergyFragment extends BaseFragment {
      */
     private List<SynergyData> readDataFromSDK() {
         //TODO
-        List<SynergyData> list = new ArrayList<>();
+        mDatas = new ArrayList<>();
 
         SynergyData data = new SynergyData();
         data.setType(SynergyData.TYPE_RECEIVE_REPORT);
         data.setName("张珊");
-        list.add(data);
+        mDatas.add(data);
 
         data = new SynergyData();
         data.setType(SynergyData.TYPE_SEND_REPORT);
         data.setName("王五");
-        list.add(data);
+        mDatas.add(data);
 
         data = new SynergyData();
         data.setType(SynergyData.TYPE_RECEIVE_REPORT);
         data.setName("赵六");
-        list.add(data);
+        mDatas.add(data);
 
         data = new SynergyData();
         data.setType(SynergyData.TYPE_SEND_REPORT);
         data.setName("李四");
-        list.add(data);
+        mDatas.add(data);
 
         data = new SynergyData();
         data.setType(SynergyData.TYPE_RECEIVE_REPORT);
         data.setName("Steve");
-        list.add(data);
+        mDatas.add(data);
 
-        return list;
+        return mDatas;
     }
 }

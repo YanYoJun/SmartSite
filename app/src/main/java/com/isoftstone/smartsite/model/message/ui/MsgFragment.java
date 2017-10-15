@@ -23,6 +23,13 @@ public class MsgFragment extends BaseFragment {
     ArrayList<Fragment> mFragList = new ArrayList<Fragment>();
     private SparseArray<TextView> mSwitchLab = new SparseArray<>();
 
+    public static final int FRAGMENT_TYPE_VCR = 0;
+    public static final int FRAGMENT_TYPE_ENVIRON = 1;
+    public static final int FRAGMENT_TYPE_SYNERGY = 2;
+
+    public static final String FRAGMENT_TYPE = "type";
+    public static final String FRAGMENT_DATA = "data";
+
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_msg;

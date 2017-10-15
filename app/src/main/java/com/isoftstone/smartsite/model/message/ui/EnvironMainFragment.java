@@ -1,8 +1,11 @@
 package com.isoftstone.smartsite.model.message.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -26,6 +29,8 @@ public class EnvironMainFragment extends BaseFragment {
 
     private Activity mActivity = null;
     private ListView mListView = null;
+    private List<EnvironData> mDatas = null;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_msg_environ;
@@ -42,10 +47,21 @@ public class EnvironMainFragment extends BaseFragment {
         SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_environ_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
                 new int[]{R.id.frag_environ_msg_details, R.id.frag_msg_environ_date});
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mActivity, DetailsActivity.class);
+                intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_ENVIRON);
+                intent.putExtra(MsgFragment.FRAGMENT_DATA, mDatas.get(position));
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     /**
      * 加载listview中的内容
+     *
      * @return
      */
     private List<Map<String, Object>> getData() {
@@ -56,13 +72,13 @@ public class EnvironMainFragment extends BaseFragment {
         List<EnvironData> environDatas = readDataFromSDK();
         String pmExtends = res.getString(R.string.environ_pm_exceeded);
         String needRepair = res.getString(R.string.environ_need_repair);
-        for (EnvironData data :  environDatas) {
+        for (EnvironData data : environDatas) {
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == EnvironData.TYPE_PM_EXTENDS) {
                 map.put(FRAG_MSG_ITEM_DETAILS, String.format(pmExtends, data.getId()));
                 map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
                 list.add(map);
-            } else if(data.getType() == EnvironData.TYPE_NEED_REPAIR) {
+            } else if (data.getType() == EnvironData.TYPE_NEED_REPAIR) {
                 map.put(FRAG_MSG_ITEM_DETAILS, String.format(needRepair, data.getId()));
                 map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
                 list.add(map);
@@ -73,37 +89,38 @@ public class EnvironMainFragment extends BaseFragment {
 
     /**
      * 测试专用，后续需要从SDK数据源中读取
+     *
      * @return
      */
     private List<EnvironData> readDataFromSDK() {
         //TODO
-        List<EnvironData> list = new ArrayList<>();
+        mDatas = new ArrayList<>();
 
         EnvironData data = new EnvironData();
         data.setType(EnvironData.TYPE_PM_EXTENDS);
         data.setId(13001);
-        list.add(data);
+        mDatas.add(data);
 
         data = new EnvironData();
         data.setType(EnvironData.TYPE_NEED_REPAIR);
         data.setId(13002);
-        list.add(data);
+        mDatas.add(data);
 
         data = new EnvironData();
         data.setType(EnvironData.TYPE_NEED_REPAIR);
         data.setId(13003);
-        list.add(data);
+        mDatas.add(data);
 
         data = new EnvironData();
         data.setType(EnvironData.TYPE_PM_EXTENDS);
         data.setId(13004);
-        list.add(data);
+        mDatas.add(data);
 
         data = new EnvironData();
         data.setType(EnvironData.TYPE_NEED_REPAIR);
         data.setId(13005);
-        list.add(data);
+        mDatas.add(data);
 
-        return list;
+        return mDatas;
     }
 }

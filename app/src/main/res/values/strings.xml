@@ -1,17 +1,38 @@
 <resources>
     <string name="app_name">智慧工地</string>
+
+    <!--          main   start            -->
+    <string name="title_main">光谷智慧工地</string>
+    <!--          main   end            -->
+
+
+    <!--          map   start            -->
+
+    <!--          map   end            -->
+
+
+    <!--          msg   start            -->
     <string name="msg">消息</string>
     <string name="frag_msg_device_watch">设备监控</string>
     <string name="frag_msg_environment_watch">环境监控</string>
     <string name="frag_msg_synergy">三方协同</string>
+    <string name="device_error">设备损坏</string>
+    <string name="device_need_repair">设备需要维护</string>
     <string name="device">设备</string>
+    <string name="need_repair">需要维护</string>
+    <string name="pm_exceeded">设备检测到PM超标</string>
     <string name="send_report">您已发送一份巡查报告</string>
-    <string name="receive_report">您收到%s的回访报告</string>
+    <string name="receive_report">您收到一份来自于%s的回访报告</string>
     <string name="device_error_location">%1$s设备损坏！地址：%2$s</string>
     <string name="device_need_repair_loation">%1$s设备需要维护 地址：%2$s</string>
     <string name="pm_exceeded_location">%1$s设备检测到PM超标！！地址：%2$s</string>
-    <string name="vcr_error">%1$s设备损坏!</string>
-    <string name="vcr_need_repair">%1$s设备需要维护</string>
-    <string name="environ_need_repair">%1$s需要维护!</string>
-    <string name="environ_pm_exceeded">%1$s设备检测到PM超标!</string>
+    <!--          msg   end            -->
+
+
+    <!--          system   start            -->
+
+    <!--          system   end            -->
+
+    
+
 </resources>

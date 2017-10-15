@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.main.ui.MainFragment;
 import com.isoftstone.smartsite.model.map.ui.MapFragment;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 
@@ -18,7 +19,7 @@ public class MainActivity extends BaseActivity {
     private int[] tabIcons = new int[]{R.drawable.selector_tab_home,R.drawable.selector_tab_round,
             R.drawable.selector_tab_me,R.drawable.selector_tab_more};
 
-    private Class[] fragments = new Class[]{MapFragment.class,MapFragment.class,
+    private Class[] fragments = new Class[]{MainFragment.class,MapFragment.class,
             MsgFragment.class,MapFragment.class};
 
     @Override

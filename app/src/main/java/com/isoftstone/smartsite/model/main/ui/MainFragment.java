@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HomeBean;
+import com.isoftstone.smartsite.http.HttpPost;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,8 @@ public class MainFragment extends BaseFragment{
     private TextView mCityTestView = null;
     private TextView mWeatherTextView = null;
     private TextView mTemperatureTextView = null;
-    private ImageView mWeatherImageView = null;
+    private HttpPost mHttpPost = null;
+    private HomeBean mHomeBean = null;
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_main;
@@ -43,18 +46,20 @@ public class MainFragment extends BaseFragment{
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
+        getHomeData();
     }
 
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
-        mWeatherTextView = (TextView) rootView.findViewById(R.id.text_weather);
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
-
-        mCityTestView.setText("city wuhan");
-        mWeatherTextView.setText("weather  qingtian");
-        mTemperatureTextView.setText("temperature 26");
     }
 
+    private void getHomeData(){
+        mHttpPost = new HttpPost();
+        mHomeBean =  mHttpPost.getHomeDate();
+        mCityTestView.setText(mHomeBean.getCity());
+        mTemperatureTextView.setText(mHomeBean.getTemperature());
+    }
 
     @Override
     public void onResume() {
@@ -71,39 +76,4 @@ public class MainFragment extends BaseFragment{
         super.onDestroy();
     }
 
-    private String getCityName(){
-        LocationManager  lm=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //List<String> names = lm.getAllProviders();//获取所有的位置提供者，一般三种
-
-        //Criteria  criteria=new Criteria();//查询条件，如果设置了海拔，则定位方式只能是GPS;
-        //criteria.setCostAllowed(true);//是否产生开销，比如流量费
-       //String provider=lm.getBaseProvider(criteria,true);//获取最好的位置提供者，第二个参数为true，表示只获取那些被打开的位置提供者
-
-        //lm.requestLocationUpdates(provier,0,0,new MyLocationListener(){});//获取位置。第二个参数表示每隔多少时间返回一次数据，第三个参数表示被定位的物体移动每次多少米返回一次数据。
-        return "";
-    }
-
-    private class MyLocationListener implements LocationListener {
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            float accuracy = location.getAccuracy(); // 精确度
-            double altitude = location.getAltitude(); // 海拔
-            double latitude = location.getLatitude(); // 纬度
-            double longitude = location.getLongitude(); // 经度
-        }
-
-        public void onProviderDisabled(String provider) {
-
-        }
-    }
 }

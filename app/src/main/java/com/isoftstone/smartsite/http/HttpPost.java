@@ -27,7 +27,7 @@ public class HttpPost {
     private static String mToken = "";
     private String URL = "http://publicobject.com/helloworld.txt";
 
-    HttpPost(){
+    public HttpPost(){
         if (mClient == null){
             mClient = new OkHttpClient();
         }

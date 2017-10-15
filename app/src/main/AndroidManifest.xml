@@ -43,6 +43,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".model.message.ui.DetailsActivity"
+            android:launchMode="singleTask">
+
+        </activity>
     </application>
 
 </manifest>

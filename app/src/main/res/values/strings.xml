@@ -33,7 +33,21 @@
 
 
     <!--          system   start            -->
-
+    <string name="user_name">用户名</string>
+    <string name="individual_center">个人中心</string>
+    <string name="about_us">关于我们</string>
+    <string name="log_off">退出</string>
+    <string name="set_user_photo">设置用户头像</string>
+    <string name="user_acoount">账户</string>
+    <string name="user_pwd">密码</string>
+    <string name="user_autograph">签名</string>
+    <string name="user_company">公司</string>
+    <string name="user_phoneNum">电话</string>
+    <string name="user_sex">性别</string>
+    <string name="user_role">角色</string>
+    <string name="user_full_name">姓名</string>
+    <string name="ok">确认</string>
+    <string name="cancle">放弃</string>
     <!--          system   end            -->
 
 

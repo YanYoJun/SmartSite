@@ -10,6 +10,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.main.ui.MainFragment;
 import com.isoftstone.smartsite.model.map.ui.MapFragment;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
+import com.isoftstone.smartsite.model.system.ui.SystemMainFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -20,7 +21,7 @@ public class MainActivity extends BaseActivity {
             R.drawable.selector_tab_me,R.drawable.selector_tab_more};
 
     private Class[] fragments = new Class[]{MainFragment.class,MapFragment.class,
-            MsgFragment.class,MapFragment.class};
+            MsgFragment.class, SystemMainFragment.class};
 
     @Override
     protected int getLayoutRes() {

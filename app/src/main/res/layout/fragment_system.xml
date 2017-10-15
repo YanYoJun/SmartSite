@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/head_linearlayout"
+        android:orientation="vertical"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:background="@color/dark">
+
+        <com.isoftstone.smartsite.model.system.ui.CircleImageView
+            android:id="@+id/head_iv"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:src="@drawable/hugh"
+            app:border_width="2dp"
+            app:border_color="@color/light" />
+
+        <TextView
+            android:id="@+id/user_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center"
+            android:textColor="@color/light"
+            android:text="@string/user_name" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/individual_center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableEnd="@mipmap/pic_error"
+            android:gravity="center_vertical"
+            android:text="@string/individual_center"
+            android:clickable="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/about_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableEnd="@mipmap/pic_error"
+            android:gravity="center_vertical"
+            android:text="@string/about_us"
+            android:clickable="false"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/log_off"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableEnd="@mipmap/pic_error"
+            android:gravity="center_vertical"
+            android:text="@string/log_off"
+            android:clickable="false"/>
+    </LinearLayout>
+</LinearLayout>

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:title="@string/map"></android.support.v7.widget.Toolbar>
+        android:title="@string/map_title"></android.support.v7.widget.Toolbar>
 
     <com.amap.api.maps.MapView
         android:layout_width="match_parent"

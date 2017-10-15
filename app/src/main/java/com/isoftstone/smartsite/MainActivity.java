@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.map.ui.MapFragment;
+import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -18,7 +19,7 @@ public class MainActivity extends BaseActivity {
             R.drawable.selector_tab_me,R.drawable.selector_tab_more};
 
     private Class[] fragments = new Class[]{MapFragment.class,MapFragment.class,
-            MapFragment.class,MapFragment.class};
+            MsgFragment.class,MapFragment.class};
 
     @Override
     protected int getLayoutRes() {

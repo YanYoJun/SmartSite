@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -34,6 +35,7 @@ public class MainFragment extends BaseFragment{
     private HttpPost mHttpPost = null;
     private HomeBean mHomeBean = null;
     private Button mThirdPartReport = null; //三方协同按钮
+    private ListView mListView = null;
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_main;
@@ -56,6 +58,7 @@ public class MainFragment extends BaseFragment{
                 getActivity().startActivity(intent);
             }
         });
+        mListView = (ListView) rootView.findViewById(R.id.list);
     }
 
     private void getHomeData(){
@@ -63,6 +66,9 @@ public class MainFragment extends BaseFragment{
         mHomeBean =  mHttpPost.getHomeDate();
         mCityTestView.setText(mHomeBean.getCity());
         mTemperatureTextView.setText(mHomeBean.getTemperature());
+        InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
+        adapter.setData(mHomeBean.getMessagelist());
+        mListView.setAdapter(adapter);
     }
 
     @Override

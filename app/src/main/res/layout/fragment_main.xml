@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
+    android:background="#c8c8c8"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="173dp"
+        android:layout_height="151dp"
+        android:background="#4141e7"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -82,7 +84,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="57dp"
             android:orientation="horizontal">
 
             <TextView
@@ -122,8 +124,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="114dp"
-        android:orientation="horizontal">
+        android:layout_height="81dp"
+        android:orientation="horizontal"
+        android:background="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="114dp"
@@ -183,9 +186,19 @@
                 android:text="三方协同" />
         </LinearLayout>
     </LinearLayout>
-
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:paddingLeft="20dp"
+        android:text="即时消息" />
 
     <ListView
+        android:id="@+id/list"
+        android:background="@color/white"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:divider="#c8c8c8"
+        android:dividerHeight="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

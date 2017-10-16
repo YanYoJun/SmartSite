@@ -170,14 +170,20 @@ public class HttpPost {
         listBean_1.setTitle("东湖高新区光谷六路");
         listBean_1.setDetail("视屏监控设备损坏");
         listBean_1.setState(1);
-        listBean_1.setTime("2014-06-13 14:19:00");
+        listBean_1.setTime("14:19:00");
         list.add(listBean_1);
-        MessageListBean listBean_2 = new MessageListBean();
-        listBean_2.setTitle("东湖高新区光谷六路");
-        listBean_2.setDetail("视屏监控设备损坏");
-        listBean_2.setState(1);
-        listBean_2.setTime("2014-06-13 14:19:00");
-        list.add(listBean_2);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
+        list.add(listBean_1);
         homeBean.setMessagelist(list);
         return  homeBean;
     }

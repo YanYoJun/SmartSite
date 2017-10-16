@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.system.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.isoftstone.smartsite.LoginActivity;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.UserUtils;
 import com.isoftstone.smartsite.base.BaseFragment;
 
 
@@ -72,7 +75,15 @@ public class SystemFragment extends BaseFragment{
         logOffLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    UserUtils.clearUserList(getActivity().getBaseContext());
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity().getBaseContext(), LoginActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

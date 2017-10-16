@@ -2,10 +2,14 @@ package com.isoftstone.smartsite.model.map.ui;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
@@ -17,7 +21,7 @@ import com.isoftstone.smartsite.utils.LogUtils;
 
 public class MapMainFragment extends BaseFragment{
 
-    private MapView mMapView;
+    private TextureMapView mMapView;
     private AMap mAMap;
     private MyLocationStyle myLocationStyle;
 
@@ -29,14 +33,28 @@ public class MapMainFragment extends BaseFragment{
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView(savedInstanceState);
-        initLocation();
+
     }
 
     private void initView(Bundle savedInstanceState){
-        mMapView = (MapView) rootView.findViewById(R.id.map_view);
-        mMapView.onCreate(savedInstanceState);
+//        mMapView = (TextureMapView) rootView.findViewById(R.id.map_view);
 
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mMapView = new TextureMapView(getActivity());
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        mMapView.setLayoutParams(params);
+        ((ViewGroup)rootView).addView(mMapView);
+
+        mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
+        initLocation();
 
     }
 
@@ -54,12 +72,20 @@ public class MapMainFragment extends BaseFragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         mMapView.onDestroy();
+        ((ViewGroup)rootView).removeView(mMapView);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        LogUtils.i(TAG,"onResume");
         mMapView.onResume();
         mAMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
@@ -69,6 +95,7 @@ public class MapMainFragment extends BaseFragment{
                 mAMap.setOnMyLocationChangeListener(null);
             }
         });
+
     }
 
     @Override

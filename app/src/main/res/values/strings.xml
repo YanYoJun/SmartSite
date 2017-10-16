@@ -14,6 +14,7 @@
 
     <!--          map   start            -->
     <string name="map_title">地图</string>
+    <string name="map_back">back</string>
     <!--          map   end            -->
 
 
@@ -33,7 +34,17 @@
     <string name="device_need_repair_loation">%1$s设备需要维护 地址：%2$s</string>
     <string name="pm_exceeded_location">%1$s设备检测到PM超标！！地址：%2$s</string>
     <string name="location">地址：%1$s</string>
-    <string name="map_back">back</string>
+    <string name="inspect_report_title">巡查报告</string>
+    <string name="check_report_title">验收报告</string>
+    <string name="view">查看</string>
+    <string name="reply">回复</string>
+    <string name="recheck">回访</string>
+    <string name="check">验收</string>
+    <string name="report_address">地址：%1$s</string>
+    <string name="report_name">发布人：%1$s</string>
+    <string name="report_stats">状态：%1$s</string>
+    <string name="dealing">处理中</string>
+    <string name="rechecked">已回访</string>
     <!--          msg   end            -->
 
 

@@ -1,20 +1,30 @@
 package com.isoftstone.smartsite.model.map.ui;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+
+import com.amap.api.maps.SupportMapFragment;
+import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.MyLocationStyle;
+
+
+//import com.amap.api.maps2d.AMap;
+//import com.amap.api.maps2d.CameraUpdateFactory;
+//import com.amap.api.maps2d.MapView;
+//import com.amap.api.maps2d.SupportMapFragment;
+//import com.amap.api.maps2d.model.MyLocationStyle;
+
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.utils.LogUtils;
 
-import java.util.ArrayList;
 
 /**
  * Created by zw on 2017/10/15.
@@ -22,7 +32,11 @@ import java.util.ArrayList;
 
 public class MapTestFragment extends BaseFragment {
 
-    private PieChart pieChart;
+    private TextureMapView mapView;
+    private AMap mMap;
+
+
+    private MyLocationStyle myLocationStyle;
 
     @Override
     protected int getLayoutRes() {
@@ -31,110 +45,88 @@ public class MapTestFragment extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        initView();
+        initView(savedInstanceState);
     }
 
-    private void initView(){
-        pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
-
-        // 设置饼图是否接收点击事件，默认为true
-        pieChart.setTouchEnabled(false);
-        //设置饼图是否使用百分比
-        pieChart.setUsePercentValues(true);
-
-        //设置中间透明圈的半径,值为所占饼图的百分比
-        pieChart.setTransparentCircleRadius(40);
-
-
-        //设置比例图
-        Legend mLegend = pieChart.getLegend();
-        //设置比例图显示在饼图的哪个位置
-        mLegend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
-        //设置比例图的形状，默认是方形,可为方形、圆形、线性
-        mLegend.setForm(Legend.LegendForm.DEFAULT);
-
-//        mLegend.setXEntrySpace(7f);
-//        mLegend.setYEntrySpace(5f);
-
-/*        //设置X轴动画
-        pieChart.animateX(1800);
-//        //设置y轴动画
-//        pieChart.animateY(1800);
-//        //设置xy轴一起的动画
-//        pieChart.animateXY(1800, 1800);*/
-
-
-
-        pieChart.setDrawHoleEnabled(true);//是否绘制饼状图中间的圆
-        pieChart.setHoleColor(Color.WHITE);//饼状图中间的圆的绘制颜色
-        pieChart.setHoleRadius(58f);//饼状图中间的圆的半径大小
-        pieChart.setRotationEnabled(false);//设置饼状图是否可以旋转(默认为true)
-        pieChart.setRotationAngle(0);//设置饼状图旋转的角度
-
-
-        // entry label styling
-        pieChart.setDrawEntryLabels(true);//设置是否绘制Label
-        pieChart.setEntryLabelColor(Color.BLACK);//设置绘制Label的颜色
-        //pieChart.setEntryLabelTypeface(mTfRegular);
-        pieChart.setEntryLabelTextSize(10f);//设置绘制Label的字体大小
-
-        setPieChartData(4,100);
-    }
-
-    private void setPieChartData(int count, float range) {
-
-        float mult = range;
-
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        for (int i = 0; i < count ; i++) {
-            entries.add(new PieEntry(25 * (i + 1)));
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(mapView != null){
+            mapView.onCreate(savedInstanceState);
+            mMap = mapView.getMap();
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+    }
 
-        dataSet.setDrawIcons(false);
+    private void initView(Bundle savedInstanceState) {
+        /*mMap = ((SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.fragment)).getMap();
+        initLocation();*/
 
-        dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
+        mapView = (TextureMapView) rootView.findViewById(R.id.map_view);
 
-        // add a lot of colors
 
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+    }
 
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
+    private void initLocation(){
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        mMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+        //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+        mMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
+    }
 
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
+    @Override
+    public void onResume() {
+        super.onResume();
+//        setUpMapIfNeeded();
+        mapView.onResume();
 
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
+        mMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+//                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+                mMap.setMyLocationStyle(myLocationStyle);
+                mMap.setOnMyLocationChangeListener(null);
+            }
+        });
+    }
 
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
+    /*private void setUpMapIfNeeded() {
+        if (mMap == null) {
+            mMap = ((SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.fragment)).getMap();
+        }
+    }*/
 
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
 
-        colors.add(ColorTemplate.getHoloBlue());
 
-        dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
 
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-//        data.setValueTypeface(mTfLight);
-        pieChart.setData(data);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtils.i(TAG,"onDestroyView");
+        mapView.onDestroy();
+    }
 
-        // undo all highlights
-        pieChart.highlightValues(null);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.i(TAG,"onDestroy");
 
-        pieChart.invalidate();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+        LogUtils.i(TAG,"onSaveInstanceState");
     }
 }

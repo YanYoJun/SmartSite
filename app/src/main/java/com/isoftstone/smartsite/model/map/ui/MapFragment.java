@@ -41,9 +41,9 @@ public class MapFragment extends BaseFragment{
         mapMainFragment = new MapMainFragment();
         mapTestFragment = new MapTestFragment();
 
+
         getChildFragmentManager().beginTransaction().add(R.id.fl_content, mapMainFragment,TAG_MAP_MAIN_FRAGMENT)
                 .commit();
-
 
     }
 

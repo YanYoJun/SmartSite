@@ -10,6 +10,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.model.main.data.InspectReportAdapter;
 import com.isoftstone.smartsite.model.main.data.InspectReportData;
 import com.isoftstone.smartsite.model.main.data.ReportData;
 
@@ -47,7 +48,7 @@ public class InspectReportFragment extends BaseFragment {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_inspect_report);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_inspect_report_item,
+        SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.frag_inspect_report_item,
                 new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
                 new int[]{R.id.lab_inspect_report_name, R.id.lab_inspect_name, R.id.lab_inspect_time, R.id.lab_inspect_address, R.id.lab_inspect_stats});
         mListView.setAdapter(adapter);

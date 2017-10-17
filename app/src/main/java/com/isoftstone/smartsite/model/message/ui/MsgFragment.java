@@ -29,6 +29,7 @@ public class MsgFragment extends BaseFragment {
 
     public static final String FRAGMENT_TYPE = "type";
     public static final String FRAGMENT_DATA = "data";
+    private TextView mTitle = null;
 
     @Override
     protected int getLayoutRes() {
@@ -41,6 +42,7 @@ public class MsgFragment extends BaseFragment {
     }
 
     private void init() {
+        mTitle = (TextView)getActivity().findViewById(R.id.lab_title_name);
         mViewPager = (ViewPager) getActivity().findViewById(R.id.main_view_pager);
         Fragment watchDevice = new VcrMainFragment();
         Fragment watchEnviron = new EnvironMainFragment();
@@ -116,6 +118,17 @@ public class MsgFragment extends BaseFragment {
     }
 
     private void chooseFrag(int position) {
+        switch(position){
+            case 0:
+                mTitle.setText(R.string.vcr_msg);
+                break;
+            case 1:
+                mTitle.setText(R.string.environ_msg);
+                break;
+            case 2:
+                mTitle.setText(R.string.synergy_msg);
+                break;
+        }
         Resources res = getActivity().getResources();
         for (int i = 0; i < mSwitchLab.size(); i++) {
             TextView v = mSwitchLab.get(i);

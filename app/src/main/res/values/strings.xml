@@ -45,6 +45,9 @@
     <string name="report_stats">状态：%1$s</string>
     <string name="dealing">处理中</string>
     <string name="rechecked">已回访</string>
+    <string name="vcr_msg">视频监控消息</string>
+    <string name="environ_msg">环境监控消息</string>
+    <string name="synergy_msg">三方协同消息</string>
     <!--          msg   end            -->
 
 

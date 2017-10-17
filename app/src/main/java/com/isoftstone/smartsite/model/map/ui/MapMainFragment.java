@@ -1,29 +1,53 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zw on 2017/10/14.
  */
 
-public class MapMainFragment extends BaseFragment{
+public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickListener {
 
     private TextureMapView mMapView;
     private AMap mAMap;
     private MyLocationStyle myLocationStyle;
+
+    private double lat,lon;
+    private List<Marker> markers = new ArrayList<>();
+    private PopupWindow chooseCameraPopWindow;
 
     @Override
     protected int getLayoutRes() {
@@ -38,8 +62,44 @@ public class MapMainFragment extends BaseFragment{
 
     private void initView(Bundle savedInstanceState){
 //        mMapView = (TextureMapView) rootView.findViewById(R.id.map_view);
+        initPopWindow();
 
+    }
 
+    private void initPopWindow(){
+        View chooseCameraView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_pop_choose_camera,null);
+        View chooseCameraHeader = LayoutInflater.from(getActivity()).inflate(R.layout.layout_choose_camera_head,null);
+
+        ListView chooseCameraListView = (ListView) chooseCameraView.findViewById(R.id.lv);
+        chooseCameraListView.setAdapter(new ChooseCameraAdapter(getActivity()));
+        chooseCameraListView.addHeaderView(chooseCameraHeader,null,false);
+        chooseCameraListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.showShort(((TextView)view).getText().toString());
+                chooseCameraPopWindow.dismiss();
+            }
+        });
+
+        chooseCameraPopWindow = new PopupWindow(getActivity());
+        chooseCameraPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        chooseCameraPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        chooseCameraPopWindow.setContentView(chooseCameraView);
+        chooseCameraPopWindow.setOutsideTouchable(false);
+        chooseCameraPopWindow.setFocusable(true);
+        chooseCameraPopWindow.setTouchable(true);
+        chooseCameraPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+//        chooseCameraPopWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        /*//设置popupWindow消失时的监听
+        chooseCameraPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            //在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+                lp.alpha = 1f;
+                getActivity().getWindow().setAttributes(lp);
+            }
+        });*/
     }
 
     @Override
@@ -54,7 +114,9 @@ public class MapMainFragment extends BaseFragment{
 
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
+        mAMap.setOnMarkerClickListener(this);
         initLocation();
+
 
     }
 
@@ -66,6 +128,32 @@ public class MapMainFragment extends BaseFragment{
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         mAMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         mAMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
+    }
+
+    private void initMarker(){
+        for (int i = 0 ;i < 5 ; i++){
+            MarkerOptions markerOption = new MarkerOptions();
+            markerOption.position(new LatLng(lat + 0.0075  ,lon + ((float)(i-2)/200)));
+            markerOption.visible(true);
+
+            markerOption.draggable(false);//设置Marker可拖动
+            if(i%2 == 0){
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(),R.mipmap.video_red)));
+            } else {
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(),R.mipmap.video_black)));
+            }
+
+            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+            markerOption.setFlat(true);//设置marker平贴地图效果
+
+            Marker marker = mAMap.addMarker(markerOption);
+
+            marker.setObject(""+i);
+            markers.add(marker);
+        }
+
     }
 
 
@@ -93,6 +181,9 @@ public class MapMainFragment extends BaseFragment{
                 myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
                 mAMap.setMyLocationStyle(myLocationStyle);
                 mAMap.setOnMyLocationChangeListener(null);
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+                initMarker();
             }
         });
 
@@ -111,4 +202,9 @@ public class MapMainFragment extends BaseFragment{
     }
 
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        chooseCameraPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+        return true;
+    }
 }

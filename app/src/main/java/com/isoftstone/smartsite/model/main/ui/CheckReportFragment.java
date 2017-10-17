@@ -10,6 +10,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.model.main.data.CheckReportAdapter;
 import com.isoftstone.smartsite.model.main.data.CheckReportData;
 import com.isoftstone.smartsite.model.main.data.InspectReportData;
 import com.isoftstone.smartsite.model.main.data.ReportData;
@@ -48,7 +49,7 @@ public class CheckReportFragment extends BaseFragment {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_check_report);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_check_report_item,
+        SimpleAdapter adapter = new CheckReportAdapter(mActivity, getData(), R.layout.frag_check_report_item,
                 new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
                 new int[]{R.id.lab_check_report_name, R.id.lab_check_name, R.id.lab_check_time, R.id.lab_check_address, R.id.lab_check_stats});
         mListView.setAdapter(adapter);

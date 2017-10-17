@@ -43,6 +43,8 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2bbb674749feb50c096e27343e2d37a4"></meta-data>
+        <!--  guowei -->
+        <activity android:name=".LoginActivity">
         <activity android:name=".LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -51,6 +53,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".model.main.ui.VideoMonitoringActivity"/>
+        <activity android:name=".model.main.ui.AirMonitoringActivity"/>
+        <activity android:name=".model.video.VideoPlayActivity"/>
+        <!--  guowei -->
+        <activity android:name=".MainActivity">
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
 

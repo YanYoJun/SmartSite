@@ -34,7 +34,11 @@ public class MainFragment extends BaseFragment{
     private TextView mTemperatureTextView = null;
     private HttpPost mHttpPost = null;
     private HomeBean mHomeBean = null;
+    private Button mVideoMonitoring = null; //视频监控
+    private Button mAirMonitoring = null; //环境监测
     private Button mThirdPartReport = null; //三方协同按钮
+    private TextView mVideoMonitoringMsg = null;
+    private TextView mAirMonitoringMsg = null;
     private ListView mListView = null;
     @Override
     protected int getLayoutRes() {
@@ -50,6 +54,34 @@ public class MainFragment extends BaseFragment{
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
+        mVideoMonitoringMsg = (TextView) rootView.findViewById(R.id.textView12);
+        mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterVideoMonitoring();
+            }
+        });
+        mVideoMonitoringMsg = (TextView) rootView.findViewById(R.id.textView13);
+        mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterAirMonitoring();
+            }
+        });
+        mAirMonitoringMsg = (Button)rootView.findViewById(R.id.button_1);
+        mAirMonitoringMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterVideoMonitoring();
+            }
+        });
+        mAirMonitoring = (Button)rootView.findViewById(R.id.button_2);
+        mAirMonitoring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterAirMonitoring();
+            }
+        });
         mThirdPartReport = (Button)rootView.findViewById(R.id.button_3);
         mThirdPartReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +93,15 @@ public class MainFragment extends BaseFragment{
         mListView = (ListView) rootView.findViewById(R.id.list);
     }
 
+    private void enterVideoMonitoring(){
+        Intent intent = new Intent(getActivity(),VideoMonitoringActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    private void enterAirMonitoring(){
+        Intent intent = new Intent(getActivity(),AirMonitoringActivity.class);
+        getActivity().startActivity(intent);
+    }
     private void getHomeData(){
         mHttpPost = new HttpPost();
         mHomeBean =  mHttpPost.getHomeDate();

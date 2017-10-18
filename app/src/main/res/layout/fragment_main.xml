@@ -173,7 +173,7 @@
                 android:background="@mipmap/ic_launcher"/>
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/textView17"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="三方协同" />

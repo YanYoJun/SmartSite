@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 /**
  * Created by gone on 2017/10/16.
+ * modifed by zhangyinfu on 2017/10/19
  */
 
 public class VideoMonitorAdapter extends BaseAdapter {
@@ -75,20 +77,25 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
             holder = (ViewHolder)convertView.getTag();
         }
-        Log.i("test","---------------------");
+
         holder.name.setText("设备名字："+mData.get(position).getDevicename());
         holder.time.setText("安装时间"+mData.get(position).getInstarltime());
         holder.address.setText("地址："+mData.get(position).getAddress());
-        if(mData.get(position).getState() == 1){
+        if(mData.get(position).getState()){
             holder.state.setText("在线:在线");
         }else {
             holder.state.setText("在线:离线");
         }
 
+        final ViewHolder finalHolder = holder;
+        Log.i("zyf_test","---------------------" + finalHolder.name.getText().toString());
         holder.button_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("ResCode", "123456_1");
+                intent.putExtras(bundle);
                 intent.setClass(mContext, VideoPlayActivity.class);
                 mContext.startActivity(intent);
             }
@@ -117,5 +124,37 @@ public class VideoMonitorAdapter extends BaseAdapter {
         public Button button_1;
         public Button button_2;
         public Button button_3;
+
+        public TextView getName() {
+            return name;
+        }
+
+        public void setName(TextView name) {
+            this.name = name;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+
+        public void setTime(TextView time) {
+            this.time = time;
+        }
+
+        public TextView getAddress() {
+            return address;
+        }
+
+        public void setAddress(TextView address) {
+            this.address = address;
+        }
+
+        public TextView getState() {
+            return state;
+        }
+
+        public void setState(TextView state) {
+            this.state = state;
+        }
     }
 }

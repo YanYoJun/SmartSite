@@ -2,15 +2,16 @@ package com.isoftstone.smartsite.http;
 
 /**
  * Created by gone on 2017/10/17.
+ * modifed by zhangyinfu on 2017/10/19
  */
 
 public class VideoMonitorBean {
     private String devicename = "";
     private String instarltime = "";
     private String address = "";
-    private int state = 0; //1 在线   2离线
+    private boolean state = false; //false 在线   true离线
 
-    public VideoMonitorBean(String devicename, String instarltime, String address, int state) {
+    public VideoMonitorBean(String devicename, String instarltime, String address, boolean state) {
         this.devicename = devicename;
         this.instarltime = instarltime;
         this.address = address;
@@ -41,11 +42,11 @@ public class VideoMonitorBean {
         this.address = address;
     }
 
-    public int getState() {
+    public boolean getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(boolean state) {
         this.state = state;
     }
 }

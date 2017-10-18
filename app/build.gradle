@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.isoftstone.smartsite"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,7 +19,7 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['src/main/jniLibs'] //,'src/main/jniLibs'
         }
     }
 }
@@ -29,7 +29,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    ///compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -41,4 +41,8 @@ dependencies {
     compile files('libs/okhttp-3.9.0.jar')
     compile files('libs/okio-1.9.0.jar')
     compile files('libs/mpchart.jar')
+    compile files('libs/org.apache.commons.lang.jar')
+    compile files('libs/org.apache.thrift.jar')
+    compile files('libs/org.slf4j.jar')
+    compile files('libs/tssdk.jar')
 }

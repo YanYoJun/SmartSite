@@ -44,7 +44,4 @@ public class VideoMonitoringActivity extends Activity {
         adapter.setData(list);
         mListView.setAdapter(adapter);
     }
-
-
-
 }

@@ -48,6 +48,31 @@
     <string name="vcr_msg">视频监控消息</string>
     <string name="environ_msg">环境监控消息</string>
     <string name="synergy_msg">三方协同消息</string>
+    <string name="add_inspect_report">巡查报告提交</string>
+    <string name="inspect_report_address">巡查地点：</string>
+    <string name="inspect_report_time">巡查时间：</string>
+    <string name="inspect_report_company">巡察单位：</string>
+    <string name="inspect_report_check_people">巡查人员：</string>
+    <string name="inspect_report_report_people">报告人员：</string>
+    <string name="inspect_report_build_company">报告时间：</string>
+    <string name="inspect_report_build_time">建设单位：</string>
+    <string name="inspect_report_construction_company">施工单位：</string>
+    <string name="inspect_report_supervision_company">监理单位：</string>
+    <string name="inspect_report_message">巡查内容：</string>
+    <string name="inpsect_report_description">问题描述：</string>
+    <string name="inpsect_report_recheck">是否回访：</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="inspect_report_recheck_time">回访时间：</string>
+    <string name="inspect_report_sub_attach">提交附件：</string>
+    <string name="inspect_report_view_attach">查看附件：</string>
+    <string name="submit">提交</string>
+    <string name="cancel">取消</string>
+    <string name="inspect_report_reply">回复巡查报告</string>
+    <string name="inspect_report_reply_people">回复人员：</string>
+    <string name="inspect_report_reply_time">回复时间：</string>
+    <string name="inspect_report_reply_msg">回复内容：</string>
+    <string name="inspect_report_recheck">取消</string>
     <!--          msg   end            -->
 
 

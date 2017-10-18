@@ -58,7 +58,6 @@ public class InspectReportFragment extends BaseFragment {
                 //TODO
             }
         });
-
     }
 
     /**

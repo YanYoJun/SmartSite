@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.main.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -70,6 +72,7 @@ public class ReportActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 chooseFrag(position);
+                initTitleOnClickListener(position);
             }
 
 
@@ -101,6 +104,7 @@ public class ReportActivity extends BaseActivity {
         mSwitchLab.put(0, v1);
         mSwitchLab.put(1, v2);
         chooseFrag(0);
+        initTitleOnClickListener(0);
         mViewPager.setCurrentItem(0);
     }
 
@@ -115,6 +119,26 @@ public class ReportActivity extends BaseActivity {
                 v.setTextColor(res.getColor(R.color.tab_text_normal));
                 v.setBackgroundColor(res.getColor(R.color.white));
             }
+        }
+    }
+
+    private void initTitleOnClickListener(int position){
+        Button btnAddPeport = (Button)findViewById(R.id.btn_title_add);
+        btnAddPeport.setVisibility(View.VISIBLE);
+        switch (position){
+            case FRAGMENT_TYPE_INSPECT_REPORT:
+                btnAddPeport.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ReportActivity.this,AddInspectReportActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                break;
+            case FRAGMENT_TYPE_CHECK_REPORT:
+                break;
+            default:
+                break;
         }
     }
 

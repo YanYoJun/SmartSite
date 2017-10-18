@@ -67,6 +67,8 @@
         <activity
             android:name=".model.main.ui.ReportActivity"
             android:launchMode="singleTask"></activity>
+        <activity android:name=".model.main.ui.AddInspectReportActivity"
+            android:launchMode="singleTask"></activity>
         <!--yanyongjun end-->
 
         <activity android:name=".model.system.ui.PermissionsActivity"></activity>

@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.data;
+package com.isoftstone.smartsite.model.Tripartite.adapter;
 
 import android.content.Context;
 import android.support.annotation.IdRes;

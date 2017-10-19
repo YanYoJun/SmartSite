@@ -75,7 +75,7 @@
             android:name=".model.message.ui.DetailsActivity"
             android:launchMode="singleTask"></activity>
         <activity
-            android:name=".model.main.ui.ReportActivity"
+            android:name=".model.Tripartite.ui.ReportActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.main.ui.AddInspectReportActivity"
             android:launchMode="singleTask"></activity>

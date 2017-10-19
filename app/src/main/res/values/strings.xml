@@ -10,6 +10,10 @@
     <string name="login_btn_text">视宇登录</string>
     <string name="forgot_pwd">忘记密码？</string>
     <string name="loading">正在登录</string>
+    <string name="device_name">设备名称:</string>
+    <string name="equipment_installation_time">安装时间:</string>
+    <string name="device_address">地址:</string>
+    <string name="device_status">状态:</string>
     <!--          main   end            -->
 
 

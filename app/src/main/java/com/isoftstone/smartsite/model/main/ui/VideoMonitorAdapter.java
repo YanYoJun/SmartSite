@@ -10,17 +10,32 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.MessageListBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
+import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.video.RePlayVideoActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
+import com.uniview.airimos.listener.OnQueryReplayListener;
+import com.uniview.airimos.listener.OnStartReplayListener;
+import com.uniview.airimos.manager.ServiceManager;
+import com.uniview.airimos.obj.QueryCondition;
+import com.uniview.airimos.obj.RecordInfo;
+import com.uniview.airimos.parameter.QueryReplayParam;
+import com.uniview.airimos.parameter.StartReplayParam;
+import com.uniview.airimos.thread.RecvStreamThread;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by gone on 2017/10/16.
  * modifed by zhangyinfu on 2017/10/19
+ * modifed by zhangyinfu on 2017/10/20
  */
 
 public class VideoMonitorAdapter extends BaseAdapter {
@@ -38,7 +53,6 @@ public class VideoMonitorAdapter extends BaseAdapter {
         mData = list;
     }
 
-
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
@@ -46,9 +60,9 @@ public class VideoMonitorAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int arg0) {
+    public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return mData.get(arg0);
+        return mData.get(position);
     }
 
     @Override
@@ -61,8 +75,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder = null;
-        if (convertView == null) {
-            holder=new ViewHolder();
+        if (null == convertView) {
+            holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.videomonitor_adapter, null);
             holder.name = (TextView)convertView.findViewById(R.id.textView_1);
             holder.time = (TextView)convertView.findViewById(R.id.textView_2);
@@ -73,38 +87,71 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder.button_3 = (Button)convertView.findViewById(R.id.button_3);
 
             convertView.setTag(holder);
+            //convertView.setTag(R.id.ab_id_adapter_item_position, position);
         }else {
-
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.name.setText("设备名字："+mData.get(position).getDevicename());
-        holder.time.setText("安装时间"+mData.get(position).getInstarltime());
-        holder.address.setText("地址："+mData.get(position).getAddress());
+        holder.name.setText(mData.get(position).getDevicename());
+        holder.time.setText(mData.get(position).getInstarltime());
+        holder.address.setText(mData.get(position).getAddress());
         if(mData.get(position).getState()){
-            holder.state.setText("在线:在线");
+            holder.state.setText("在线");
         }else {
-            holder.state.setText("在线:离线");
+            holder.state.setText("离线");
         }
 
         final ViewHolder finalHolder = holder;
         Log.i("zyf_test","---------------------" + finalHolder.name.getText().toString());
-        holder.button_1.setOnClickListener(new View.OnClickListener() {
+        holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
+
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("ResCode", "123456_1");
-                intent.putExtras(bundle);
-                intent.setClass(mContext, VideoPlayActivity.class);
-                mContext.startActivity(intent);
+            public void onClickCallBack(View registedView, View rootView) {
+                //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).toString(), Toast.LENGTH_SHORT).show();
+                ViewHolder viewHolder = (ViewHolder)rootView.getTag();
+                if(null != viewHolder) {
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ResCode", viewHolder.name.getText().toString());
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+                    intent.putExtras(bundle);
+                    intent.setClass(mContext, VideoPlayActivity.class);
+                    mContext.startActivity(intent);
+                } else {
+                    Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        holder.button_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
+        holder.button_2.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
+            @Override
+            public void onClickCallBack(View registedView, View rootView) {
+                ViewHolder viewHolder = (ViewHolder)rootView.getTag();
+
+                if(null != viewHolder) {
+                    //模拟一个查询回放起始和结束的时间
+                    Date now = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String beginTime = "2017-01-10" + " 00:00:00";
+                    String endTime = formatter.format(now) + " 23:59:59";
+
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ResCode", viewHolder.name.getText().toString());
+                    bundle.putString("beginTime", beginTime);
+                    bundle.putString("endTime", endTime);
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+                    intent.putExtras(bundle);
+                    intent.setClass(mContext, RePlayVideoActivity.class);
+                    mContext.startActivity(intent);
+                } else {
+                    Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
+                }
             }
+            /**@Override
+            public void onClick(View v) {
+                mOnClickListener.
+            }*/
         });
         holder.button_3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,5 +203,17 @@ public class VideoMonitorAdapter extends BaseAdapter {
         public void setState(TextView state) {
             this.state = state;
         }
+
+        @Override
+        public String toString() {
+            return "ViewHolder{" +
+                    "name=" + name.getText().toString() +
+                    ", time=" + time.getText().toString() +
+                    ", address=" + address.getText().toString() +
+                    ", state=" + state.getText().toString() +
+                    '}';
+        }
     }
+
+
 }

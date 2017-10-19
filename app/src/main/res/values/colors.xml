@@ -16,7 +16,7 @@
     <color name="transparent">#7f000000</color>
     <!-- main   end -->
     <!-- map   start -->
-
+    <color name="devices_press">#88ffffff</color>
     <!-- map   end -->
 
     <!--msg   start -->

@@ -2,7 +2,9 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,24 +20,17 @@ import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 import com.isoftstone.smartsite.model.video.RePlayVideoActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
-import com.uniview.airimos.listener.OnQueryReplayListener;
-import com.uniview.airimos.listener.OnStartReplayListener;
-import com.uniview.airimos.manager.ServiceManager;
-import com.uniview.airimos.obj.QueryCondition;
-import com.uniview.airimos.obj.RecordInfo;
-import com.uniview.airimos.parameter.QueryReplayParam;
-import com.uniview.airimos.parameter.StartReplayParam;
-import com.uniview.airimos.thread.RecvStreamThread;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by gone on 2017/10/16.
  * modifed by zhangyinfu on 2017/10/19
  * modifed by zhangyinfu on 2017/10/20
+ * modifed by zhangyinfu on 2017/10/21
  */
 
 public class VideoMonitorAdapter extends BaseAdapter {
@@ -44,6 +39,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<VideoMonitorBean> mData = new ArrayList<VideoMonitorBean>();
     private Context mContext = null;
+    private final String IMAGE_TYPE = "image/*";
+
     public VideoMonitorAdapter(Context context){
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -148,20 +145,35 @@ public class VideoMonitorAdapter extends BaseAdapter {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
                 }
             }
-            /**@Override
-            public void onClick(View v) {
-                mOnClickListener.
-            }*/
         });
+
         holder.button_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openAlbum();
             }
         });
 
         return convertView;
     }
+
+    public void openAlbum(){
+        //Intent intent = new Intent();
+        //intent.addCategory(Intent.CATEGORY_OPENABLE);
+        //intent.setType(IMAGE_TYPE);
+        //if (Build.VERSION.SDK_INT <19) {
+            //intent.setAction(Intent.ACTION_GET_CONTENT);
+        //}else {
+        //    intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        //}
+        try {
+            Intent intentFromGallery = new Intent("com.android.gallery");
+            mContext.startActivity(intentFromGallery);
+        } catch (Exception e) {
+            ToastUtils.showShort("Exception:" + e.getMessage());
+        }
+    }
+
 
     public final class ViewHolder{
         public TextView name;

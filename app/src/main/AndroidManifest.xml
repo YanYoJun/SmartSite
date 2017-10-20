@@ -64,8 +64,8 @@
         </activity>
         <activity android:name=".model.main.ui.VideoMonitoringActivity"/>
         <activity android:name=".model.main.ui.AirMonitoringActivity"/>
-        <activity android:name=".model.video.VideoPlayActivity"/>
-        <activity android:name=".model.video.RePlayVideoActivity"/>
+        <activity android:name=".model.video.VideoPlayActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name=".model.video.RePlayVideoActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
         <!--  guowei -->
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">

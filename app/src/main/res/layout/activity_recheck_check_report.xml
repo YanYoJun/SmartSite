@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?><!--验收报告验收页-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/check_report_address"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_address" />
+
+    <EditText
+        android:id="@+id/check_report_time"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_time" />
+
+    <EditText
+        android:id="@+id/check_report_report_name"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_report_name" />
+
+    <EditText
+        android:id="@+id/check_report_report_company"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_report_company" />
+
+    <EditText
+        android:id="@+id/check_report_build_company"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_build_company" />
+
+    <EditText
+        android:id="@+id/check_report_construction_company"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_construction_company" />
+
+    <EditText
+        android:id="@+id/check_report_supervision_company"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_supervision_company" />
+
+    <EditText
+        android:id="@+id/check_report_report_report_time"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_report_report_time" />
+
+    <EditText
+        android:id="@+id/check_report_des"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_des" />
+
+    <EditText
+        android:id="@+id/check_report_is_need_recheck"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_is_need_recheck" />
+
+    <EditText
+        android:id="@+id/check_report_recheck_time"
+        style="@style/add_report_edittext"
+        android:hint="@string/check_report_recheck_time" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:textColor="@color/tab_text_normal"
+        android:textSize="17sp" />
+
+</LinearLayout>

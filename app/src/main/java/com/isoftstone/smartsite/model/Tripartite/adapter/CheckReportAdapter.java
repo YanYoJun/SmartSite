@@ -11,6 +11,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.Tripartite.ui.CheckReportActivity;
+import com.isoftstone.smartsite.model.Tripartite.ui.ViewCheckReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class CheckReportAdapter extends SimpleAdapter {
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent intent = new Intent(mContext, ViewCheckReportActivity.class);
+                        mContext.startActivity(intent);
                     }
                 });
             }

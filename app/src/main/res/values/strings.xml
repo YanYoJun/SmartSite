@@ -61,10 +61,10 @@
     <string name="inspect_report_supervision_company">监理单位：</string>
     <string name="inspect_report_message">巡查内容：</string>
     <string name="inspect_report_description">问题描述：</string>
-    <string name="inspect_report_recheck">是否回访：</string>
+    <string name="inspect_report_is_need_recheck">是否回访：</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="inspect_report_recheck_time">回访时间：</string>
+
     <string name="inspect_report_sub_attach">提交附件：</string>
     <string name="inspect_report_view_attach">查看附件：</string>
     <string name="submit">提交</string>
@@ -73,6 +73,14 @@
     <string name="inspect_report_reply_people">回复人员：</string>
     <string name="inspect_report_reply_time">回复时间：</string>
     <string name="inspect_report_reply_msg">回复内容：</string>
+    <!-- 回访巡查报告-->
+    <string name="inspect_report_recheck">回访巡查报告</string>
+    <string name="inspect_report_recheck_time">回访时间</string>
+    <string name="inspect_report_recheck_people">回访人员</string>
+    <string name="inspect_report_recheck_msg">回访内容</string>
+    <string name="inspect_report_recheck_des">回访内容描述</string>
+    <string name="inspect_report_recheck_is_need_recheck">是否继续回访</string>
+    <string name="inspect_report_recheck_next_recheck_time">下次回访时间</string>
     <!--          msg   end            -->
 
 

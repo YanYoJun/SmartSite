@@ -3,8 +3,6 @@ package com.isoftstone.smartsite.model.Tripartite.ui;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -52,12 +50,6 @@ public class InspectReportFragment extends BaseFragment {
                 new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
                 new int[]{R.id.lab_inspect_report_name, R.id.lab_inspect_name, R.id.lab_inspect_time, R.id.lab_inspect_address, R.id.lab_inspect_stats});
         mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO
-            }
-        });
     }
 
     /**

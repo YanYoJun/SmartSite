@@ -176,7 +176,7 @@
 
                 <TextView
                     style="@style/add_report_lab"
-                    android:text="@string/inspect_report_recheck" />
+                    android:text="@string/inspect_report_is_need_recheck" />
 
                 <TextView
                     android:id="@+id/inspect_report_recheck"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <fragment
+                android:id="@+id/frag_inspect_report_view"
+                android:name="com.isoftstone.smartsite.model.Tripartite.ui.InspectReportViewFrag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+
+            <fragment
+                android:id="@+id/frag_view_reply_inspect_report"
+                android:name="com.isoftstone.smartsite.model.Tripartite.ui.ReplyInspectReportFrag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

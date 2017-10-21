@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.main.ui;
+package com.isoftstone.smartsite.model.Tripartite.ui;
 
 import android.os.Bundle;
 
@@ -6,14 +6,14 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 
 /**
- * Created by yanyongjun on 2017/10/18.
+ * Created by yanyongjun on 2017/10/19.
+ * 查看巡查报告界面
  */
 
-public class AddInspectReportActivity extends BaseActivity {
+public class InspectReportViewActivity extends BaseActivity {
     @Override
     protected int getLayoutRes() {
-        //TODO 这个界面还需要不少的润色
-        return R.layout.activity_add_inspect_report;
+        return R.layout.activity_view_inspect_report;
     }
 
     @Override

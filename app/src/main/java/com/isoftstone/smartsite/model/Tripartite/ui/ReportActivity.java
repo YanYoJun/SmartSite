@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.model.main.ui.AddInspectReportActivity;
 
 import java.util.ArrayList;
 

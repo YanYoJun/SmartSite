@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.Tripartite.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.Button;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.Tripartite.ui.InspectReportViewActivity;
+import com.isoftstone.smartsite.model.Tripartite.ui.ReplyInspectReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +38,8 @@ public class InspectReportAdapter extends SimpleAdapter {
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent intent = new Intent(mContext, InspectReportViewActivity.class);
+                        mContext.startActivity(intent);
                     }
                 });
             }
@@ -44,7 +48,8 @@ public class InspectReportAdapter extends SimpleAdapter {
                 btnReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent intent = new Intent(mContext, ReplyInspectReportActivity.class);
+                        mContext.startActivity(intent);
                     }
                 });
             }

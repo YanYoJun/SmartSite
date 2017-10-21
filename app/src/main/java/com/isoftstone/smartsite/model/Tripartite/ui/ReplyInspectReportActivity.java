@@ -3,17 +3,17 @@ package com.isoftstone.smartsite.model.Tripartite.ui;
 import android.os.Bundle;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.base.BaseActivity;
 
 /**
  * Created by yanyongjun on 2017/10/19.
- * 查看巡查报告的fragment界面，可以嵌套在不同的activity中
+ * 回复巡查报告的Activity页
  */
 
-public class InspectReportViewFrag extends BaseFragment {
+public class ReplyInspectReportActivity extends BaseActivity {
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_view_inspect_report;
+        return R.layout.activity_reply_inspect_report;
     }
 
     @Override

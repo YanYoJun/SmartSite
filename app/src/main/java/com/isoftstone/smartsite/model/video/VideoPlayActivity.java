@@ -10,12 +10,13 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.graphics.ColorUtils;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
@@ -32,7 +33,7 @@ import com.uniview.airimos.thread.RecvStreamThread;
  * modifed by zhangyinfu on 2017/10/19
  */
 
-public class VideoPlayActivity extends Activity{
+public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private static final String TAG = "zyf_VideoPlayActivity";
 
     private SurfaceView mSurfaceView;
@@ -40,21 +41,19 @@ public class VideoPlayActivity extends Activity{
     private Context mContext;
     private RecvStreamThread mRecvStreamThread = null;
     private RoundMenuView mRoundMenuView;
+    private ImageView mImageView;
     private static  final int GRAY_9999 = Color.GREEN;
     private static  final int GRAY_F2F2 = Color.BLUE;
 
     private int mSurfaceViewWidth;
     private int mSurfaceViewHeight;
-    //static {
-    //    System.loadLibrary("imosplayer");
-    //}
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        setContentView(R.layout.activity_videoplay);
+        setContentView(R.layout.activity_video_play);
         mContext = this;
         //SurfaceView用于渲染
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
@@ -68,18 +67,7 @@ public class VideoPlayActivity extends Activity{
         mPlayer = new Player();
         mPlayer.AVInitialize(mSurfaceView.getHolder());
 
-        /*获取Intent中的Bundle对象*/
-        if(bundle == null) {
-            bundle = this.getIntent().getExtras();
-        }
-
-        /*获取Bundle中的数据，注意类型和key*/
-        String resCode = bundle.getString("ResCode");
-        Log.i(TAG,"--------------resCode-------" + resCode);
-        startLive(resCode);
-
         //初始化摇杆控件
-        mRoundMenuView = (RoundMenuView)findViewById(R.id.round_menu_view);
         initRoundMenuView();
 
         //获取设备屏幕大小信息
@@ -88,6 +76,18 @@ public class VideoPlayActivity extends Activity{
         mSurfaceViewWidth = dm.widthPixels;
         mSurfaceViewHeight = dm.heightPixels;
 
+        mImageView = (ImageView) findViewById(R.id.capture_view);
+        mImageView.setOnClickListener(this);
+
+
+        /*获取Intent中的Bundle对象*/
+        if(bundle == null) {
+            bundle = this.getIntent().getExtras();
+        }
+        /*获取Bundle中的数据，注意类型和key*/
+        String resCode = bundle.getString("resCode");
+        Log.i(TAG,"--------------resCode-------" + resCode);
+        startLive(resCode);
     }
 
     /**
@@ -175,6 +175,8 @@ public class VideoPlayActivity extends Activity{
     }
 
     public void initRoundMenuView() {
+        mRoundMenuView = (RoundMenuView)findViewById(R.id.round_menu_view);
+
         RoundMenuView.RoundMenu roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = GRAY_9999;//Integer.parseInt(toHexEncoding(Color.GRAY));
         roundMenu.strokeColor = GRAY_F2F2;//Integer.parseInt(toHexEncoding(Color.GRAY));//ColorUtils.getColor(mContext, R.color.gray_9999);
@@ -238,6 +240,7 @@ public class VideoPlayActivity extends Activity{
                     @Override
                     public void onClick(View view) {
                         ToastUtils.showShort("点击了中心圆圈");
+                        stopLive();
                     }
         });
     }
@@ -273,6 +276,24 @@ public class VideoPlayActivity extends Activity{
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.capture_view:
+                //boolean sdCardExist = Environment.getExternalStorageState().equals("mounted");
+                //ToastUtils.showShort("sdCardExist ? " + sdCardExist);
+                //抓拍图片，返回路径
+                String path = mPlayer.snatch(null);
+                if (null != path) {
+                    Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 
 

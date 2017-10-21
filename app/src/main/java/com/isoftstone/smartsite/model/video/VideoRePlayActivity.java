@@ -11,14 +11,11 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnQueryReplayListener;
-import com.uniview.airimos.listener.OnStartLiveListener;
 import com.uniview.airimos.listener.OnStartReplayListener;
-import com.uniview.airimos.listener.OnStopLiveListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.obj.QueryCondition;
 import com.uniview.airimos.obj.RecordInfo;
 import com.uniview.airimos.parameter.QueryReplayParam;
-import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.parameter.StartReplayParam;
 import com.uniview.airimos.thread.RecvStreamThread;
 
@@ -28,7 +25,7 @@ import java.util.List;
  * Created by zhangyinfu on 2017/10/20.
  */
 
-public class RePlayVideoActivity extends Activity{
+public class VideoRePlayActivity extends Activity{
     private static final String TAG = "zyf_RePlayVideoActivity";
 
     private SurfaceView mSurfaceView;
@@ -44,7 +41,7 @@ public class RePlayVideoActivity extends Activity{
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        setContentView(R.layout.activity_replayvideo);
+        setContentView(R.layout.activity_video_replay);
         mContext = this;
         //SurfaceView用于渲染
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
@@ -62,7 +59,7 @@ public class RePlayVideoActivity extends Activity{
         }
 
         /*获取Bundle中的数据，注意类型和key*/
-        String resCode = bundle.getString("ResCode");
+        String resCode = bundle.getString("resCode");
         Log.i(TAG,"--------------resCode-------" + resCode);
         String beginTime = bundle.getString("beginTime");
         Log.i(TAG,"--------------beginTime-------" + beginTime);

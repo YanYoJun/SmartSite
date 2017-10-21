@@ -111,7 +111,7 @@ public class AirMonitoringActivity extends Activity {
 
     private void setData(){
         VideoMonitorAdapter adapter = new VideoMonitorAdapter(AirMonitoringActivity.this);
-        VideoMonitorBean video = new VideoMonitorBean("TX_001","2017-5-8","洪山广场大新路",true);
+        VideoMonitorBean video = new VideoMonitorBean("TX_001", 1, "洪山广场大新路",true);
         ArrayList<VideoMonitorBean> list = new ArrayList<VideoMonitorBean>();
         list.add(video);
         list.add(video);

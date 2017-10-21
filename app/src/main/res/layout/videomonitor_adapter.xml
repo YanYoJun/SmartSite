@@ -32,7 +32,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/device_name"/>
+                        android:text="@string/res_code"/>
                     <TextView
                         android:id="@+id/textView_1"
                         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                     <TextView
                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/equipment_installation_time"/>
+                        android:text="@string/res_type"/>
                     <TextView
                         android:id="@+id/textView_2"
                         android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/device_address"/>
+                        android:text="@string/res_name"/>
                     <TextView
                         android:id="@+id/textView_3"
                         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/device_status"/>
+                        android:text="@string/is_online"/>
                     <TextView
                         android:id="@+id/textView_4"
                         android:layout_width="wrap_content"

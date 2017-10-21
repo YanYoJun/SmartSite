@@ -2,9 +2,7 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.MessageListBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
-import com.isoftstone.smartsite.model.video.RePlayVideoActivity;
+import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
@@ -75,31 +72,30 @@ public class VideoMonitorAdapter extends BaseAdapter {
         if (null == convertView) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.videomonitor_adapter, null);
-            holder.name = (TextView)convertView.findViewById(R.id.textView_1);
-            holder.time = (TextView)convertView.findViewById(R.id.textView_2);
-            holder.address = (TextView)convertView.findViewById(R.id.textView_3);
-            holder.state = (TextView)convertView.findViewById(R.id.textView_4);
+            holder.resCode = (TextView)convertView.findViewById(R.id.textView_1);
+            holder.resSubType = (TextView)convertView.findViewById(R.id.textView_2);
+            holder.resName = (TextView)convertView.findViewById(R.id.textView_3);
+            holder.isOnline = (TextView)convertView.findViewById(R.id.textView_4);
             holder.button_1 = (Button)convertView.findViewById(R.id.button_1);
             holder.button_2 = (Button)convertView.findViewById(R.id.button_2);
             holder.button_3 = (Button)convertView.findViewById(R.id.button_3);
 
             convertView.setTag(holder);
-            //convertView.setTag(R.id.ab_id_adapter_item_position, position);
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.name.setText(mData.get(position).getDevicename());
-        holder.time.setText(mData.get(position).getInstarltime());
-        holder.address.setText(mData.get(position).getAddress());
-        if(mData.get(position).getState()){
-            holder.state.setText("在线");
+        holder.resCode.setText(mData.get(position).getResCode());
+        holder.resName.setText(mData.get(position).getResName());
+        setCameraType(holder.resSubType, mData.get(position).getResSubType());
+        if(mData.get(position).isOnline()){
+            holder.isOnline.setText("在线");
+            holder.button_1.setEnabled(true);
         }else {
-            holder.state.setText("离线");
+            holder.isOnline.setText("离线");
+            holder.button_1.setEnabled(false);
         }
 
-        final ViewHolder finalHolder = holder;
-        Log.i("zyf_test","---------------------" + finalHolder.name.getText().toString());
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
@@ -109,7 +105,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 if(null != viewHolder) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putString("ResCode", viewHolder.name.getText().toString());
+                    bundle.putString("resCode", viewHolder.resCode.getText().toString());
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoPlayActivity.class);
@@ -134,12 +130,12 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putString("ResCode", viewHolder.name.getText().toString());
+                    bundle.putString("resCode", viewHolder.resCode.getText().toString());
                     bundle.putString("beginTime", beginTime);
                     bundle.putString("endTime", endTime);
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent.putExtras(bundle);
-                    intent.setClass(mContext, RePlayVideoActivity.class);
+                    intent.setClass(mContext, VideoRePlayActivity.class);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -155,6 +151,26 @@ public class VideoMonitorAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private void setCameraType(TextView textView,int resSubType) {
+        if (1 == resSubType) {
+            textView.setText(R.string.camera_type_1);
+        } else if (2 == resSubType) {
+            textView.setText(R.string.camera_type_2);
+        } else if (3 == resSubType) {
+            textView.setText(R.string.camera_type_3);
+        } else if (4 == resSubType) {
+            textView.setText(R.string.camera_type_4);
+        } else if (5 == resSubType) {
+            textView.setText(R.string.camera_type_5);
+        } else if (6 == resSubType) {
+            textView.setText(R.string.camera_type_6);
+        } else if (7 == resSubType) {
+            textView.setText(R.string.camera_type_7);
+        } else {
+            textView.setText("");
+        }
     }
 
     public void openAlbum(){
@@ -176,53 +192,54 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
 
     public final class ViewHolder{
-        public TextView name;
-        public TextView time;
-        public TextView address;
-        public TextView state;
-        public Button button_1;
-        public Button button_2;
-        public Button button_3;
+        public TextView resCode;//资源编码
+        public TextView resSubType;//资源类型
+        public TextView resName;//资源名称
+        public TextView isOnline;//是否在线
 
-        public TextView getName() {
-            return name;
+        public Button button_1;//视频监控Btn
+        public Button button_2;//环境监控
+        public Button button_3 ;//三方协同
+
+        public TextView getResCode() {
+            return resCode;
         }
 
-        public void setName(TextView name) {
-            this.name = name;
+        public void setResCode(TextView resCode) {
+            this.resCode = resCode;
         }
 
-        public TextView getTime() {
-            return time;
+        public TextView getResSubType() {
+            return resSubType;
         }
 
-        public void setTime(TextView time) {
-            this.time = time;
+        public void setResSubType(TextView resSubType) {
+            this.resSubType = resSubType;
         }
 
-        public TextView getAddress() {
-            return address;
+        public TextView getResName() {
+            return resName;
         }
 
-        public void setAddress(TextView address) {
-            this.address = address;
+        public void setResName(TextView resName) {
+            this.resName = resName;
         }
 
-        public TextView getState() {
-            return state;
+        public TextView getIsOnline() {
+            return isOnline;
         }
 
-        public void setState(TextView state) {
-            this.state = state;
+        public void setIsOnline(TextView isOnline) {
+            this.isOnline = isOnline;
         }
 
         @Override
         public String toString() {
             return "ViewHolder{" +
-                    "name=" + name.getText().toString() +
-                    ", time=" + time.getText().toString() +
-                    ", address=" + address.getText().toString() +
-                    ", state=" + state.getText().toString() +
+                    "resCode=" + resCode.getText().toString() +
+                    ", resSubType=" + resSubType.getText().toString()  +
+                    ", resName=" + resName.getText().toString()  +
+                    ", isOnline=" + isOnline.getText().toString()  +
                     '}';
         }
     }

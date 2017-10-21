@@ -34,11 +34,9 @@ public class VideoMonitoringActivity extends Activity {
     protected void onStart() {
         super.onStart();
         mContext = getApplicationContext();
-        //查询设备列表
-        queryResourceList();
     }
 
-    private void queryResourceList() {
+    private void setResourceDate() {
         //查询资源参数
         QueryResourceParam params = new QueryResourceParam("", "", new QueryCondition(0, 200, true));
 
@@ -72,7 +70,8 @@ public class VideoMonitoringActivity extends Activity {
                         mEditCamCode.setText(resList.get(i).getResCode());
                         break;
                     }*/
-                    video = new VideoMonitorBean(resList.get(i).getResCode(),"2017-5-8",resList.get(i).getResName(),resList.get(i).getIsOnline());
+                    video = new VideoMonitorBean(resList.get(i).getResCode(), resList.get(i).getResName()
+                            ,resList.get(i).getResType(), resList.get(i).getResSubType(),resList.get(i).getIsOnline(),resList.get(i).getIsShared());
                     sList.add(video);
                 }
 
@@ -92,23 +91,11 @@ public class VideoMonitoringActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videomonitoring);
         init();
-        //setData();
+        //查询设备列表,并填充ListView数据
+        setResourceDate();
     }
 
     private void init(){
         mListView = (ListView) findViewById(R.id.list);
-    }
-
-    private void setData(){
-        VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
-        VideoMonitorBean video = new VideoMonitorBean("TX_001","2017-5-8","洪山广场大新路",true);
-        ArrayList<VideoMonitorBean> list = new ArrayList<VideoMonitorBean>();
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        adapter.setData(list);
-        mListView.setAdapter(adapter);
     }
 }

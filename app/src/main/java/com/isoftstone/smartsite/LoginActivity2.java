@@ -23,15 +23,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.isoftstone.smartsite.common.KeepAliveService;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
@@ -40,8 +37,8 @@ import com.uniview.airimos.service.KeepaliveService;
 
 /**
  * 登录界面
- * 
- * @author y00486
+ * created by zhangyinfu 2017-10-19
+ * modified by zhangyinfu 2017-10-21
  */
 public class LoginActivity2 extends Activity implements OnLoginListener,KeepaliveService.OnKeepaliveListener
 {
@@ -51,12 +48,11 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
     private EditText mEditPort;
     private EditText mEditUserName;
     private EditText mEditUserPasswd;
+    private View mLoginProgress;
 
     private KeepaliveService mKeepService = null;
     private boolean isBound = false;
     private Intent intentService;
-
-    private KeepAliveService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,6 +81,8 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
                     
                     //调用登录接口
                     ServiceManager.login(params, LoginActivity2.this);
+                    //显示登录progress
+                    showProgress();
                 }
             });
 
@@ -96,6 +94,8 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
                 LoginActivity2.this.startActivity(intent);
             }
         });
+
+        mLoginProgress = (View) findViewById(R.id.login_progress);
     }
     
     
@@ -106,6 +106,9 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
     public void onLoginResult(long errorCode, String errorDesc)
     {
         Log.i("zyf","onLoginResult   errorCode=" + errorCode);
+        //隐藏登录progress
+        hidProgress();
+
         //成功为0，其余为失败错误码
         if (errorCode == 0)
         {
@@ -124,9 +127,7 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
 
     //启动保活服务
     public void startKeepaliveService(){
-
         Intent toService = new Intent(this, NewKeepAliveService.class);
-
         startService(toService);
     }
 
@@ -163,4 +164,21 @@ public class LoginActivity2 extends Activity implements OnLoginListener,Keepaliv
         return;
     }
 
+    public void showProgress() {
+        mLoginProgress.setVisibility(View.VISIBLE);
+        mBtnLogin.setEnabled(false);
+        mEditServer.setEnabled(false);
+        mEditPort.setEnabled(false);
+        mEditUserName.setEnabled(false);
+        mEditUserPasswd.setEnabled(false);
+    }
+
+    public void hidProgress() {
+        mLoginProgress.setVisibility(View.GONE);
+        mBtnLogin.setEnabled(true);
+        mEditServer.setEnabled(true);
+        mEditPort.setEnabled(true);
+        mEditUserName.setEnabled(true);
+        mEditUserPasswd.setEnabled(true);
+    }
 }

@@ -6,7 +6,10 @@
         <attr name="border_overlay" format="boolean" />
     </declare-styleable>
     <!-- main   start -->
-
+    <!--progress -->
+    <declare-styleable name="CircularProgress">
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
     <!-- main   end -->
     <!-- map   start -->
 

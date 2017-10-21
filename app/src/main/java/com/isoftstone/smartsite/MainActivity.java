@@ -1,21 +1,26 @@
 package com.isoftstone.smartsite;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.model.main.ui.MainFragment;
 import com.isoftstone.smartsite.model.map.ui.MapFragment;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
+import com.isoftstone.smartsite.model.system.ui.IndividualCenterFragment;
 import com.isoftstone.smartsite.model.system.ui.SystemMainFragment;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IndividualCenterFragment.BackHandlerInterface {
 
     private String[] tabTitles;
     private FragmentTabHost tabHost;
+    private IndividualCenterFragment mFrame;
 
     private int[] tabIcons = new int[]{R.drawable.selector_tab_home,R.drawable.selector_tab_round,
             R.drawable.selector_tab_me,R.drawable.selector_tab_more};
@@ -54,5 +59,17 @@ public class MainActivity extends BaseActivity {
             tabHost.addTab(tabHost.newTabSpec("" + i).setIndicator(view),fragments[i],null);
         }
         tabHost.setCurrentTab(0);
+    }
+
+    @Override
+    public void setSelectedFragment(IndividualCenterFragment backHandledFragment) {
+        mFrame = backHandledFragment;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mFrame.onFragmentBackPressed()) {
+            super.onBackPressed();
+        }
     }
 }

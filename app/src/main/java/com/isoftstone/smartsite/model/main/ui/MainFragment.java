@@ -11,7 +11,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.model.Tripartite.ui.ReportActivity;
+import com.isoftstone.smartsite.model.Tripartite.ui.TripartiteActivity;
 
 
 /**
@@ -87,7 +87,7 @@ public class MainFragment extends BaseFragment{
         mThirdPartReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),ReportActivity.class);
+                Intent intent = new Intent(getActivity(),TripartiteActivity.class);
                 getActivity().startActivity(intent);
             }
         });

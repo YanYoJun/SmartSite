@@ -1,8 +1,11 @@
 package com.isoftstone.smartsite.model.Tripartite.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -32,6 +35,7 @@ public class InspectReportFragment extends BaseFragment {
     private Activity mActivity = null;
     private ListView mListView = null;
     private List<ReportData> mDatas = null;
+    private Button mAdd = null;
 
     @Override
     protected int getLayoutRes() {
@@ -45,12 +49,24 @@ public class InspectReportFragment extends BaseFragment {
     }
 
     private void init() {
+        //初始化Listview
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_inspect_report);
         SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.frag_inspect_report_item,
                 new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
                 new int[]{R.id.lab_inspect_report_name, R.id.lab_inspect_name, R.id.lab_inspect_time, R.id.lab_inspect_address, R.id.lab_inspect_stats});
         mListView.setAdapter(adapter);
+
+        //输出化btn
+        mAdd = (Button)mActivity.findViewById(R.id.btn_add);
+        mAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity,AddInspectReportActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     /**
      * 加载listview的数据源

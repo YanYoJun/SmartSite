@@ -119,13 +119,13 @@ public class MsgFragment extends BaseFragment {
 
     private void chooseFrag(int position) {
         switch(position){
-            case 0:
+            case FRAGMENT_TYPE_VCR:
                 mTitle.setText(R.string.vcr_msg);
                 break;
-            case 1:
+            case FRAGMENT_TYPE_ENVIRON:
                 mTitle.setText(R.string.environ_msg);
                 break;
-            case 2:
+            case FRAGMENT_TYPE_SYNERGY:
                 mTitle.setText(R.string.synergy_msg);
                 break;
         }

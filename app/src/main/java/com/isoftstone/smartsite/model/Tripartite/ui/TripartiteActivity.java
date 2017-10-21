@@ -1,6 +1,5 @@
 package com.isoftstone.smartsite.model.Tripartite.ui;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -21,7 +19,7 @@ import java.util.ArrayList;
  * 三方协同的主页面
  */
 
-public class ReportActivity extends BaseActivity {
+public class TripartiteActivity extends BaseActivity {
     private ViewPager mViewPager = null;
     ArrayList<Fragment> mFragList = new ArrayList<Fragment>();
     private SparseArray<TextView> mSwitchLab = new SparseArray<>();
@@ -32,9 +30,10 @@ public class ReportActivity extends BaseActivity {
     public static final String FRAGMENT_TYPE = "type";
     public static final String FRAGMENT_DATA = "data";
 
+
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_report;
+        return R.layout.activity_tripartite;
     }
 
     @Override
@@ -123,17 +122,17 @@ public class ReportActivity extends BaseActivity {
     }
 
     private void initTitleOnClickListener(int position){
-        Button btnAddPeport = (Button)findViewById(R.id.btn_title_add);
-        btnAddPeport.setVisibility(View.VISIBLE);
+/*        Button btnAddPeport = (Button)findViewById(R.id.btn_title_add);
+        btnAddPeport.setVisibility(View.VISIBLE);*/
         switch (position){
             case FRAGMENT_TYPE_INSPECT_REPORT:
-                btnAddPeport.setOnClickListener(new View.OnClickListener() {
+/*                btnAddPeport.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ReportActivity.this,AddInspectReportActivity.class);
+                        Intent intent = new Intent(TripartiteActivity.this,AddInspectReportActivity.class);
                         startActivity(intent);
                     }
-                });
+                });*/
                 break;
             case FRAGMENT_TYPE_CHECK_REPORT:
                 break;
@@ -142,4 +141,11 @@ public class ReportActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 点击返回键之后的操作
+     * @param v
+     */
+    public void onBackBtnClick(View v){
+        finish();
+    }
 }

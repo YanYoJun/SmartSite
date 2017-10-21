@@ -53,11 +53,6 @@ public class AirMonitoringActivity extends Activity {
     private HorizontalBarChart mChart = null;
     private PieChart mPieChart = null;
     private LineChart mLineChart = null;
-    private TextView mTitleTextView = null;
-    private Button mBackButton = null;
-    private TextView mdevicelist = null;
-    private ListView mListView = null;
-    private ScrollView mScrollView = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,60 +61,11 @@ public class AirMonitoringActivity extends Activity {
         setHorizontalBarChart();
         setPieChart();
         setLineChart();
-        setData();
-        setVisibility(false);
-    }
-
-    private void setVisibility(boolean showDevicesList){
-        if(showDevicesList){
-            mBackButton.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.VISIBLE);
-            mScrollView.setVisibility(View.GONE);
-            mdevicelist.setVisibility(View.GONE);
-            mTitleTextView.setText("MP设备列表");
-        }else{
-            mBackButton.setVisibility(View.GONE);
-            mListView.setVisibility(View.GONE);
-            mScrollView.setVisibility(View.VISIBLE);
-            mdevicelist.setVisibility(View.VISIBLE);
-            mTitleTextView.setText("报表情况");
-        }
     }
     private void init(){
         mChart = (HorizontalBarChart)findViewById(R.id.chart1);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
-        mTitleTextView = (TextView)findViewById(R.id.textView);
-        mBackButton = (Button)findViewById(R.id.button);
-        mdevicelist =  (TextView)findViewById(R.id.textView_1);
-        mListView = (ListView) findViewById(R.id.list);
-        mScrollView = (ScrollView)findViewById(R.id.scrollview);
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setVisibility(false);
-            }
-        });
-        mdevicelist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setVisibility(true);
-            }
-        });
-    }
-
-    private void setData(){
-        VideoMonitorAdapter adapter = new VideoMonitorAdapter(AirMonitoringActivity.this);
-        VideoMonitorBean video = new VideoMonitorBean("TX_001", 1, "洪山广场大新路",true);
-        ArrayList<VideoMonitorBean> list = new ArrayList<VideoMonitorBean>();
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        adapter.setData(list);
-        mListView.setAdapter(adapter);
     }
 
     private void setHorizontalBarChart(){

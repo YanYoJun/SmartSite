@@ -72,4 +72,8 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
             super.onBackPressed();
         }
     }
+
+    public void setCurrentTab(int index){
+        tabHost.setCurrentTab(index);
+    }
 }

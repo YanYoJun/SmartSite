@@ -92,8 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="未查看消息"
-                tools:text="未查看消息" />
+                android:text="未查看消息"/>
 
             <TextView
                 android:id="@+id/textView11"

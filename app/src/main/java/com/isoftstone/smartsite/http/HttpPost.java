@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,67 +25,51 @@ import static android.R.attr.port;
 
 public class HttpPost {
     private static OkHttpClient  mClient = null;
-    private static String mUserName = "";
-    private static String mToken = "";
-    private String URL = "http://publicobject.com/helloworld.txt";
-
+    private String URL = "http://61.160.82.83:19090/ctess/";
+    private String LOGIN_URL = URL + "login";
+    private LoginBean mLoginBean = null;
     public HttpPost(){
         if (mClient == null){
             mClient = new OkHttpClient();
         }
     }
 
-    public LoginBean Login(String username,String password){
+    public LoginBean login(String username,String password){
         LoginBean loginBean = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", username).add("password", password).build();
+        FormBody  body = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
         Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
+                .url(LOGIN_URL)
+                .post(body)
                 .build();
         Response response = null;
         try {
             response = mClient.newCall(request).execute();
             if(response.isSuccessful()){
-                String responsebody = response.body().toString();
+                mLoginBean = new LoginBean();
+                String responsebody = response.body().string();
+                Log.i("text","------------------------------------"+responsebody);
                 JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject resultJson = new JSONObject(results);
-                String token = resultJson.getString("token");
-                String viod_ip = resultJson.getString("viod_ip");
-                String port = resultJson.getString("port");
-                String name = resultJson.getString("name");
-                String password = resultJson.getString("password");
-                loginBean = new LoginBean();
-                loginBean.setmErrorInfo(errorinfo);
-                loginBean.setmErrorCode(errorcode);
-                loginBean.setmDate(date);
-                loginBean.setmToken(token);
-                loginBean.setmViodIp(viod_ip);
-                loginBean.setmPort(port);
-                loginBean.setmName(name);
-                loginBean.setmPassword(password);
+                boolean success = json.getBoolean("success");
+                if(success){
+                    mLoginBean.setmName(username);
+                    mLoginBean.setmPassword(password);
+                    mLoginBean.setLoginSuccess(true);
+                }else{
+                    int errorinfo = json.getInt("reason");
+                    mLoginBean.setmErrorCode(errorinfo);
+                    mLoginBean.setLoginSuccess(false);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
-        loginBean = new LoginBean();
-        loginBean.setmErrorInfo("");
-        loginBean.setmErrorCode(100);
-        loginBean.setmDate("2014-06-13 14:19:00");
-        loginBean.setmToken("abadaaddac");
-        loginBean.setmViodIp("192.168.1.1");
-        loginBean.setmPort("8080");
-        loginBean.setmName("adb");
-        loginBean.setmPassword("123");
+        }
+        return mLoginBean;
 
-        mUserName  = "abc";
-        mToken = "abadaaddac";
-        return loginBean;
     }
 
     public HomeBean getHomeDate(){

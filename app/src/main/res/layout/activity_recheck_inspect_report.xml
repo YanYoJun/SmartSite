@@ -1,7 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- 回访巡查报告 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_report_lab"
+            android:text="@string/inspect_report_recheck_report_people" />
+
+        <TextView
+            android:id="@+id/inspect_report_recheck_report_people"
+            style="@style/add_report_lab" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_report_lab"
+            android:text="@string/inspect_report_recheck_report_time" />
+
+        <TextView
+            android:id="@+id/inspect_report_recheck_report_time"
+            style="@style/add_report_lab" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_time"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_time" />
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_people"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_people" />
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_msg"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_msg" />
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_des"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_des" />
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_is_need_recheck"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_is_need_recheck" />
+
+    <EditText
+        android:id="@+id/inspect_report_recheck_next_recheck_time"
+        style="@style/add_report_edittext"
+        android:hint="@string/inspect_report_recheck_next_recheck_time" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:textColor="@color/tab_text_normal"
+        android:textSize="17sp" />
 
 
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.Tripartite.ui.InspectReportViewActivity;
+import com.isoftstone.smartsite.model.Tripartite.ui.RecheckInspectReportActivity;
 import com.isoftstone.smartsite.model.Tripartite.ui.ReplyInspectReportActivity;
 
 import java.util.List;
@@ -59,7 +60,8 @@ public class InspectReportAdapter extends SimpleAdapter {
                 btnReCheck.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent intent = new Intent(mContext, RecheckInspectReportActivity.class);
+                        mContext.startActivity(intent);
                     }
                 });
             }

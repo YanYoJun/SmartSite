@@ -3,7 +3,6 @@
     package="com.isoftstone.smartsite">
 
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -22,15 +21,11 @@
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- 读取设备信息 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <application
         android:name=".common.App"
@@ -55,7 +50,8 @@
             -->
         </activity>
         <activity android:name=".LoginActivity2"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,8 +60,13 @@
         </activity>
         <activity android:name=".model.main.ui.VideoMonitoringActivity"/>
         <activity android:name=".model.main.ui.AirMonitoringActivity"/>
-        <activity android:name=".model.video.VideoPlayActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".model.video.RePlayVideoActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name=".model.video.VideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".model.video.RePlayVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"/>
         <!--  guowei -->
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -92,7 +93,12 @@
             android:launchMode="singleTask"></activity>
         <!--yanyongjun end-->
 
+        <!--zhangyinfu begin-->
         <activity android:name=".model.system.ui.PermissionsActivity"></activity>
+
+        <service android:name="com.uniview.airimos.service.KeepaliveService"/>
+        <service android:name=".common.NewKeepAliveService"/>
+        <!--zhangyinfu end-->
     </application>
 
 </manifest>

@@ -33,9 +33,10 @@ import java.util.Map;
 /**
  * Created by zyf on 2017/10/13 20:00.
  * 个人中心页面
+ * modified by zyf on 2017/10/21
  */
 public class IndividualCenterFragment extends BaseFragment implements UploadUtil.OnUploadProcessListener, View.OnClickListener{
-
+    private boolean mHandledPress = false;
     private LinearLayout mLinearLayout;//用户头像父节点LL
     private ImageView mImageView;//用户头像IV
     private Bitmap mHeadBitmap;//裁剪后得图片
@@ -66,6 +67,12 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+        backHandlerInterface.setSelectedFragment(this);
+    }
+
+    @Override
     protected int getLayoutRes() {
         return R.layout.fragment_individual_center;
     }
@@ -74,6 +81,12 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     protected void afterCreated(Bundle savedInstanceState) {
         init();
         mCurrentFrame = IndividualCenterFragment.this;
+        if (!(getActivity() instanceof BackHandlerInterface)) {
+            throw new ClassCastException("Hosting activity must implement BackHandlerInterface");
+        } else {
+            // 强转为接口实例  
+            backHandlerInterface = (BackHandlerInterface) getActivity();
+        }
     }
 
     /**
@@ -353,7 +366,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             case R.id.ok:
                 //保存用戶數據 上傳到服务器..... zyf modifed.....
             case R.id.cancle:
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                /**FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Fragment systemFragment = new SystemFragment();
                 if(mCurrentFrame != systemFragment){
@@ -363,10 +376,45 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                         fragmentTransaction.hide(mCurrentFrame).show(systemFragment).commitAllowingStateLoss();
                     }
                     mCurrentFrame = systemFragment;
-                }
+                }*/
+                Fragment systemFragment = new SystemFragment();
+                changeToAnotherFragment(mCurrentFrame, systemFragment);
             default:
                 break;
         }
+    }
 
+
+    protected BackHandlerInterface backHandlerInterface;
+    public interface BackHandlerInterface {
+        public void setSelectedFragment(IndividualCenterFragment backHandledFragment);
+    }
+    /**
+     * 其返回一个布尔值;意思是,如果对返回事件进行了处理就返回TRUE,如果不做处理就返回FALSE,让上层进行处理
+     */
+    public boolean onFragmentBackPressed() {
+        if (!mHandledPress) {
+            mHandledPress = true;
+            ToastUtils.showShort("onFragmentBackPressed");
+            Fragment systemFragment = new SystemFragment();
+            changeToAnotherFragment(mCurrentFrame, systemFragment);
+            return true;
+        }
+        return false;
+    }
+
+    private void changeToAnotherFragment(Fragment currentFrame,Fragment toFragment){
+        //如果是不是用的v4的包，则用getActivity().getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        //注意v4包的配套使用;
+        if(currentFrame != toFragment) {
+            if(!toFragment.isAdded()) {
+                transaction.hide(currentFrame).add(R.id.fl_system_content, toFragment).commitAllowingStateLoss();
+            } else{
+                transaction.hide(currentFrame).show(toFragment).commitAllowingStateLoss();
+            }
+            mCurrentFrame = toFragment;
+        }
     }
 }

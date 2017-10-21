@@ -15,7 +15,7 @@ import java.util.TimerTask;
 
 /**
  * Description:
- * Created by L02465 on 2016.12.01.
+ * Created by zhangyinfu on 2017.10.21.
  */
 public abstract class KeepAliveService extends Service {
 

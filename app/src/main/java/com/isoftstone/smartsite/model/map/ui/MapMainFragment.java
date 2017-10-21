@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.map.ui;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -39,7 +41,7 @@ import java.util.List;
  * Created by zw on 2017/10/14.
  */
 
-public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickListener {
+public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickListener, View.OnClickListener {
 
     private TextureMapView mMapView;
     private AMap mAMap;
@@ -48,6 +50,12 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private double lat,lon;
     private List<Marker> markers = new ArrayList<>();
     private PopupWindow chooseCameraPopWindow;
+    private TextView tvDeviceName;
+    private TextView tvDeviceAddress;
+    private TextView tvDeviceDate;
+    private Button btnDeviceInfo;
+    private Button btnDeviceCancel;
+    private PopupWindow deviceInfoPopWindow;
 
     @Override
     protected int getLayoutRes() {
@@ -61,14 +69,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     }
 
     private void initView(Bundle savedInstanceState){
-//        mMapView = (TextureMapView) rootView.findViewById(R.id.map_view);
-        initPopWindow();
+
+        initChooseCameraPopWindow();
+        initDeviceInfoPopWindow();
 
     }
 
-    private void initPopWindow(){
-        View chooseCameraView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_pop_choose_camera,null);
-        View chooseCameraHeader = LayoutInflater.from(getActivity()).inflate(R.layout.layout_choose_camera_head,null);
+    private void initChooseCameraPopWindow(){
+        View chooseCameraView = LayoutInflater.from(mContext).inflate(R.layout.layout_pop_choose_camera,null);
+        View chooseCameraHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_choose_camera_head,null);
 
         ListView chooseCameraListView = (ListView) chooseCameraView.findViewById(R.id.lv);
         chooseCameraListView.setAdapter(new ChooseCameraAdapter(getActivity()));
@@ -90,16 +99,28 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         chooseCameraPopWindow.setTouchable(true);
         chooseCameraPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-//        chooseCameraPopWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        /*//设置popupWindow消失时的监听
-        chooseCameraPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            //在dismiss中恢复透明度
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-                lp.alpha = 1f;
-                getActivity().getWindow().setAttributes(lp);
-            }
-        });*/
+    }
+
+    private void initDeviceInfoPopWindow(){
+        View deviceInfoView = LayoutInflater.from(mContext).inflate(R.layout.layout_map_device_info,null);
+        tvDeviceName = (TextView) deviceInfoView.findViewById(R.id.device_name);
+        tvDeviceAddress = (TextView) deviceInfoView.findViewById(R.id.device_address);
+        tvDeviceDate = (TextView) deviceInfoView.findViewById(R.id.device_date);
+        btnDeviceInfo = (Button) deviceInfoView.findViewById(R.id.device_info);
+        btnDeviceCancel = (Button) deviceInfoView.findViewById(R.id.device_cancel);
+        btnDeviceCancel.setOnClickListener(this);
+        btnDeviceInfo.setOnClickListener(this);
+
+
+        deviceInfoPopWindow = new PopupWindow(getActivity());
+        deviceInfoPopWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        deviceInfoPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        deviceInfoPopWindow.setContentView(deviceInfoView);
+
+        deviceInfoPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        deviceInfoPopWindow.setOutsideTouchable(false);
+        deviceInfoPopWindow.setFocusable(true);
+        deviceInfoPopWindow.setTouchable(true);
     }
 
     @Override
@@ -204,7 +225,37 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        chooseCameraPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+        if(marker.getObject() != null){
+            if(marker.getObject().equals("1")){
+                tvDeviceName.setText("设备名称：130004 设备正常");
+                tvDeviceName.setTextColor(Color.BLACK);
+                btnDeviceInfo.setClickable(true);
+                btnDeviceInfo.setTextColor(Color.BLACK);
+                deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+            }else if(marker.getObject().equals("2")){
+                tvDeviceName.setText("设备名称：130004 污染严重");
+                tvDeviceName.setTextColor(Color.RED);
+                btnDeviceInfo.setClickable(false);
+                btnDeviceInfo.setTextColor(Color.GRAY);
+                deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+            } else {
+                chooseCameraPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+            }
+        }
+
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.device_info:
+                deviceInfoPopWindow.dismiss();
+                ToastUtils.showShort("详细数据");
+                break;
+            case R.id.device_cancel:
+                deviceInfoPopWindow.dismiss();
+                break;
+        }
     }
 }

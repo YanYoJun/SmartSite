@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.utils;
 
 import android.widget.Toast;
-
 import com.isoftstone.smartsite.common.App;
 
 

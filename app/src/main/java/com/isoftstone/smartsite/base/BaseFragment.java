@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +19,17 @@ public abstract class BaseFragment extends Fragment {
 
     protected View rootView;
 
+    protected Context mContext;
+
     //第一次加载才初始化View，避免重复调用onCreateView初始化数据
     private boolean isFirstCreate = true;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+
+    }
 
     @Nullable
     @Override

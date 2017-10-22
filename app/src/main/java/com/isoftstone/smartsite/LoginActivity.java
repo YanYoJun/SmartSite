@@ -1,11 +1,17 @@
 package com.isoftstone.smartsite;
 
 import java.util.ArrayList;
+import java.util.logging.LogRecord;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -21,7 +27,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener {
+import com.isoftstone.smartsite.common.KeepAliveService;
+import com.isoftstone.smartsite.common.NewKeepAliveService;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.LoginBean;
+import com.uniview.airimos.listener.OnLoginListener;
+import com.uniview.airimos.manager.ServiceManager;
+import com.uniview.airimos.parameter.LoginParam;
+import com.uniview.airimos.service.KeepaliveService;
+
+public class LoginActivity extends Activity implements OnClickListener,OnLoginListener ,KeepaliveService.OnKeepaliveListener{
 	protected static final String TAG = "LoginActivity";
 	private LinearLayout mLoginLinearLayout; // 登录内容的容器
 	private LinearLayout mUserIdLinearLayout; // 将下拉弹出窗口在此容器下方显示
@@ -33,6 +48,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String mIdString;
 	private String mPwdString;
 	private ArrayList<User> mUsers; // 用户列表
+    private HttpPost mHttpPost = new HttpPost();
+	private static final  int HANDLER_LOGIN_START = 1;
+	private static final  int HANDLER_LOGIN_END = 2;
+	private static final int HANDLER_SHOW_TOAST = 3;
+	private String mLoginResult = "";
+	private Boolean isLogin_1 = false;
+	private Boolean isLogin_2 = true;
+
+	private KeepaliveService mKeepService = null;
+	private boolean isBound = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +72,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		if (mUsers.size() > 0) {
 			/* 将列表中的第一个user显示在编辑框 */
+			Log.i("test","mUsers.get(0).getId() ="+mUsers.get(0).getId());
 			mIdEditText.setText(mUsers.get(0).getId());
 			mPwdEditText.setText(mUsers.get(0).getPwd());
-			loggin(mUsers.get(0).getId(),mUsers.get(0).getPwd());
+			Message message = new Message();
+			message.what = HANDLER_LOGIN_START;
+			mHandler.sendMessage(message);
 		}
 
 	}
@@ -97,6 +125,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		mLoginButton.setOnClickListener(this);
 		setListener();
+
+		mIdEditText.setText("admin");
+		mPwdEditText.setText("bmeB4000");
 	}
 
 	/* 初始化正在登录对话框 */
@@ -157,8 +188,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 					Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT)
 							.show();
 				} else {// 账号和密码都不为空时
-					Log.i(TAG, mIdString + "  " + mPwdString);
-					loggin(mIdString,mPwdString);
+					Message message = new Message();
+					message.what = HANDLER_LOGIN_START;
+					mHandler.sendMessage(message);
 				}
 				break;
 			default:
@@ -178,10 +210,68 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what){
+				case HANDLER_LOGIN_START:{
+					showLoginingDlg(); // 显示"正在登录"对话框,因为此Demo没有登录到web服务器,所以效果可能看不出.可以结合情况使用
+					new Thread(){
+						@Override
+						public void run() {
+							loggin(mIdString,mPwdString);
+							logginVideo();
+						}
+					}.start();
+				}
+				break;
+				case HANDLER_LOGIN_END:{
+					closeLoginingDlg();// 关闭对话框
+					Toast.makeText(LoginActivity.this, mLoginResult, Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent();
+					intent.setClass(LoginActivity.this,MainActivity.class);
+					LoginActivity.this.startActivity(intent);
+					finish();
+				}
+				break;
+			}
+
+		}
+	};
 	private void loggin(String mIdString,String mPwdString){
 		// 启动登录
-		showLoginingDlg(); // 显示"正在登录"对话框,因为此Demo没有登录到web服务器,所以效果可能看不出.可以结合情况使用
-		if(mIdString.equals("test")&&mPwdString.equals("test")){
+		String strResult = "";
+		if((!mIdString.equals("test")) && (!mPwdString.equals("test"))){
+			 LoginBean loginBean = null;
+			 loginBean = mHttpPost.login(mIdString,mPwdString);
+             if(loginBean.isLoginSuccess()){
+				 boolean mIsSave = true;
+				 try {
+					 Log.i(TAG, "保存用户列表");
+					 for (User user : mUsers) { // 判断本地文档是否有此ID用户
+						 if (user.getId().equals(mIdString)) {
+							 mIsSave = false;
+							 break;
+						 }
+					 }
+				/*if (mIsSave) { // 将新用户加入users
+					User user = new User(mIdString, mPwdString);
+					mUsers.add(user);
+				}*/
+					 mUsers.clear();
+					 User user = new User(mIdString, mPwdString);
+					 mUsers.add(user);
+				 } catch (Exception e) {
+					 e.printStackTrace();
+				 }
+				 mLoginResult="登录成功";
+				 isLogin_1 = true;
+			 }else{
+				 mLoginResult = loginBean.getmErrorInfo();
+				 isLogin_1 = false;
+			 }
+		}else if(mIdString.equals("test")&&mPwdString.equals("test")){
 			boolean mIsSave = true;
 			try {
 				Log.i(TAG, "保存用户列表");
@@ -198,18 +288,89 @@ public class LoginActivity extends Activity implements OnClickListener {
 				mUsers.clear();
 				User user = new User(mIdString, mPwdString);
 				mUsers.add(user);
-				Intent intent = new Intent();
-				intent.setClass(LoginActivity.this,MainActivity.class);
-				LoginActivity.this.startActivity(intent);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-			finish();
+			mLoginResult = "登录成功";
+			isLogin_1 = true;
 		}else{
-			Toast.makeText(this, "用户名或者密码错误", Toast.LENGTH_SHORT).show();
+			mLoginResult = "用户名或者密码错误";
+			isLogin_1 = false;
 		}
-		closeLoginingDlg();// 关闭对话框
+		mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 	}
 
+	private void logginVideo(){
+		LoginParam params = new LoginParam();
+		params.setServer("111.47.21.51");
+		params.setPort(Integer.parseInt("52060"));
+		params.setUserName("loadmin");
+		params.setPassword("loadmin");
+		//调用登录接口
+		ServiceManager.login(params, LoginActivity.this);
+	}
+	/**
+	 * 登录结果返回
+	 */
+	@Override
+	public void onLoginResult(long errorCode, String errorDesc)
+	{
+		Log.i("zyf","onLoginResult   errorCode=" + errorCode);
+		//成功为0，其余为失败错误码
+		if (errorCode == 0)
+		{
+			startKeepaliveService();
+			isLogin_2 = true;
+		}
+		else
+		{
+			mLoginResult = "登录失败：" + errorCode + "," + errorDesc;
+			isLogin_2 = false;
+		}
+		mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+		Message message = new Message();
+		message.what = HANDLER_LOGIN_END;
+		mHandler.sendMessage(message);
+	}
+
+	//启动保活服务
+	public void startKeepaliveService(){
+
+		Intent toService = new Intent(this, NewKeepAliveService.class);
+
+		startService(toService);
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+
+		stopKeepaliveService();
+	}
+
+	public void stopKeepaliveService(){
+		Intent intent = new Intent(this, NewKeepAliveService.class);
+		stopService(intent);
+		return;
+	}
+
+	public ServiceConnection connection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			KeepaliveService.KeepaliveBinder binder = (KeepaliveService.KeepaliveBinder) service;
+			mKeepService =  binder.getService();
+			mKeepService.start(LoginActivity.this);
+			isBound = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			isBound = false;
+		}
+	};
+
+	@Override
+	public void onKeepaliveFailed() {
+		Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
+	}
 }

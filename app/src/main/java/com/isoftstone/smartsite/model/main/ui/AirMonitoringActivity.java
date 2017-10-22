@@ -3,23 +3,12 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ListViewAutoScrollHelper;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
-import com.amap.api.maps.model.Text;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -33,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -40,7 +30,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.http.VideoMonitorBean;
 
 import java.util.ArrayList;
 
@@ -50,112 +39,69 @@ import java.util.ArrayList;
  */
 
 public class AirMonitoringActivity extends Activity {
-    private HorizontalBarChart mChart = null;
+    private HorizontalBarChart mBarChart = null;
     private PieChart mPieChart = null;
     private LineChart mLineChart = null;
-    private TextView mTitleTextView = null;
-    private Button mBackButton = null;
-    private TextView mdevicelist = null;
-    private ListView mListView = null;
-    private ScrollView mScrollView = null;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_airmonitoring);
         init();
         setHorizontalBarChart();
         setPieChart();
         setLineChart();
-        setData();
-        setVisibility(false);
-    }
-
-    private void setVisibility(boolean showDevicesList){
-        if(showDevicesList){
-            mBackButton.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.VISIBLE);
-            mScrollView.setVisibility(View.GONE);
-            mdevicelist.setVisibility(View.GONE);
-            mTitleTextView.setText("MP设备列表");
-        }else{
-            mBackButton.setVisibility(View.GONE);
-            mListView.setVisibility(View.GONE);
-            mScrollView.setVisibility(View.VISIBLE);
-            mdevicelist.setVisibility(View.VISIBLE);
-            mTitleTextView.setText("报表情况");
-        }
     }
     private void init(){
-        mChart = (HorizontalBarChart)findViewById(R.id.chart1);
+        mBarChart = (HorizontalBarChart)findViewById(R.id.chart1);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
-        mTitleTextView = (TextView)findViewById(R.id.textView);
-        mBackButton = (Button)findViewById(R.id.button);
-        mdevicelist =  (TextView)findViewById(R.id.textView_1);
-        mListView = (ListView) findViewById(R.id.list);
-        mScrollView = (ScrollView)findViewById(R.id.scrollview);
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setVisibility(false);
-            }
-        });
-        mdevicelist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setVisibility(true);
-            }
-        });
-    }
-
-    private void setData(){
-        VideoMonitorAdapter adapter = new VideoMonitorAdapter(AirMonitoringActivity.this);
-        VideoMonitorBean video = new VideoMonitorBean("TX_001","2017-5-8","洪山广场大新路",true);
-        ArrayList<VideoMonitorBean> list = new ArrayList<VideoMonitorBean>();
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        list.add(video);
-        adapter.setData(list);
-        mListView.setAdapter(adapter);
     }
 
     private void setHorizontalBarChart(){
-        mChart.setDrawBarShadow(true);
+        mBarChart.setDrawBarShadow(true);
 
-        mChart.setDrawValueAboveBar(true);
+        mBarChart.setDrawValueAboveBar(true);
 
-        mChart.getDescription().setEnabled(false);
+        mBarChart.getDescription().setEnabled(false);
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mChart.setMaxVisibleValueCount(60);
+        mBarChart.setMaxVisibleValueCount(5);
 
         // scaling can now only be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
+        mBarChart.setPinchZoom(false);
 
         // draw shadows for each bar that show the maximum value
         // mChart.setDrawBarShadow(true);
 
-        mChart.setDrawGridBackground(false);
+        mBarChart.setDrawGridBackground(false);
 
-        XAxis xl = mChart.getXAxis();
+        final String lable[]={"1","2","3","4","5"};
+        XAxis xl = mBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xl.setTypeface(mTfLight);
         xl.setDrawAxisLine(true);
         xl.setDrawGridLines(false);
         xl.setGranularity(10f);
+        xl.setLabelCount(lable.length);
+        xl.setDrawLabels(true);
+        xl.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return lable[(int)value/10];
+            }
+        });
 
-        YAxis yl = mChart.getAxisLeft();
+        YAxis yl = mBarChart.getAxisLeft();
         //yl.setTypeface(mTfLight);
-        yl.setDrawAxisLine(true);
-        yl.setDrawGridLines(true);
+        yl.setDrawAxisLine(false);
+        yl.setDrawTopYLabelEntry(false);
+        yl.setEnabled(false);   //设置上边不划线
+        yl.setDrawGridLines(false);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yl.setInverted(true);
 
-        YAxis yr = mChart.getAxisRight();
+        YAxis yr = mBarChart.getAxisRight();
         //yr.setTypeface(mTfLight);
         yr.setDrawAxisLine(true);
         yr.setDrawGridLines(false);
@@ -163,14 +109,14 @@ public class AirMonitoringActivity extends Activity {
 //        yr.setInverted(true);
 
         setHorizontalBarChartData(5, 5);
-        mChart.setFitBars(true);
-        mChart.animateY(2500);
+        mBarChart.setFitBars(true);
+        mBarChart.animateY(2500);
 
-        Legend l = mChart.getLegend();
+        Legend l = mBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(true);
+        l.setDrawInside(false);
         l.setFormSize(8f);
         l.setXEntrySpace(4f);
     }
@@ -189,12 +135,12 @@ public class AirMonitoringActivity extends Activity {
 
         BarDataSet set1;
 
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet)mChart.getData().getDataSetByIndex(0);
+        if (mBarChart.getData() != null &&
+                mBarChart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet)mBarChart.getData().getDataSetByIndex(0);
             set1.setValues(yVals1);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
+            mBarChart.getData().notifyDataChanged();
+            mBarChart.notifyDataSetChanged();
         } else {
             set1 = new BarDataSet(yVals1, "DataSet 1");
 
@@ -207,7 +153,7 @@ public class AirMonitoringActivity extends Activity {
             data.setValueTextSize(10f);
             //data.setValueTypeface(mTfLight);
             data.setBarWidth(barWidth);
-            mChart.setData(data);
+            mBarChart.setData(data);
         }
     }
 
@@ -245,13 +191,13 @@ public class AirMonitoringActivity extends Activity {
 
         setPieChartData(4, 10);
 
-        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
 
         //mPieChart.setOnSeekBarChangeListener(this);
         //mPieChart.setOnSeekBarChangeListener(this);
 
-        Legend l = mChart.getLegend();
+        Legend l = mPieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
@@ -323,9 +269,9 @@ public class AirMonitoringActivity extends Activity {
         mPieChart.setData(data);
 
         // undo all highlights
-        mChart.highlightValues(null);
+        mPieChart.highlightValues(null);
 
-        mChart.invalidate();
+        mPieChart.invalidate();
     }
 
     private void setLineChart(){
@@ -364,7 +310,7 @@ public class AirMonitoringActivity extends Activity {
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(10f);
 
-        XAxis xAxis = mChart.getXAxis();
+        XAxis xAxis = mLineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line

@@ -3,15 +3,19 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.model.Tripartite.ui.TripartiteActivity;
+import com.isoftstone.smartsite.model.message.data.SynergyData;
+import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
+import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 
 
 /**
@@ -40,6 +44,8 @@ public class MainFragment extends BaseFragment{
     private Button mThirdPartReport = null; //三方协同按钮
     private TextView mVideoMonitoringMsg = null;
     private TextView mAirMonitoringMsg = null;
+    private TextView mUnCheckMsg = null;
+    private TextView mUntreatedReport = null;
     private ListView mListView = null;
     @Override
     protected int getLayoutRes() {
@@ -55,6 +61,20 @@ public class MainFragment extends BaseFragment{
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
+        mUnCheckMsg = (TextView) rootView.findViewById(R.id.textView10);
+        mUnCheckMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterUnChekMsg();
+            }
+        });
+        mUntreatedReport = (TextView) rootView.findViewById(R.id.textView11);
+        mUntreatedReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterUntreatedReport();
+            }
+        });
         mVideoMonitoringMsg = (TextView) rootView.findViewById(R.id.textView12);
         mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,15 +82,15 @@ public class MainFragment extends BaseFragment{
                 enterVideoMonitoring();
             }
         });
-        mVideoMonitoringMsg = (TextView) rootView.findViewById(R.id.textView13);
-        mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
+        mAirMonitoringMsg = (TextView) rootView.findViewById(R.id.textView13);
+        mAirMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterAirMonitoring();
+                enterAirMonitoringMsg();
             }
         });
-        mAirMonitoringMsg = (Button)rootView.findViewById(R.id.button_1);
-        mAirMonitoringMsg.setOnClickListener(new View.OnClickListener() {
+        mVideoMonitoring = (Button)rootView.findViewById(R.id.button_1);
+        mVideoMonitoring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterVideoMonitoring();
@@ -87,19 +107,55 @@ public class MainFragment extends BaseFragment{
         mThirdPartReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),TripartiteActivity.class);
-                getActivity().startActivity(intent);
+                enterThirdPartReport();
             }
         });
         mListView = (ListView) rootView.findViewById(R.id.list);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onItemClicked();
+            }
+        });
+    }
+
+    private void onItemClicked(){
+        SynergyData data = new SynergyData();
+        data.setType(SynergyData.TYPE_RECEIVE_REPORT);
+        data.setName("张珊");
+        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+        intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
+        intent.putExtra(MsgFragment.FRAGMENT_DATA, data);
+        getActivity().startActivity(intent);
+    }
+
+    private void enterUnChekMsg(){
+          //进入未查看消息
+        ((MainActivity)getActivity()).setCurrentTab(2);
+    }
+
+    private void enterUntreatedReport(){
+        //进入未处理报告
+        ((MainActivity)getActivity()).setCurrentTab(2);
+    }
+
+    private void enterAirMonitoringMsg(){
+        Intent intent = new Intent(getActivity(),PMDevicesListActivity.class);
+        getActivity().startActivity(intent);
+    }
+    private void enterThirdPartReport(){
+        //进入三方协同
+        ((MainActivity)getActivity()).setCurrentTab(2);
     }
 
     private void enterVideoMonitoring(){
+        //进入视屏监控
         Intent intent = new Intent(getActivity(),VideoMonitoringActivity.class);
         getActivity().startActivity(intent);
     }
 
     private void enterAirMonitoring(){
+        //进入环境监控
         Intent intent = new Intent(getActivity(),AirMonitoringActivity.class);
         getActivity().startActivity(intent);
     }

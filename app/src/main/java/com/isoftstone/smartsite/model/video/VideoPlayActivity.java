@@ -10,20 +10,23 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.graphics.ColorUtils;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
+import com.uniview.airimos.listener.OnPtzCommandListener;
 import com.uniview.airimos.listener.OnStartLiveListener;
 import com.uniview.airimos.listener.OnStopLiveListener;
 import com.uniview.airimos.manager.ServiceManager;
+import com.uniview.airimos.parameter.PtzCommandParam;
 import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.thread.RecvStreamThread;
 
@@ -32,7 +35,7 @@ import com.uniview.airimos.thread.RecvStreamThread;
  * modifed by zhangyinfu on 2017/10/19
  */
 
-public class VideoPlayActivity extends Activity{
+public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private static final String TAG = "zyf_VideoPlayActivity";
 
     private SurfaceView mSurfaceView;
@@ -40,21 +43,24 @@ public class VideoPlayActivity extends Activity{
     private Context mContext;
     private RecvStreamThread mRecvStreamThread = null;
     private RoundMenuView mRoundMenuView;
+    private ImageView mImageView;
+    private String mCameraCode;
     private static  final int GRAY_9999 = Color.GREEN;
     private static  final int GRAY_F2F2 = Color.BLUE;
 
     private int mSurfaceViewWidth;
     private int mSurfaceViewHeight;
-    //static {
-    //    System.loadLibrary("imosplayer");
-    //}
+    //固定摄像机：1; 云台摄像机：2; 高清固定摄像机：3; 高清云台摄像机：4; 车载摄像机：5; 不可控标清摄像机：6; 不可控高清摄像机：7;
+    private static final int CAMERA_TYPE_TOW = 2;
+    private static final int CAMERA_TYPE_FOUR = 4;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        setContentView(R.layout.activity_videoplay);
+        setContentView(R.layout.activity_video_play);
         mContext = this;
         //SurfaceView用于渲染
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
@@ -68,19 +74,7 @@ public class VideoPlayActivity extends Activity{
         mPlayer = new Player();
         mPlayer.AVInitialize(mSurfaceView.getHolder());
 
-        /*获取Intent中的Bundle对象*/
-        if(bundle == null) {
-            bundle = this.getIntent().getExtras();
-        }
-
-        /*获取Bundle中的数据，注意类型和key*/
-        String resCode = bundle.getString("ResCode");
-        Log.i(TAG,"--------------resCode-------" + resCode);
-        startLive(resCode);
-
-        //初始化摇杆控件
         mRoundMenuView = (RoundMenuView)findViewById(R.id.round_menu_view);
-        initRoundMenuView();
 
         //获取设备屏幕大小信息
         DisplayMetrics dm = new DisplayMetrics();
@@ -88,6 +82,30 @@ public class VideoPlayActivity extends Activity{
         mSurfaceViewWidth = dm.widthPixels;
         mSurfaceViewHeight = dm.heightPixels;
 
+        mImageView = (ImageView) findViewById(R.id.capture_view);
+        mImageView.setOnClickListener(this);
+
+
+        /*获取Intent中的Bundle对象*/
+        if(bundle == null) {
+            bundle = this.getIntent().getExtras();
+        }
+        /*获取Bundle中的数据，注意类型和key*/
+        mCameraCode = bundle.getString("resCode");
+        int resSubType = bundle.getInt("resSubType");
+        Log.i(TAG,"--------------mCameraCode-------" + mCameraCode + ";   resSubType = " +  resSubType);
+
+        startLive(mCameraCode);
+
+        if( (CAMERA_TYPE_TOW == resSubType) || (CAMERA_TYPE_FOUR ==  resSubType)) {
+            Log.i(TAG,"--------------zyf----VISIBLE---");
+            //初始化摇杆控件
+            mRoundMenuView.setVisibility(View.VISIBLE);
+            initRoundMenuView();
+        } else {
+            Log.i(TAG,"--------------zyf----GONE---");
+            mRoundMenuView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -157,6 +175,7 @@ public class VideoPlayActivity extends Activity{
 
                     //停止Player播放解码
                     mPlayer.AVStopPlay();
+                    mImageView.setEnabled(false);
                 }
             }
         });
@@ -182,7 +201,8 @@ public class VideoPlayActivity extends Activity{
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastUtils.showShort("点击了1");
+                ToastUtils.showShort("点击了down");
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTDOWN);
             }
         };
         mRoundMenuView.addRoundMenu(roundMenu);
@@ -194,7 +214,8 @@ public class VideoPlayActivity extends Activity{
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastUtils.showShort("点击了2");
+                ToastUtils.showShort("点击了left");
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANLEFT);
             }
         };
         mRoundMenuView.addRoundMenu(roundMenu);
@@ -206,7 +227,8 @@ public class VideoPlayActivity extends Activity{
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastUtils.showShort("点击了3");
+                ToastUtils.showShort("点击了up");
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTUP);
             }
         };
         mRoundMenuView.addRoundMenu(roundMenu);
@@ -218,7 +240,8 @@ public class VideoPlayActivity extends Activity{
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastUtils.showShort("点击了4");
+                ToastUtils.showShort("点击了right");
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANRIGHT);
             }
         };
         mRoundMenuView.addRoundMenu(roundMenu);
@@ -238,9 +261,40 @@ public class VideoPlayActivity extends Activity{
                     @Override
                     public void onClick(View view) {
                         ToastUtils.showShort("点击了中心圆圈");
+                        ptzCommand(mCameraCode,PtzCommandParam.PTZ_CMD.ALLSTOP);
                     }
         });
     }
+
+    /**
+     * 云台控制
+     * */
+    public void ptzCommand(String cameraCode, int directionCode){
+
+        //云台命令参数
+        PtzCommandParam param = new PtzCommandParam();
+        param.setCameraCode(cameraCode);
+        param.setCmd(directionCode);
+        param.setSpeed1(3);
+        param.setSpeed2(3);
+
+        try {
+            OnPtzCommandListener listener = new OnPtzCommandListener() {
+                @Override
+                public void onPtzCommandResult(long errorCode, String errorDesc) {
+                    if (errorCode != 0) {
+                        Toast.makeText(VideoPlayActivity.this, errorDesc, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            //云台控制接口
+            ServiceManager.ptzCommand(param, listener);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     public static String toHexEncoding(int color) {
         String R, G, B;
@@ -275,23 +329,40 @@ public class VideoPlayActivity extends Activity{
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.capture_view:
+                //boolean sdCardExist = Environment.getExternalStorageState().equals("mounted");
+                //ToastUtils.showShort("sdCardExist ? " + sdCardExist);
+                //抓拍图片，返回路径
+                String path = mPlayer.snatch(null);
+                if (null != path) {
+                    Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
     class surfaceCallback implements SurfaceHolder.Callback {
 
         public void surfaceCreated(SurfaceHolder holder) {
-            Log.d(TAG, "===== surfaceCreated =====");
+            //Log.d(TAG, "===== surfaceCreated =====");
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Log.d(TAG, "===== surfaceChanged =====");
-            if (mPlayer != null) {
-                mPlayer.changeDisplaySize(width, height);
+            //Log.d(TAG, "===== surfaceChanged =====");
+            if (mPlayer != null) {//mPlayer.changeDisplaySize(width, height);
             }
         }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
-            Log.d(TAG, "===== surfaceDestroyed =====");
+            //Log.d(TAG, "===== surfaceDestroyed =====");
         }
     }
 }

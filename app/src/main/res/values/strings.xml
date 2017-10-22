@@ -10,10 +10,24 @@
     <string name="login_btn_text">视宇登录</string>
     <string name="forgot_pwd">忘记密码？</string>
     <string name="loading">正在登录</string>
-    <string name="device_name">设备名称:</string>
-    <string name="equipment_installation_time">安装时间:</string>
-    <string name="device_address">地址:</string>
-    <string name="device_status">状态:</string>
+    <string name="res_code">资源编码:</string>
+    <string name="res_type">资源子类型:</string>
+    <string name="res_name">资源名称:</string>
+    <string name="is_online">是否在线:</string>
+    <string name="camera_type_1">固定摄像机</string>
+    <string name="camera_type_2">云台摄像机</string>
+    <string name="camera_type_3">高清固定摄像机</string>
+    <string name="camera_type_4">高清云台摄像机</string>
+    <string name="camera_type_5">车载摄像机</string>
+    <string name="camera_type_6">不可控标清摄像机</string>
+    <string name="camera_type_7">不可控高清摄像机</string>
+    <string name="realtime_video">实时视频</string>
+    <string name="historical_monitoring">历史监控</string>
+    <string name="snapshot_record">抓拍记录</string>
+    <string name="data_pick_dialog_error_msg">请选择起始时间!</string>
+    <string name="data_pick_dialog_error_msg2">起始时间大于结束时间,请重新输入.</string>
+    <string name="camera_online">在线</string>
+    <string name="camera_offline">离线</string>
     <!--          main   end            -->
 
 

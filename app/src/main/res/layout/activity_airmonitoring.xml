@@ -2,36 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="80dp">
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:text="返回" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
-            android:id="@+id/textView_1"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/star"
-            android:text="设备列表" />
-    </RelativeLayout>
+    android:orientation="vertical"
+    android:background="#c0c0c0">
 
     <ScrollView
+        android:layout_margin="10dp"
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -45,7 +20,7 @@
                 android:text="区域月度排名"/>
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart1"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="220dp"
                 android:background="@android:color/white"/>
             <TextView
@@ -57,7 +32,8 @@
                 android:id="@+id/chart2"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:layout_above="@+id/seekBar1" />
+                android:layout_above="@+id/seekBar1"
+                android:background="@android:color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,12 +44,8 @@
                 android:id="@+id/chart3"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_above="@+id/seekBar1" />
+                android:layout_above="@+id/seekBar1"
+                android:background="@android:color/white"/>
         </LinearLayout>
     </ScrollView>
-
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </LinearLayout>

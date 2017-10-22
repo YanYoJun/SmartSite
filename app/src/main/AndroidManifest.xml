@@ -100,6 +100,12 @@
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.Tripartite.ui.ViewCheckReportActivity"
             android:launchMode="singleTask"></activity>
+        <activity android:name=".model.message.ui.VcrActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.message.ui.EnvironActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.message.ui.TripartiteMsgActivity"
+            android:launchMode="singleTask"></activity>
         <!--yanyongjun end-->
 
         <!--zhangyinfu begin-->

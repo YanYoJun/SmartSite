@@ -39,7 +39,7 @@
 
     <!--          msg   start            -->
     <string name="msg">消息</string>
-    <string name="frag_msg_device_watch">设备监控</string>
+    <string name="frag_msg_vcr">视频监控</string>
     <string name="frag_msg_environment_watch">环境监控</string>
     <string name="frag_msg_synergy">三方协同</string>
     <string name="vcr_error">%1$d设备损坏!</string>

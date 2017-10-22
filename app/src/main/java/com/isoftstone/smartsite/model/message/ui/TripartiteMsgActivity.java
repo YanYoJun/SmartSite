@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.message.data.SynergyData;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by yanyongjun on 2017/10/15.
  */
 
-public class SynergyFragment extends BaseFragment {
+public class TripartiteMsgActivity extends BaseActivity {
     //listView中各项的名称
     public static final String FRAG_MSG_ITEM_DETAILS = "frag_synergy_msg";
     public static final String FRAG_MSG_ITEM_DATE = "frag_synergy_date";
@@ -32,12 +32,12 @@ public class SynergyFragment extends BaseFragment {
     private List<SynergyData> mDatas = null;
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_msg_synergy;
+        return R.layout.activity_msg_thirpartite;
     }
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        mActivity = getActivity();
+        mActivity = this;
         init();
     }
 

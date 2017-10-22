@@ -13,6 +13,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.Tripartite.ui.TripartiteActivity;
 import com.isoftstone.smartsite.model.message.data.SynergyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
@@ -145,7 +146,10 @@ public class MainFragment extends BaseFragment{
     }
     private void enterThirdPartReport(){
         //进入三方协同
-        ((MainActivity)getActivity()).setCurrentTab(2);
+        /*((MainActivity)getActivity()).setCurrentTab(2);*/
+        //yanyongjun 这个地方应该是进到三方协同界面，而不是到消息fragment页
+        Intent intent = new Intent(getActivity(), TripartiteActivity.class);
+        startActivity(intent);
     }
 
     private void enterVideoMonitoring(){

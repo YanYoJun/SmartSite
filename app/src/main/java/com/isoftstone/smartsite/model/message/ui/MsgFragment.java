@@ -1,32 +1,35 @@
 package com.isoftstone.smartsite.model.message.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.SparseArray;
-import android.widget.TextView;
+import android.support.constraint.ConstraintLayout;
+import android.view.View;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-
-import java.util.ArrayList;
 
 /**
  * Created by yanyongjun on 2017/10/15.
  */
 
 public class MsgFragment extends BaseFragment {
-    private ViewPager mViewPager = null;
+/*    private ViewPager mViewPager = null;
     ArrayList<Fragment> mFragList = new ArrayList<Fragment>();
-    private SparseArray<TextView> mSwitchLab = new SparseArray<>();
+    private SparseArray<TextView> mSwitchLab = new SparseArray<>();*/
 
     public static final int FRAGMENT_TYPE_VCR = 0;
     public static final int FRAGMENT_TYPE_ENVIRON = 1;
     public static final int FRAGMENT_TYPE_SYNERGY = 2;
 
+
+    private ConstraintLayout mVcr = null;
+    private ConstraintLayout mEnviron = null;
+    private ConstraintLayout mTripartite = null;
+    private Activity mActivity = null;
+
     public static final String FRAGMENT_TYPE = "type";
     public static final String FRAGMENT_DATA = "data";
-    private TextView mTitle = null;
 
     @Override
     protected int getLayoutRes() {
@@ -35,16 +38,45 @@ public class MsgFragment extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
+        init();
+    }
 
+    private void init(){
+        mActivity = getActivity();
+        mVcr = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_vcr);
+        mEnviron = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_environ);
+        mTripartite = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_thirpartite);
+
+        mVcr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mActivity,VcrActivity.class);
+                mActivity.startActivity(i);
+            }
+        });
+        mEnviron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mActivity,EnvironActivity.class);
+                mActivity.startActivity(i);
+            }
+        });
+        mTripartite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mActivity,TripartiteMsgActivity.class);
+                mActivity.startActivity(i);
+            }
+        });
     }
 /*
 
     private void init() {
         mTitle = (TextView)getActivity().findViewById(R.id.lab_title_name);
         mViewPager = (ViewPager) getActivity().findViewById(R.id.main_view_pager);
-        Fragment watchDevice = new VcrMainFragment();
-        Fragment watchEnviron = new EnvironMainFragment();
-        Fragment synergy = new SynergyFragment();
+        Fragment watchDevice = new VcrActivity();
+        Fragment watchEnviron = new EnvironActivity();
+        Fragment synergy = new TripartiteMsgActivity();
 
         mFragList.add(watchDevice);
         mFragList.add(watchEnviron);

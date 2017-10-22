@@ -55,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="@string/frag_msg_device_watch"
+            android:text="@string/frag_msg_vcr"
             android:textColor="@color/main_text_color"
             android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@+id/img_vcr"

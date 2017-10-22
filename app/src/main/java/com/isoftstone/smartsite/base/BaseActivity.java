@@ -1,10 +1,10 @@
 package com.isoftstone.smartsite.base;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.common.AppManager;
 import com.isoftstone.smartsite.utils.StatusViewUtils;
 
@@ -54,5 +54,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(this,activity);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    /**
+     * 点击返回按钮
+     */
+    public void onBackBtnClick(View v){
+        finish();;
     }
 }

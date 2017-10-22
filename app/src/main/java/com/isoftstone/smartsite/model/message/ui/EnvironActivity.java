@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.message.data.EnvironData;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by yanyongjun on 2017/10/15.
  */
 
-public class EnvironMainFragment extends BaseFragment {
+public class EnvironActivity extends BaseActivity {
     //listview中各项的名称
     public static final String FRAG_MSG_ITEM_DETAILS = "frag_environ_msg_details";
     public static final String FRAG_MSG_ITEM_DATE = "frag_msg_environ_date";
@@ -33,12 +33,12 @@ public class EnvironMainFragment extends BaseFragment {
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_msg_environ;
+        return R.layout.activity_msg_environ;
     }
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        mActivity = getActivity();
+        mActivity = this;
         init();
     }
 
@@ -123,4 +123,5 @@ public class EnvironMainFragment extends BaseFragment {
 
         return mDatas;
     }
+
 }

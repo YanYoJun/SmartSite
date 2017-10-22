@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f44336</color>
+    <color name="colorPrimary">#3464dd</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#406ee1</color>
+    <color name="windowBackground">#f5f5f5</color>
 
-    <color name="white">#f5f5f5</color>
+    <color name="white">#ffffff</color>
+    <!-- app的背景颜色-->
+    <color name="app_background">#f5f5f5</color>
     <color name="tab_text_normal">#212121</color>
     <color name="gray">#BBBBBB</color>
     <color name="actionsheet_gray">#8F8F8F</color>
     <color name="actionsheet_blue">#037BFF</color>
     <color name="dark">#FF222222</color>
     <color name="light">#FFEEEEEE</color>
+    <!-- 主要显示字体的颜色，几乎是纯黑-->
+    <color name = "main_text_color">#222222</color>
+    <!-- 次要字体（描述性字体的颜色）-->
+    <color name = "des_text_color">#999999</color>
 
     <!-- main   start -->
     <color name="transparent">#7f000000</color>

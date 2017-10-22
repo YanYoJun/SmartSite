@@ -1,12 +1,9 @@
 package com.isoftstone.smartsite.model.message.ui;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
-import android.view.View;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -38,8 +35,9 @@ public class MsgFragment extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        init();
+
     }
+/*
 
     private void init() {
         mTitle = (TextView)getActivity().findViewById(R.id.lab_title_name);
@@ -141,6 +139,7 @@ public class MsgFragment extends BaseFragment {
             }
         }
     }
+*/
 
 
 }

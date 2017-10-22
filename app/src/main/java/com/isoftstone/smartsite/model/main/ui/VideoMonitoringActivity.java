@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.common.widget.AlertView;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -23,13 +24,13 @@ import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnQueryResourceListener;
-import com.uniview.airimos.listener.OnStartReplayListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.obj.QueryCondition;
 import com.uniview.airimos.obj.RecordInfo;
 import com.uniview.airimos.obj.ResourceInfo;
 import com.uniview.airimos.parameter.QueryReplayParam;
 import com.uniview.airimos.parameter.QueryResourceParam;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,12 +139,12 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         //拓展窗口
         mAlertViewExt = new AlertView(null,null, null, null, null, this, AlertView.Style.Alert, null);
         mViewGrounp = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.alertext_form,null);
-        mCancleDialogIV = mViewGrounp.findViewById(R.id.canlce_dialog_iv);
-        mBeginTimeET = mViewGrounp.findViewById(R.id.begin_time_et);
-        mBeginTimeIV = mViewGrounp.findViewById(R.id.begin_time_iv);
-        mEndTimeET = mViewGrounp.findViewById(R.id.end_time_et);
-        mEndTimeIV = mViewGrounp.findViewById(R.id.end_time_iv);
-        mOkBtn = mViewGrounp.findViewById(R.id.ok_btn);
+        mCancleDialogIV = (ImageView)mViewGrounp.findViewById(R.id.canlce_dialog_iv);
+        mBeginTimeET = (EditText)mViewGrounp.findViewById(R.id.begin_time_et);
+        mBeginTimeIV = (ImageView)mViewGrounp.findViewById(R.id.begin_time_iv);
+        mEndTimeET = (EditText)mViewGrounp.findViewById(R.id.end_time_et);
+        mEndTimeIV = (ImageView)mViewGrounp.findViewById(R.id.end_time_iv);
+        mOkBtn = (Button)mViewGrounp.findViewById(R.id.ok_btn);
 
         mBeginTimeIV.setOnClickListener(this);
         mEndTimeIV.setOnClickListener(this);

@@ -3,7 +3,6 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -35,12 +33,18 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private ArrayList<VideoMonitorBean> mData = new ArrayList<VideoMonitorBean>();
-    private Context mContext = null;
     private final String IMAGE_TYPE = "image/*";
+    private Context mContext = null;
+    private AdapterViewOnClickListener listener;
 
     public VideoMonitorAdapter(Context context){
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
+        listener = (AdapterViewOnClickListener)context;
+    }
+
+    public interface AdapterViewOnClickListener {
+        public void viewOnClickListener(ViewHolder viewHolder);
     }
 
     public void setData(ArrayList<VideoMonitorBean> list){
@@ -72,10 +76,10 @@ public class VideoMonitorAdapter extends BaseAdapter {
         if (null == convertView) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.videomonitor_adapter, null);
-            holder.resCode = (TextView)convertView.findViewById(R.id.textView_1);
-            holder.resSubType = (TextView)convertView.findViewById(R.id.textView_2);
-            holder.resName = (TextView)convertView.findViewById(R.id.textView_3);
-            holder.isOnline = (TextView)convertView.findViewById(R.id.textView_4);
+            holder.resCodeTv = (TextView)convertView.findViewById(R.id.textView_1);
+            holder.resSubTypeTv = (TextView)convertView.findViewById(R.id.textView_2);
+            holder.resNameTv = (TextView)convertView.findViewById(R.id.textView_3);
+            holder.isOnlineTv = (TextView)convertView.findViewById(R.id.textView_4);
             holder.button_1 = (Button)convertView.findViewById(R.id.button_1);
             holder.button_2 = (Button)convertView.findViewById(R.id.button_2);
             holder.button_3 = (Button)convertView.findViewById(R.id.button_3);
@@ -85,16 +89,20 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.resCode.setText(mData.get(position).getResCode());
-        holder.resName.setText(mData.get(position).getResName());
-        setCameraType(holder.resSubType, mData.get(position).getResSubType());
-        if(mData.get(position).isOnline()){
-            holder.isOnline.setText("在线");
+        holder.resCodeTv.setText(mData.get(position).getResCode());
+        holder.resNameTv.setText(mData.get(position).getResName());
+        setCameraType(holder.resSubTypeTv, mData.get(position).getResSubType());
+        holder.resType = mData.get(position).getResType();
+        holder.resSubType = mData.get(position).getResSubType();
+        holder.isOnline = mData.get(position).isOnline();
+        if(holder.isOnline){
+            holder.isOnlineTv.setText("在线");
             holder.button_1.setEnabled(true);
         }else {
-            holder.isOnline.setText("离线");
+            holder.isOnlineTv.setText("离线");
             holder.button_1.setEnabled(false);
         }
+        holder.isShared = mData.get(position).isShared();
 
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
@@ -105,7 +113,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 if(null != viewHolder) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putString("resCode", viewHolder.resCode.getText().toString());
+                    bundle.putString("resCode", viewHolder.resCodeTv.getText().toString());
+                    bundle.putInt("resSubType", viewHolder.resSubType);
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoPlayActivity.class);
@@ -130,7 +139,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putString("resCode", viewHolder.resCode.getText().toString());
+                    bundle.putString("resCode", viewHolder.resCodeTv.getText().toString());
                     bundle.putString("beginTime", beginTime);
                     bundle.putString("endTime", endTime);
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -143,16 +152,39 @@ public class VideoMonitorAdapter extends BaseAdapter {
             }
         });
 
-        holder.button_3.setOnClickListener(new View.OnClickListener() {
-            @Override
+        final Calendar sCalendar = Calendar.getInstance();
+        holder.button_3.setOnClickListener(new OnConvertViewClickListener(convertView, position)  {
+            /**@Override
             public void onClick(View v) {
-                openAlbum();
+                //openAlbum();
+
+                DatePickerDialog dialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            sCalendar.set(year, monthOfYear, dayOfMonth);
+                            ToastUtils.showShort(DateFormat.format("yyy-MM-dd", sCalendar).toString());
+                        }
+                    }, sCalendar.get(Calendar.YEAR), sCalendar.get(Calendar.MONTH), sCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.show();
+                }*/
+
+            @Override
+            public void onClickCallBack(View registedView, View rootView) {
+                ViewHolder viewHolder = (ViewHolder)rootView.getTag();
+                if (null != viewHolder) {
+                    listener.viewOnClickListener(viewHolder);
+                }
             }
         });
 
         return convertView;
     }
 
+    /**
+     * 固定摄像机：1; 云台摄像机：2; 高清固定摄像机：3; 高清云台摄像机：4; 车载摄像机：5; 不可控标清摄像机：6; 不可控高清摄像机：7;
+     * @param textView
+     * @param resSubType
+     */
     private void setCameraType(TextView textView,int resSubType) {
         if (1 == resSubType) {
             textView.setText(R.string.camera_type_1);
@@ -192,54 +224,94 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
 
     public final class ViewHolder{
-        public TextView resCode;//资源编码
-        public TextView resSubType;//资源类型
-        public TextView resName;//资源名称
-        public TextView isOnline;//是否在线
+        public TextView resCodeTv;//资源编码
+        public TextView resSubTypeTv;//资源子类型
+        public TextView resNameTv;//资源名称
+        public TextView isOnlineTv;//是否在线
+        public int resType;
+        public int resSubType;
+        public Boolean isOnline;
+        public Boolean isShared;
 
         public Button button_1;//视频监控Btn
         public Button button_2;//环境监控
         public Button button_3 ;//三方协同
 
-        public TextView getResCode() {
-            return resCode;
+        public TextView getResCodeTv() {
+            return resCodeTv;
         }
 
-        public void setResCode(TextView resCode) {
-            this.resCode = resCode;
+        public void setResCodeTv(TextView resCodeTv) {
+            this.resCodeTv = resCodeTv;
         }
 
-        public TextView getResSubType() {
+        public TextView getResSubTypeTv() {
+            return resSubTypeTv;
+        }
+
+        public void setResSubTypeTv(TextView resSubTypeTv) {
+            this.resSubTypeTv = resSubTypeTv;
+        }
+
+        public TextView getResNameTv() {
+            return resNameTv;
+        }
+
+        public void setResNameTv(TextView resNameTv) {
+            this.resNameTv = resNameTv;
+        }
+
+        public TextView getIsOnlineTv() {
+            return isOnlineTv;
+        }
+
+        public void setIsOnlineTv(TextView isOnlineTv) {
+            this.isOnlineTv = isOnlineTv;
+        }
+
+        public int getResType() {
+            return resType;
+        }
+
+        public void setResType(int resType) {
+            this.resType = resType;
+        }
+
+        public int getResSubType() {
             return resSubType;
         }
 
-        public void setResSubType(TextView resSubType) {
+        public void setResSubType(int resSubType) {
             this.resSubType = resSubType;
         }
 
-        public TextView getResName() {
-            return resName;
-        }
-
-        public void setResName(TextView resName) {
-            this.resName = resName;
-        }
-
-        public TextView getIsOnline() {
+        public Boolean getOnline() {
             return isOnline;
         }
 
-        public void setIsOnline(TextView isOnline) {
-            this.isOnline = isOnline;
+        public void setOnline(Boolean online) {
+            isOnline = online;
+        }
+
+        public Boolean getShared() {
+            return isShared;
+        }
+
+        public void setShared(Boolean shared) {
+            isShared = shared;
         }
 
         @Override
         public String toString() {
             return "ViewHolder{" +
-                    "resCode=" + resCode.getText().toString() +
-                    ", resSubType=" + resSubType.getText().toString()  +
-                    ", resName=" + resName.getText().toString()  +
-                    ", isOnline=" + isOnline.getText().toString()  +
+                    "resCodeTv=" + resCodeTv.getText().toString() +
+                    ", resSubTypeTv=" + resSubTypeTv.getText().toString() +
+                    ", resNameTv=" + resNameTv.getText().toString() +
+                    ", isOnlineTv=" + isOnlineTv.getText().toString() +
+                    ", resType=" + resType +
+                    ", resSubType=" + resSubType +
+                    ", isOnline=" + isOnline +
+                    ", isShared=" + isShared +
                     '}';
         }
     }

@@ -103,19 +103,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="实时视频" />
+                    android:text="@string/realtime_video" />
                 <Button
                     android:id="@+id/button_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="历史回放" />
+                    android:text="@string/historical_monitoring" />
                 <Button
                     android:id="@+id/button_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="抓拍记录" />
+                    android:text="@string/snapshot_record" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

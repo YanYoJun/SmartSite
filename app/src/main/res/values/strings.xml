@@ -21,6 +21,11 @@
     <string name="camera_type_5">车载摄像机</string>
     <string name="camera_type_6">不可控标清摄像机</string>
     <string name="camera_type_7">不可控高清摄像机</string>
+    <string name="realtime_video">实时视频</string>
+    <string name="historical_monitoring">历史监控</string>
+    <string name="snapshot_record">抓拍记录</string>
+    <string name="data_pick_dialog_error_msg">请选择起始时间!</string>
+    <string name="data_pick_dialog_error_msg2">起始时间大于结束时间,请重新输入.</string>
     <!--          main   end            -->
 
 

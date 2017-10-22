@@ -45,6 +45,8 @@
     <string name="reply">回复</string>
     <string name="recheck">回访</string>
     <string name="check">验收</string>
+    <!--添加回访报告页-->
+    <string name="add_report">添加回访报告页</string>
     <string name="report_address">地址：%1$s</string>
     <string name="report_name">发布人：%1$s</string>
     <string name="report_stats">状态：%1$s</string>
@@ -54,18 +56,18 @@
     <string name="environ_msg">环境监控消息</string>
     <string name="synergy_msg">三方协同消息</string>
     <string name="add_inspect_report">巡查报告提交</string>
-    <string name="inspect_report_address">巡查地点：</string>
+    <string name="inspect_report_address">巡查地点</string>
     <string name="inspect_report_time">巡查时间</string>
     <string name="inspect_report_company">巡察单位</string>
-    <string name="inspect_report_check_people">巡查人员：</string>
-    <string name="inspect_report_report_people">报告人员：</string>
-    <string name="inspect_report_build_company">建设单位：</string>
-    <string name="inspect_report_build_time">报告时间：</string>
-    <string name="inspect_report_construction_company">施工单位：</string>
-    <string name="inspect_report_supervision_company">监理单位：</string>
-    <string name="inspect_report_message">巡查内容：</string>
-    <string name="inspect_report_description">问题描述：</string>
-    <string name="inspect_report_is_need_recheck">是否回访：</string>
+    <string name="inspect_report_check_people">巡查人员</string>
+    <string name="inspect_report_report_people">报告人员</string>
+    <string name="inspect_report_build_company">建设单位</string>
+    <string name="inspect_report_build_time">报告时间</string>
+    <string name="inspect_report_construction_company">施工单位</string>
+    <string name="inspect_report_supervision_company">监理单位</string>
+    <string name="inspect_report_message">巡查内容</string>
+    <string name="inspect_report_description">问题描述</string>
+    <string name="inspect_report_is_need_recheck">是否回访</string>
     <string name="yes">是</string>
     <string name="no">否</string>
 
@@ -119,6 +121,7 @@
     <string name="user_full_name">姓名</string>
     <string name="ok">确认</string>
     <string name="cancle">放弃</string>
+    <string name="save">保存</string>
     <!--          system   end            -->
 
 

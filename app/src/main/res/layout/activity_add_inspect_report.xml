@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.isoftstone.smartsite.model.Tripartite.ui.AddInspectReportActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:clipToPadding="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/homeAsUpIndicator"
+                android:onClick="onBtnBackClick" />
+
+            <TextView
+                android:id="@+id/lab_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/add_report"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:elevation="1dp"
+                android:onClick="onBtnSaveClick"
+                android:paddingRight="4dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,224 +69,119 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/inspect_report_address"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_address" />
+
+            <EditText
+                android:id="@+id/inspect_report_time"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_time" />
+
+            <EditText
+                android:id="@+id/inspect_report_company"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_company" />
+
+            <EditText
+                android:id="@+id/inspect_report_check_people"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_check_people" />
+
+            <EditText
+                android:id="@+id/inspect_report_report_people"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_report_people" />
+
+            <EditText
+                android:id="@+id/inspect_report_build_time"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_build_time" />
+
+            <EditText
+                android:id="@+id/inspect_report_build_company"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_build_company" />
+
+            <EditText
+                android:id="@+id/inspect_report_construction_company"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_construction_company" />
+
+            <EditText
+                android:id="@+id/inspect_report_supervision_company"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_supervision_company" />
+
+            <EditText
+                android:id="@+id/inspect_report_message"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_message" />
+
+            <EditText
+                android:id="@+id/inspect_report_description"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_description" />
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:clipToPadding="true">
 
                 <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_address" />
-
-                <EditText
-                    android:id="@+id/inspect_report_address"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_time" />
-
-                <EditText
-                    android:id="@+id/inspect_report_time"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_company" />
-
-                <EditText
-                    android:id="@+id/inspect_report_company"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_check_people" />
-
-                <EditText
-                    android:id="@+id/inspect_report_check_people"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_report_people" />
-
-                <EditText
-                    android:id="@+id/inspect_report_report_people"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_build_time" />
-
-                <EditText
-                    android:id="@+id/inspect_report_build_time"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_build_company" />
-
-                <EditText
-                    android:id="@+id/inspect_report_build_company"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_construction_company" />
-
-                <EditText
-                    android:id="@+id/inspect_report_construction_company"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_supervision_company" />
-
-                <EditText
-                    android:id="@+id/inspect_report_supervision_company"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_message" />
-
-                <EditText
-                    android:id="@+id/inspect_report_message"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_description" />
-
-                <EditText
-                    android:id="@+id/inspect_report_description"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_is_need_recheck" />
-
-                <EditText
                     android:id="@+id/inspect_report_recheck"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
                     style="@style/add_report_lab"
-                    android:text="@string/inspect_report_recheck_time" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="0dp"
+                    android:drawableLeft="@android:drawable/ic_menu_add"
+                    android:gravity="center_vertical"
+                    android:hint="@string/inspect_report_is_need_recheck" />
 
-                <EditText
-                    android:id="@+id/inspect_report_recheck_time"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal">
 
-            <LinearLayout
+                    <RadioButton
+                        android:id="@+id/radio_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/yes" />
+
+                    <RadioButton
+                        android:id="@+id/radio_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/no" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+
+            <EditText
+                android:id="@+id/inspect_report_recheck_time"
+                style="@style/add_report_edittext"
+                android:hint="@string/inspect_report_recheck_time" />
+
+            <GridView
+                android:layout_width="match_parent"
+                android:numColumns="5"
+                android:id="@+id/grid_view"
+                android:layout_height="wrap_content">
+
+            </GridView>
+
+            <Button
+                android:id="@+id/btn_add_report_submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="@string/submit"
+                android:textColor="@color/tab_text_normal" />
 
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_sub_attach" />
-
-                <EditText
-                    android:id="@+id/inspect_report_sub_attach"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_add_report_submit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/submit"
-                    android:textColor="@color/tab_text_normal" />
-
-                <Button
-                    android:id="@+id/btn_add_report_cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/cancel"
-                    android:textColor="@color/tab_text_normal" />
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

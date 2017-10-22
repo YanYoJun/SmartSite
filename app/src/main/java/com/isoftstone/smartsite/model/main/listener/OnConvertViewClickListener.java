@@ -13,22 +13,22 @@ import android.view.View;
 public abstract class OnConvertViewClickListener implements View.OnClickListener{
 
     private View convertView;
-    private int[] positionIds;
+    private int positionId;
 
-    public OnConvertViewClickListener(View convertView, int... positionIds) {
+    public OnConvertViewClickListener(View convertView, int position) {
         this.convertView = convertView;
-        this.positionIds = positionIds;
+        this.positionId = position;
 
     }
 
     @TargetApi(Build.VERSION_CODES.DONUT)
     @Override
     public void onClick(View v) {
-        onClickCallBack(v, convertView);
+        onClickCallBack(v, convertView, positionId);
 
     }
 
 
-    public abstract void onClickCallBack(View registedView, View rootView);
+    public abstract void onClickCallBack(View registedView, View rootView, int position);
 
 }

@@ -58,7 +58,6 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         setContentView(R.layout.activity_video_play);
         mContext = this;
@@ -94,8 +93,6 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mCameraCode = bundle.getString("resCode");
         int resSubType = bundle.getInt("resSubType");
         Log.i(TAG,"--------------mCameraCode-------" + mCameraCode + ";   resSubType = " +  resSubType);
-
-        startLive(mCameraCode);
 
         if( (CAMERA_TYPE_TOW == resSubType) || (CAMERA_TYPE_FOUR ==  resSubType)) {
             Log.i(TAG,"--------------zyf----VISIBLE---");
@@ -191,6 +188,22 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if (null != mPlayer && mPlayer.AVIsPlaying()) {
+            stopLive();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (null != mPlayer && !mPlayer.AVIsPlaying()) {
+            startLive(mCameraCode);
+        }
+        super.onResume();
     }
 
     public void initRoundMenuView() {
@@ -351,7 +364,10 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     class surfaceCallback implements SurfaceHolder.Callback {
 
         public void surfaceCreated(SurfaceHolder holder) {
-            //Log.d(TAG, "===== surfaceCreated =====");
+            Log.d(TAG, "===== surfaceCreated =====");
+            if (null != mPlayer && !mPlayer.AVIsPlaying()) {
+                startLive(mCameraCode);
+            }
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -362,7 +378,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
-            //Log.d(TAG, "===== surfaceDestroyed =====");
+            Log.d(TAG, "===== surfaceDestroyed =====");
+            stopLive();
         }
     }
 }

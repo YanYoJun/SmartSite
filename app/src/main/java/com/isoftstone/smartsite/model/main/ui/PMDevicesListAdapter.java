@@ -102,7 +102,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
-            public void onClickCallBack(View registedView, View rootView) {
+            public void onClickCallBack(View registedView, View rootView, int position) {
                 //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).toString(), Toast.LENGTH_SHORT).show();
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if(null != viewHolder) {
@@ -122,7 +122,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
 
         holder.button_2.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
             @Override
-            public void onClickCallBack(View registedView, View rootView) {
+            public void onClickCallBack(View registedView, View rootView, int position) {
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
 
                 if(null != viewHolder) {

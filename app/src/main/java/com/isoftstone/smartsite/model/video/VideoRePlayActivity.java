@@ -34,6 +34,12 @@ public class VideoRePlayActivity extends Activity{
     private Player mPlayer;
     private Context mContext;
     private RecvStreamThread mRecvStreamThread = null;
+    private String mResCode;
+    private String mBeginTime;
+    private String mEndTime;
+    private String mFileName;
+    private int mPosition;
+
 
     //static {
     //    System.loadLibrary("imosplayer");
@@ -61,15 +67,12 @@ public class VideoRePlayActivity extends Activity{
         }
 
         /*获取Bundle中的数据，注意类型和key*/
-        String resCode = bundle.getString("resCode");
-        Log.i(TAG,"--------------resCode-------" + resCode);
-        String beginTime = bundle.getString("beginTime");
-        Log.i(TAG,"--------------beginTime-------" + beginTime);
-        String endTime = bundle.getString("endTime");
-        Log.i(TAG,"--------------endTime-------" + endTime);
-        String fileName = bundle.getString("fileName");
-        startReplay(resCode,beginTime,endTime, fileName);
-        Log.i(TAG,"--------------fileName-------" + fileName);
+        mResCode = bundle.getString("resCode");
+        mBeginTime = bundle.getString("beginTime");
+        mEndTime = bundle.getString("endTime");
+        mFileName = bundle.getString("fileName");
+        mPosition = bundle.getInt("position");
+
     }
 
     /**
@@ -77,7 +80,7 @@ public class VideoRePlayActivity extends Activity{
      *
      * @param cameraCode 摄像机编码
      */
-    private void startReplay(final String cameraCode, String beginTime, String endTime, final String fileName) {
+    private void startReplay(final String cameraCode, String beginTime, String endTime, final String fileName, final int position) {
 
 
         //查询回放记录参数
@@ -96,8 +99,12 @@ public class VideoRePlayActivity extends Activity{
                     return;
                 }
 
-                //取第一条回放记录测试回放
-                RecordInfo currentRecord = recordList.get(0);
+                RecordInfo currentRecord;
+                if (position < recordList.size()) {
+                    currentRecord = recordList.get(position);
+                } else {
+                    currentRecord = recordList.get(0);
+                }
 
                 /**for (int i = 0; i < recordList.size(); i++) {
                     Log.i(TAG,"fileName= " + fileName);
@@ -154,6 +161,24 @@ public class VideoRePlayActivity extends Activity{
 
     }
 
+    public void  stopReplay() {
+        if(mPlayer != null) {
+            //停止回放
+            ServiceManager.stopReplay(mPlayer.getPlaySession(), null);
+        }
+
+        //停止收流线程
+        if (mRecvStreamThread != null) {
+            mRecvStreamThread.interrupt();
+            mRecvStreamThread = null;
+        }
+
+        if(mPlayer != null && mPlayer.AVIsPlaying()) {
+            //停止播放解码
+            mPlayer.AVStopPlay();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         //销毁Player
@@ -165,10 +190,19 @@ public class VideoRePlayActivity extends Activity{
         super.onDestroy();
     }
 
+    @Override
+    protected void onPause() {
+        stopReplay();
+        super.onPause();
+    }
+
     class surfaceCallback implements SurfaceHolder.Callback {
 
         public void surfaceCreated(SurfaceHolder holder) {
             Log.d(TAG, "===== surfaceCreated =====");
+            if (mPlayer != null && !mPlayer.AVIsPlaying()) {
+                startReplay(mResCode, mBeginTime, mEndTime, mFileName, mPosition);
+            }
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -181,6 +215,7 @@ public class VideoRePlayActivity extends Activity{
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
             Log.d(TAG, "===== surfaceDestroyed =====");
+            stopReplay();
         }
     }
 

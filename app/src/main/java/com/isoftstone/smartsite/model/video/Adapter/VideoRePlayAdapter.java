@@ -114,7 +114,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
         holder.mediaPreviewIv1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
-            public void onClickCallBack(View registedView, View rootView) {
+            public void onClickCallBack(View registedView, View rootView, int position) {
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if(null != viewHolder) {
                     Intent intent = new Intent();
@@ -123,6 +123,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
                     bundle.putString("beginTime", viewHolder.beginTime);
                     bundle.putString("endTime", viewHolder.endTime);
                     bundle.putString("fileName", viewHolder.mediaPreviewTv1.getText().toString());
+                    bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoRePlayActivity.class);
                     mContext.startActivity(intent);
@@ -134,7 +135,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
 
         holder.mediaPreviewIv2.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
             @Override
-            public void onClickCallBack(View registedView, View rootView) {
+            public void onClickCallBack(View registedView, View rootView, int position) {
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
 
                 if(null != viewHolder) {
@@ -144,6 +145,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
                     bundle.putString("beginTime", viewHolder.beginTime + " 00:00:00");
                     bundle.putString("endTime", viewHolder.endTime + " 23:59:59");
                     bundle.putString("fileName", viewHolder.mediaPreviewTv2.getText().toString());
+                    bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoRePlayActivity.class);
                     mContext.startActivity(intent);

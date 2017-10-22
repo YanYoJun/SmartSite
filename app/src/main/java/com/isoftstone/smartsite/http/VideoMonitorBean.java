@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.http;
 /**
  * Created by gone on 2017/10/17.
  * modifed by zhangyinfu on 2017/10/19
+ * modifed by zhangyinfu on 2017/10/22
  */
 
 public class VideoMonitorBean {
@@ -12,6 +13,16 @@ public class VideoMonitorBean {
     private int resSubType;
     private boolean isOnline = false; //false 在线   true离线
     private boolean isShared = false; //false 不共享   true共享
+    private String flieName;
+    private String beginData;
+    private String endData;
+
+    public VideoMonitorBean(String beginData, String endData, String flieName, String resCode) {
+        this.beginData = beginData;
+        this.endData = endData;
+        this.flieName =flieName;
+        this.resCode = resCode;
+    }
 
     public VideoMonitorBean(String resCode, int resType, String resName, boolean isOnline) {
         this.resCode = resCode;
@@ -75,6 +86,30 @@ public class VideoMonitorBean {
 
     public void setShared(boolean shared) {
         isShared = shared;
+    }
+
+    public String getFlieName() {
+        return flieName;
+    }
+
+    public void setFlieName(String mFlieName) {
+        this.flieName = flieName;
+    }
+
+    public String getBeginData() {
+        return beginData;
+    }
+
+    public void setBeginData(String beginData) {
+        this.beginData = beginData;
+    }
+
+    public String getEndData() {
+        return endData;
+    }
+
+    public void setEndData(String endData) {
+        this.endData = endData;
     }
 
     @Override

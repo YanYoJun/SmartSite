@@ -246,7 +246,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         return isBigger;
     }
 
-    public void queryReplayVideo(final String cameraCode, String beginTime, String endTime) {
+    public void queryReplayVideo(final String cameraCode, final String beginTime, final String endTime) {
         //查询回放记录参数
         QueryReplayParam p = new QueryReplayParam(cameraCode, beginTime, endTime, new QueryCondition(0, 100, true));
 
@@ -276,6 +276,8 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                 bundle.putInt("resSubType", mViewHolder.resSubType);
                 bundle.putString("resName", mViewHolder.resNameTv.getText().toString());
                 bundle.putBoolean("isOnline", mViewHolder.isOnline);
+                bundle.putString("beginTime", beginTime);
+                bundle.putString("endTime", endTime);
                 //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                 intent.putExtras(bundle);
                 intent.setClass(mContext, VideoRePlayListActivity.class);

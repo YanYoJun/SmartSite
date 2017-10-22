@@ -9,6 +9,8 @@ import android.view.SurfaceView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.utils.DataUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnStartReplayListener;
@@ -65,7 +67,9 @@ public class VideoRePlayActivity extends Activity{
         Log.i(TAG,"--------------beginTime-------" + beginTime);
         String endTime = bundle.getString("endTime");
         Log.i(TAG,"--------------endTime-------" + endTime);
-        startReplay(resCode,beginTime,endTime);
+        String fileName = bundle.getString("fileName");
+        startReplay(resCode,beginTime,endTime, fileName);
+        Log.i(TAG,"--------------fileName-------" + fileName);
     }
 
     /**
@@ -73,11 +77,11 @@ public class VideoRePlayActivity extends Activity{
      *
      * @param cameraCode 摄像机编码
      */
-    private void startReplay(final String cameraCode, String beginTime, String endTime) {
+    private void startReplay(final String cameraCode, String beginTime, String endTime, final String fileName) {
 
 
         //查询回放记录参数
-        QueryReplayParam p = new QueryReplayParam(cameraCode, beginTime, endTime, new QueryCondition(0, 100, true));
+        QueryReplayParam p = new QueryReplayParam(cameraCode, DataUtils.checkDataTime(beginTime, true), DataUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
 
         //查询回放记录结果监听
         OnQueryReplayListener queryListener = new OnQueryReplayListener() {
@@ -92,14 +96,27 @@ public class VideoRePlayActivity extends Activity{
                     return;
                 }
 
-
                 //取第一条回放记录测试回放
-                RecordInfo firstRecord = recordList.get(0);
-                Toast.makeText(mContext,"此时段有录像...size =" + recordList.size(),Toast.LENGTH_SHORT).show();
+                RecordInfo currentRecord = null; //recordList.get(0);
+
+                for (int i = 0; i < recordList.size(); i++) {
+                    Log.i(TAG,"fileName= " + fileName);
+                    Log.i(TAG,"xxxxName= " + recordList.get(i).getFileName());
+                    if (fileName.equals(recordList.get(i).getFileName())) {
+                        ToastUtils.showShort("i = " + i);
+                        currentRecord = recordList.get(i);
+                    }
+                }
+
+                if (currentRecord == null) {
+                    Toast.makeText(mContext,"此录像出现问题 无法播放...size =" + recordList.size(),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 //启动回放的参数
                 StartReplayParam p = new StartReplayParam();
                 p.setCameraCode(cameraCode);
-                p.setRecodeInfo(firstRecord);
+                p.setRecodeInfo(currentRecord);
                 p.setBitrate(64 * 8);  //64KB码率
                 p.setFramerate(20);     //20帧率
                 p.setResolution(2);     //4CIF分辨率
@@ -166,4 +183,5 @@ public class VideoRePlayActivity extends Activity{
             Log.d(TAG, "===== surfaceDestroyed =====");
         }
     }
+
 }

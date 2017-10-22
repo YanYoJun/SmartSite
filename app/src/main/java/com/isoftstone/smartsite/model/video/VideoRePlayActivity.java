@@ -97,12 +97,12 @@ public class VideoRePlayActivity extends Activity{
                 }
 
                 //取第一条回放记录测试回放
-                RecordInfo currentRecord = null; //recordList.get(0);
+                RecordInfo currentRecord = recordList.get(0);
 
-                for (int i = 0; i < recordList.size(); i++) {
+                /**for (int i = 0; i < recordList.size(); i++) {
                     Log.i(TAG,"fileName= " + fileName);
                     Log.i(TAG,"xxxxName= " + recordList.get(i).getFileName());
-                    if (fileName.equals(recordList.get(i).getFileName())) {
+                    if (null != fileName && fileName.equals(recordList.get(i).getFileName())) {
                         ToastUtils.showShort("i = " + i);
                         currentRecord = recordList.get(i);
                     }
@@ -111,7 +111,7 @@ public class VideoRePlayActivity extends Activity{
                 if (currentRecord == null) {
                     Toast.makeText(mContext,"此录像出现问题 无法播放...size =" + recordList.size(),Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
 
                 //启动回放的参数
                 StartReplayParam p = new StartReplayParam();

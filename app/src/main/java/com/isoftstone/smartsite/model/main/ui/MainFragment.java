@@ -13,10 +13,11 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.model.Tripartite.ui.TripartiteActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity;
 import com.isoftstone.smartsite.model.message.data.SynergyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
+import com.isoftstone.smartsite.model.message.ui.UnReadMsgActivity;
 
 
 /**
@@ -132,7 +133,9 @@ public class MainFragment extends BaseFragment{
 
     private void enterUnChekMsg(){
           //进入未查看消息
-        ((MainActivity)getActivity()).setCurrentTab(2);
+        /*((MainActivity)getActivity()).setCurrentTab(2);*/
+        Intent intent = new Intent(getActivity(), UnReadMsgActivity.class);
+        startActivity(intent);
     }
 
     private void enterUntreatedReport(){

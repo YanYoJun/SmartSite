@@ -24,8 +24,9 @@ import java.util.Map;
 
 public class TripartiteMsgActivity extends BaseActivity {
     //listView中各项的名称
-    public static final String FRAG_MSG_ITEM_DETAILS = "frag_synergy_msg";
-    public static final String FRAG_MSG_ITEM_DATE = "frag_synergy_date";
+    public static final String ITEM_DATE = "lab_time";
+    public static final String ITEM_TITLE = "lab_title";
+    public static final String ITEM_DETAILS = "lab_details";
 
     private Activity mActivity = null;
     private ListView mListView = null;
@@ -43,8 +44,8 @@ public class TripartiteMsgActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_synergy);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_synergy_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
-                new int[]{R.id.frag_synergy_msg, R.id.frag_synergy_date});
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE,ITEM_TITLE,ITEM_DETAILS,  },
+                new int[]{R.id.lab_time, R.id.lab_title,R.id.lab_details});
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,6 +57,7 @@ public class TripartiteMsgActivity extends BaseActivity {
                 mActivity.startActivity(intent);
             }
         });
+        mListView.setDividerHeight(40);//TODO
     }
 
     /**
@@ -73,12 +75,14 @@ public class TripartiteMsgActivity extends BaseActivity {
         for (SynergyData data : datas) {
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == SynergyData.TYPE_SEND_REPORT) {
-                map.put(FRAG_MSG_ITEM_DETAILS, sendReport);
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"收到张三一份巡查报告");
+                map.put(ITEM_DETAILS, sendReport);
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             } else if(data.getType() == SynergyData.TYPE_RECEIVE_REPORT) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(receiveReport, data.getName()));
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"您发送了一份巡查报告");
+                map.put(ITEM_DETAILS, String.format(receiveReport, data.getName()));
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             }
         }

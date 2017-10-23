@@ -24,8 +24,9 @@ import java.util.Map;
 
 public class EnvironActivity extends BaseActivity {
     //listview中各项的名称
-    public static final String FRAG_MSG_ITEM_DETAILS = "frag_environ_msg_details";
-    public static final String FRAG_MSG_ITEM_DATE = "frag_msg_environ_date";
+    public static final String ITEM_DATE = "lab_time";
+    public static final String ITEM_TITLE = "lab_title";
+    public static final String ITEM_DETAILS = "lab_details";
 
     private Activity mActivity = null;
     private ListView mListView = null;
@@ -44,8 +45,8 @@ public class EnvironActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_environ);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_environ_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
-                new int[]{R.id.frag_environ_msg_details, R.id.frag_msg_environ_date});
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE,ITEM_TITLE,ITEM_DETAILS,},
+                new int[]{R.id.lab_time, R.id.lab_title,R.id.lab_details});
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,6 +58,7 @@ public class EnvironActivity extends BaseActivity {
                 mActivity.startActivity(intent);
             }
         });
+        mListView.setDividerHeight(40);//TODO
     }
 
     /**
@@ -75,12 +77,14 @@ public class EnvironActivity extends BaseActivity {
         for (EnvironData data : environDatas) {
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == EnvironData.TYPE_PM_EXTENDS) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(pmExtends, data.getId()));
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"NXC-12检测到PM超标");
+                map.put(ITEM_DETAILS, String.format(pmExtends, data.getId()));
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             } else if (data.getType() == EnvironData.TYPE_NEED_REPAIR) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(needRepair, data.getId()));
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"NXC-12设备损坏");
+                map.put(ITEM_DETAILS, String.format(needRepair, data.getId()));
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             }
         }

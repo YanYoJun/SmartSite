@@ -24,8 +24,9 @@ import java.util.Map;
 
 public class VcrActivity extends BaseActivity {
     //listview中各item项的名称
-    public static final String FRAG_MSG_ITEM_DETAILS = "frag_msg_details";
-    public static final String FRAG_MSG_ITEM_DATE = "frag_msg_date";
+    public static final String ITEM_DATE = "lab_time";
+    public static final String ITEM_TITLE = "lab_title";
+    public static final String ITEM_DETAILS = "lab_details";
 
     private Activity mActivity = null;
     private ListView mListView = null;
@@ -44,8 +45,8 @@ public class VcrActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_vcr);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.frag_vcr_item, new String[]{FRAG_MSG_ITEM_DETAILS, FRAG_MSG_ITEM_DATE},
-                new int[]{R.id.frag_msg_details, R.id.frag_msg_date});
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE,ITEM_TITLE,ITEM_DETAILS,  },
+                new int[]{R.id.lab_time, R.id.lab_title,R.id.lab_details});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -56,6 +57,7 @@ public class VcrActivity extends BaseActivity {
                 mActivity.startActivity(intent);
             }
         });
+        mListView.setDividerHeight(40);//TODO
     }
 
     /**
@@ -74,12 +76,14 @@ public class VcrActivity extends BaseActivity {
         for (VCRData data : vcrDatas) {
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == VCRData.TYPE_ERROR) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(vcrError, data.getId()));
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"NXC-12检测到PM超标");
+                map.put(ITEM_DETAILS, String.format(vcrError, data.getId()));
+                map.put( ITEM_DATE, data.getStringDate());
                 list.add(map);
             } else if (data.getType() == VCRData.TYPE_NEED_REPAIR) {
-                map.put(FRAG_MSG_ITEM_DETAILS, String.format(vcrNeedRepair, data.getId()));
-                map.put(FRAG_MSG_ITEM_DATE, data.getStringDate());
+                map.put(ITEM_TITLE,"NXC-12设备损坏");
+                map.put(ITEM_DETAILS, String.format(vcrNeedRepair, data.getId()));
+                map.put( ITEM_DATE, data.getStringDate());
                 list.add(map);
             }
         }

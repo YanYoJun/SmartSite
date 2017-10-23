@@ -48,6 +48,7 @@
     <!-- main   end -->
     <!-- map   start -->
     <color name="devices_press">#88ffffff</color>
+    <color name="report_item_title_bg">#fbfbfb</color>
     <!-- map   end -->
 
     <!--msg   start -->

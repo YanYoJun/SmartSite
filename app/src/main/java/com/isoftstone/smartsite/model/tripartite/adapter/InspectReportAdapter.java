@@ -12,7 +12,6 @@ import android.widget.SimpleAdapter;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewActivity;
 import com.isoftstone.smartsite.model.tripartite.ui.RecheckInspectReportActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.ReplyInspectReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class InspectReportAdapter extends SimpleAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         if (view != null) {
-            Button btnView = (Button) view.findViewById(R.id.btn_inspect_view);
+            Button btnView = (Button) view.findViewById(R.id.btn_view);
             if (btnView != null) {
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -44,18 +43,8 @@ public class InspectReportAdapter extends SimpleAdapter {
                     }
                 });
             }
-            Button btnReply = (Button) view.findViewById(R.id.btn_inspect_reply);
-            if (btnReply != null) {
-                btnReply.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, ReplyInspectReportActivity.class);
-                        mContext.startActivity(intent);
-                    }
-                });
-            }
 
-            Button btnReCheck = (Button) view.findViewById(R.id.btn_inspect_recheck);
+            Button btnReCheck = (Button) view.findViewById(R.id.btn_recheck);
             if (btnReCheck != null) {
                 btnReCheck.setOnClickListener(new View.OnClickListener() {
                     @Override

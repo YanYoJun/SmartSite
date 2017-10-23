@@ -26,11 +26,11 @@ import java.util.Map;
  */
 
 public class InspectReportFragment extends BaseFragment {
-    public static final String ITEM_REPORT_NAME = "lab_inspect_report_name";
-    public static final String ITEM_NAME = "lab_inspect_name";
-    public static final String ITEM_TIME = "lab_inspect_time";
-    public static final String ITEM_ADDRESS = "lab_inspect_address";
-    public static final String ITEM_STATS = "lab_inspect_stats";
+    public static final String ITEM_TITLE = "lab_title";
+    public static final String ITEM_NAME = "lab_name";
+    public static final String ITEM_TIME = "lab_time";
+    public static final String ITEM_COMPANY = "lab_company";
+    public static final String ITEM_STATS = "lab_status";
 
     private Activity mActivity = null;
     private ListView mListView = null;
@@ -50,21 +50,22 @@ public class InspectReportFragment extends BaseFragment {
 
     private void init() {
         //初始化Listview
-        mListView = (ListView) mActivity.findViewById(R.id.listview_frag_inspect_report);
-        SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.frag_inspect_report_item,
-                new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
-                new int[]{R.id.lab_inspect_report_name, R.id.lab_inspect_name, R.id.lab_inspect_time, R.id.lab_inspect_address, R.id.lab_inspect_stats});
+        mListView = (ListView) mActivity.findViewById(R.id.listview);
+        SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.listview_inspect_report_item,
+                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY, ITEM_STATS},
+                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company, R.id.lab_status});
         mListView.setAdapter(adapter);
 
         //输出化btn
-        mAdd = (Button)mActivity.findViewById(R.id.btn_add);
+        mAdd = (Button) mActivity.findViewById(R.id.btn_add);
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity,AddInspectReportActivity.class);
+                Intent intent = new Intent(mActivity, AddInspectReportActivity.class);
                 startActivity(intent);
             }
         });
+        mListView.setDividerHeight(40);
     }
 
 
@@ -83,13 +84,13 @@ public class InspectReportFragment extends BaseFragment {
         String name = res.getString(R.string.report_name);
         for (ReportData data : datas) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put(ITEM_REPORT_NAME, data.getReportName());
-            map.put(ITEM_NAME, String.format(name, data.getName()));
-            map.put(ITEM_ADDRESS, String.format(address, data.getAddress()));
+            map.put(ITEM_TITLE, data.getReportName());
+            map.put(ITEM_NAME, data.getName());
+            map.put(ITEM_COMPANY, data.getAddress());
             if (data.getStats() == ReportData.STATS_DEALING) {
-                map.put(ITEM_STATS, String.format(stats, res.getString(R.string.dealing)));
+                map.put(ITEM_STATS, res.getString(R.string.dealing));
             } else if (data.getStats() == ReportData.STATS_VISITED) {
-                map.put(ITEM_STATS, String.format(stats, res.getString(R.string.rechecked)));
+                map.put(ITEM_STATS, res.getString(R.string.rechecked));
             }
             map.put(ITEM_TIME, data.getTime());
             list.add(map);

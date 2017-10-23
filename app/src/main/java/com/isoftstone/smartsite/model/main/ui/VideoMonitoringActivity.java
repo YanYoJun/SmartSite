@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -120,10 +121,18 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     @Override
-    public void viewOnClickListener(VideoMonitorAdapter.ViewHolder viewHolder) {
+    public void viewOnClickListener(VideoMonitorAdapter.ViewHolder viewHolder, boolean isFormOneType) {
         mViewHolder = viewHolder;
-        initAlertView();
-        alertShowExt();
+        if (isFormOneType) {
+            initAlertView();
+            alertShowExt();
+        } else {
+            //打开系统相册浏览照片  
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
     }
 
     private AlertView mAlertViewExt;//窗口拓展例子

@@ -44,7 +44,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
     }
 
     public interface AdapterViewOnClickListener {
-        public void viewOnClickListener(ViewHolder viewHolder);
+        //postionType means   true ? onclick button 2 : onclick button 3
+        public void viewOnClickListener(ViewHolder viewHolder, boolean isFormOneType);
     }
 
     public void setData(ArrayList<VideoMonitorBean> list){
@@ -128,7 +129,12 @@ public class VideoMonitorAdapter extends BaseAdapter {
         holder.button_2.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
             @Override
             public void onClickCallBack(View registedView, View rootView,int position) {
+
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
+                if (null != viewHolder) {
+                    listener.viewOnClickListener(viewHolder, true);
+                }
+                /**ViewHolder viewHolder = (ViewHolder)rootView.getTag();
 
                 if(null != viewHolder) {
                     //模拟一个查询回放起始和结束的时间
@@ -148,7 +154,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
 
@@ -172,7 +178,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
             public void onClickCallBack(View registedView, View rootView,int position) {
                 ViewHolder viewHolder = (ViewHolder)rootView.getTag();
                 if (null != viewHolder) {
-                    listener.viewOnClickListener(viewHolder);
+                    listener.viewOnClickListener(viewHolder, false);
                 }
             }
         });

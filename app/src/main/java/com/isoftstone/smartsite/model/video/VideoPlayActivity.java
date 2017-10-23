@@ -9,8 +9,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -171,8 +173,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                     }
 
                     //停止Player播放解码
-                    mPlayer.AVStopPlay();
-                    mImageView.setEnabled(false);
+                    if (null != mPlayer) {
+                        mPlayer.AVStopPlay();
+                    }
                 }
             }
         });
@@ -327,7 +330,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     }
 
     public static Bitmap drawableToBitmap(Context context, int resId) {
-        Drawable drawable = context.getDrawable(resId);
+        Drawable drawable = context.getResources().getDrawable(resId);
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
 
         Canvas canvas = new Canvas(bitmap);

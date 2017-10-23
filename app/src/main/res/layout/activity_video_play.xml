@@ -22,7 +22,7 @@
             android:id="@+id/round_menu_view"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginStart="0dp"/>
+            android:layout_marginLeft="0dp"/>
 
         <View
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_capture"
-            android:layout_marginEnd="0dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginRight="0dp" />
     </LinearLayout>
 </RelativeLayout>

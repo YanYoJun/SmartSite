@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
+    android:background="@color/app_background"
     android:orientation="vertical"
     tools:context="com.isoftstone.smartsite.model.message.ui.EnvironActivity">
 
@@ -42,7 +43,10 @@
 
     <ListView
         android:id="@+id/listview_frag_environ"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:divider="@null"
         android:layout_height="wrap_content"></ListView>
 
 </LinearLayout>

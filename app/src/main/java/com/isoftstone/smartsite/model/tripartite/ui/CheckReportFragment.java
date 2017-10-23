@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.Tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.ui;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -10,10 +10,10 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.model.Tripartite.adapter.CheckReportAdapter;
-import com.isoftstone.smartsite.model.Tripartite.data.CheckReportData;
-import com.isoftstone.smartsite.model.Tripartite.data.InspectReportData;
-import com.isoftstone.smartsite.model.Tripartite.data.ReportData;
+import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
+import com.isoftstone.smartsite.model.tripartite.data.CheckReportData;
+import com.isoftstone.smartsite.model.tripartite.data.InspectReportData;
+import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

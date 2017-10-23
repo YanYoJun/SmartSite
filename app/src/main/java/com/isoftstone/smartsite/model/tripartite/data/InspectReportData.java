@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.Tripartite.data;
+package com.isoftstone.smartsite.model.tripartite.data;
 
 /**
  * Created by yanyongjun on 2017/10/16.

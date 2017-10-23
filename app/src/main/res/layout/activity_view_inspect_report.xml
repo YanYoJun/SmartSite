@@ -15,13 +15,13 @@
 
             <fragment
                 android:id="@+id/frag_inspect_report_view"
-                android:name="com.isoftstone.smartsite.model.Tripartite.ui.InspectReportViewFrag"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewFrag"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
 
             <fragment
                 android:id="@+id/frag_view_reply_inspect_report"
-                android:name="com.isoftstone.smartsite.model.Tripartite.ui.ViewReplyInsepectReportFrag"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.ViewReplyInsepectReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
         </LinearLayout>

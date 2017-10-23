@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/app_background"
     tools:context="com.isoftstone.smartsite.model.message.ui.UnReadMsgActivity">
 
     <android.support.v7.widget.Toolbar
@@ -35,33 +36,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/msg"
+                android:text="@string/unread_msg_title"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/lab_msg_details"
+    <ListView
+        android:id="@+id/listview"
+        android:divider="@null"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/toolbar"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="40dp"
-        android:text="nihaoma"
-        android:textColor="@color/tab_text_normal"
-        android:textSize="17sp" />
-
-    <TextView
-        android:id="@+id/lab_msg_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/lab_msg_details"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
-        android:textColor="@color/tab_text_normal"
-        android:textSize="17sp" />
-
-</RelativeLayout>
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_height="wrap_content"></ListView>
+</LinearLayout>

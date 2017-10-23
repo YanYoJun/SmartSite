@@ -7,6 +7,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:background="@color/app_background"
     tools:context="com.isoftstone.smartsite.model.message.ui.VcrActivity">
 
     <android.support.v7.widget.Toolbar
@@ -43,6 +44,9 @@
 
     <ListView
         android:id="@+id/listview_frag_vcr"
-        android:layout_width="wrap_content"
+        android:divider="@null"
+        android:layout_width="match_parent"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_height="wrap_content"></ListView>
 </LinearLayout>

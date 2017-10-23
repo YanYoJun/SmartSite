@@ -86,25 +86,27 @@
             android:name=".model.message.ui.DetailsActivity"
             android:launchMode="singleTask"></activity>
         <activity
-            android:name=".model.Tripartite.ui.TripartiteActivity"
+            android:name=".model.tripartite.ui.TripartiteActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.AddInspectReportActivity"
+        <activity android:name=".model.tripartite.ui.AddInspectReportActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.InspectReportViewActivity"
+        <activity android:name=".model.tripartite.ui.InspectReportViewActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.ReplyInspectReportActivity"
+        <activity android:name=".model.tripartite.ui.ReplyInspectReportActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.RecheckInspectReportActivity"
+        <activity android:name=".model.tripartite.ui.RecheckInspectReportActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.CheckReportActivity"
+        <activity android:name=".model.tripartite.ui.CheckReportActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.Tripartite.ui.ViewCheckReportActivity"
+        <activity android:name=".model.tripartite.ui.ViewCheckReportActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.VcrActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.EnvironActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.TripartiteMsgActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.message.ui.UnReadMsgActivity"
             android:launchMode="singleTask"></activity>
         <!--yanyongjun end-->
 

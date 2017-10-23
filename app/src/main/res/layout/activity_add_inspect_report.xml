@@ -7,7 +7,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.isoftstone.smartsite.model.Tripartite.ui.AddInspectReportActivity">
+    tools:context="com.isoftstone.smartsite.model.tripartite.ui.AddInspectReportActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"

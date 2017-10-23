@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.Tripartite.adapter;
+package com.isoftstone.smartsite.model.tripartite.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.model.Tripartite.ui.InspectReportViewActivity;
-import com.isoftstone.smartsite.model.Tripartite.ui.RecheckInspectReportActivity;
-import com.isoftstone.smartsite.model.Tripartite.ui.ReplyInspectReportActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.RecheckInspectReportActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.ReplyInspectReportActivity;
 
 import java.util.List;
 import java.util.Map;

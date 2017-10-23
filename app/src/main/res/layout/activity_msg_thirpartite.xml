@@ -6,6 +6,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:background="@color/app_background"
     tools:context="com.isoftstone.smartsite.model.message.ui.TripartiteMsgActivity">
 
     <android.support.v7.widget.Toolbar
@@ -42,6 +43,9 @@
 
     <ListView
         android:id="@+id/listview_frag_synergy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:divider="@null"></ListView>
 </LinearLayout>

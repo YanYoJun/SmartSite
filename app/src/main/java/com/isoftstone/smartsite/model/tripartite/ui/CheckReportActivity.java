@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.Tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.ui;
 
 /**
  * Created by yanyongjun on 2017/10/21.

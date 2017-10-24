@@ -15,7 +15,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/ic_launcher"
                 android:layout_gravity="center_vertical"
                 android:id="@+id/iv_back"
                 />
@@ -41,7 +41,7 @@
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/ic_launcher"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

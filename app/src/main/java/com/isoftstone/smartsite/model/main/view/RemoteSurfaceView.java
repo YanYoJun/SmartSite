@@ -59,7 +59,7 @@ public class RemoteSurfaceView extends SurfaceView implements Callback, Runnable
         smallCircleX = width / 2;
         smallCircleY = height / 2;
         smallCircleR = width / 8;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.tab_me);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tab_me);
         remoteViewBg = new RemoteViewBg(bitmap);
         th = new Thread(this);
         flag = true;

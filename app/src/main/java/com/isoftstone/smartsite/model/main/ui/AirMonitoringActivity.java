@@ -23,15 +23,19 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.isoftstone.smartsite.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gone on 2017/10/17.
@@ -66,7 +70,7 @@ public class AirMonitoringActivity extends Activity {
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mBarChart.setMaxVisibleValueCount(5);
+        mBarChart.setMaxVisibleValueCount(60);
 
         // scaling can now only be done on x- and y-axis separately
         mBarChart.setPinchZoom(false);
@@ -119,6 +123,7 @@ public class AirMonitoringActivity extends Activity {
         l.setDrawInside(false);
         l.setFormSize(8f);
         l.setXEntrySpace(4f);
+        l.setEnabled(false);
     }
 
     private void setHorizontalBarChartData(int count, float range) {
@@ -153,6 +158,7 @@ public class AirMonitoringActivity extends Activity {
             data.setValueTextSize(10f);
             //data.setValueTypeface(mTfLight);
             data.setBarWidth(barWidth);
+            data.setValueFormatter(new CustomerPercentFormatter(yVals1));
             mBarChart.setData(data);
         }
     }
@@ -428,6 +434,33 @@ public class AirMonitoringActivity extends Activity {
 
             // set data
             mLineChart.setData(data);
+        }
+    }
+
+    public class CustomerPercentFormatter implements IValueFormatter {
+
+        protected DecimalFormat mFormat;
+        protected ArrayList<BarEntry> mXVals;
+
+        public CustomerPercentFormatter(ArrayList<BarEntry> data) {
+            mFormat = new DecimalFormat("###,###,##0.0");
+            mXVals = data;
+        }
+
+        /**
+         * Allow a custom decimalformat
+         *
+         * @param format
+         */
+        public CustomerPercentFormatter(DecimalFormat format) {
+            this.mFormat = format;
+        }
+
+
+        @Override
+        public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
+
+            return "QIA" + " : "+mXVals.get(i).getY();
         }
     }
 }

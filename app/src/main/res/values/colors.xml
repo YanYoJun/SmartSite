@@ -22,6 +22,7 @@
     <color name = "main_text_color">#222222</color>
     <!-- 次要字体（描述性字体的颜色）-->
     <color name = "des_text_color">#999999</color>
+    <color name ="hit_text_color">#cccccc</color>
 
     <!-- main   start -->
     <color name="transparent">#7f000000</color>

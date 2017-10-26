@@ -3,8 +3,8 @@ package com.isoftstone.smartsite.model.message.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
@@ -23,9 +23,9 @@ public class MsgFragment extends BaseFragment {
     public static final int FRAGMENT_TYPE_SYNERGY = 2;
 
 
-    private ConstraintLayout mVcr = null;
-    private ConstraintLayout mEnviron = null;
-    private ConstraintLayout mTripartite = null;
+    private RelativeLayout mVcr = null;
+    private RelativeLayout mEnviron = null;
+    private RelativeLayout mTripartite = null;
     private Activity mActivity = null;
 
     public static final String FRAGMENT_TYPE = "type";
@@ -43,9 +43,9 @@ public class MsgFragment extends BaseFragment {
 
     private void init(){
         mActivity = getActivity();
-        mVcr = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_vcr);
-        mEnviron = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_environ);
-        mTripartite = (ConstraintLayout)mActivity.findViewById(R.id.conlayout_thirpartite);
+        mVcr = (RelativeLayout)mActivity.findViewById(R.id.conlayout_vcr);
+        mEnviron = (RelativeLayout)mActivity.findViewById(R.id.conlayout_environ);
+        mTripartite = (RelativeLayout)mActivity.findViewById(R.id.conlayout_thirpartite);
 
         mVcr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +170,7 @@ public class MsgFragment extends BaseFragment {
                 v.setBackgroundColor(res.getColor(R.color.white));
             }
         }
-    }
-*/
+    }*/
 
 
 }

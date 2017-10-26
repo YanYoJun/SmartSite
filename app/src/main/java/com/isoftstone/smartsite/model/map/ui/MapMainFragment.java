@@ -15,15 +15,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -31,6 +35,7 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
+import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
@@ -47,7 +52,6 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private AMap mAMap;
     private MyLocationStyle myLocationStyle;
 
-    private double lat,lon;
     private List<Marker> markers = new ArrayList<>();
     private PopupWindow chooseCameraPopWindow;
     private TextView tvDeviceName;
@@ -56,6 +60,8 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private Button btnDeviceInfo;
     private Button btnDeviceCancel;
     private PopupWindow deviceInfoPopWindow;
+    private FrameLayout mapContentView;
+    private LatLng aotiLatLon;
 
     @Override
     protected int getLayoutRes() {
@@ -65,13 +71,16 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView(savedInstanceState);
-
     }
 
     private void initView(Bundle savedInstanceState){
 
         initChooseCameraPopWindow();
         initDeviceInfoPopWindow();
+
+        aotiLatLon = new LatLng(30.479736,114.476322);
+
+        mapContentView = (FrameLayout) rootView.findViewById(R.id.map_content);
 
     }
 
@@ -131,39 +140,70 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         mMapView.setLayoutParams(params);
-        ((ViewGroup)rootView).addView(mMapView);
+        mapContentView.addView(mMapView,0);
 
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
         mAMap.setOnMarkerClickListener(this);
+
+        UiSettings settings = mAMap.getUiSettings();
+        settings.setLogoBottomMargin(DensityUtils.dip2px(getActivity(),52));
+        settings.setZoomControlsEnabled(false);
+
         initLocation();
 
 
     }
 
     private void initLocation(){
-        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        /*//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle = new MyLocationStyle();
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         mAMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         mAMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         mAMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
+
+        mAMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+                mAMap.setMyLocationStyle(myLocationStyle);
+                mAMap.setOnMyLocationChangeListener(null);
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+                initMarker();
+            }
+        });*/
+
+        CameraUpdate update = CameraUpdateFactory.newCameraPosition(new CameraPosition(aotiLatLon,12f,0,0));
+        mAMap.moveCamera(update);
+        initMarker();
+
     }
 
     private void initMarker(){
         for (int i = 0 ;i < 5 ; i++){
             MarkerOptions markerOption = new MarkerOptions();
-            markerOption.position(new LatLng(lat + 0.0075  ,lon + ((float)(i-2)/200)));
+            markerOption.position(new LatLng(30.479736 + 0.0075  ,114.476322 + ((float)(i-2)/50)));
             markerOption.visible(true);
 
             markerOption.draggable(false);//设置Marker可拖动
-            if(i%2 == 0){
+            if(i == 0){
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.mipmap.video_red)));
-            } else {
+                        .decodeResource(getResources(),R.drawable.camera_gray)));
+            } else if(i == 1){
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.mipmap.video_black)));
+                        .decodeResource(getResources(),R.drawable.camera_normal)));
+            } else if(i == 2){
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(),R.drawable.camera_red)));
+            } else if(i == 3){
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(),R.drawable.environment_orange)));
+            } else if(i == 4){
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(),R.drawable.environment_pink)));
             }
 
             // 将Marker设置为贴地显示，可以双指下拉地图查看效果
@@ -188,25 +228,14 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     public void onDestroyView() {
         super.onDestroyView();
         mMapView.onDestroy();
-        ((ViewGroup)rootView).removeView(mMapView);
+        mapContentView.removeView(mMapView);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LogUtils.i(TAG,"onResume");
         mMapView.onResume();
-        mAMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location) {
-                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-                mAMap.setMyLocationStyle(myLocationStyle);
-                mAMap.setOnMyLocationChangeListener(null);
-                lat = location.getLatitude();
-                lon = location.getLongitude();
-                initMarker();
-            }
-        });
+
 
     }
 
@@ -226,13 +255,13 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(marker.getObject() != null){
-            if(marker.getObject().equals("1")){
-                tvDeviceName.setText("设备名称：130004 设备正常");
+            if(marker.getObject().equals("3")){
+                tvDeviceName.setText("设备名称：130004 轻度污染");
                 tvDeviceName.setTextColor(Color.BLACK);
                 btnDeviceInfo.setClickable(true);
                 btnDeviceInfo.setTextColor(Color.BLACK);
                 deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
-            }else if(marker.getObject().equals("2")){
+            }else if(marker.getObject().equals("4")){
                 tvDeviceName.setText("设备名称：130004 污染严重");
                 tvDeviceName.setTextColor(Color.RED);
                 btnDeviceInfo.setClickable(false);

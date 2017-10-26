@@ -19,7 +19,7 @@ import com.isoftstone.smartsite.utils.DensityUtils;
 
 public class ChooseCameraAdapter extends BaseAdapter {
 
-    private String[] titles = new String[]{"实时视频","历史视频","视频抓拍"};
+    private String[] titles = new String[]{"实时视频","历史监控","视频抓拍"};
     private Context mContext;
 
 

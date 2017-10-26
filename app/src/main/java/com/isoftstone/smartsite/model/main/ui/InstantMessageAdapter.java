@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -21,8 +22,10 @@ public class InstantMessageAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private ArrayList<MessageListBean> mData = new ArrayList<MessageListBean>();
+    private Context mContext = null;
 
     public InstantMessageAdapter(Context context){
+        mContext = context;
         this.mInflater = LayoutInflater.from(context);
     }
 
@@ -58,6 +61,7 @@ public class InstantMessageAdapter extends BaseAdapter {
             holder.map = (TextView)convertView.findViewById(R.id.textView_map);
             holder.info = (TextView)convertView.findViewById(R.id.textView_info);
             holder.time = (TextView)convertView.findViewById(R.id.textView_time);
+            holder.type = (ImageView)convertView.findViewById(R.id.imageView);
             convertView.setTag(holder);
         }else {
 
@@ -66,7 +70,11 @@ public class InstantMessageAdapter extends BaseAdapter {
         holder.info.setText(mData.get(position).getDetail());
         holder.map.setText(mData.get(position).getTitle());
         holder.time.setText(mData.get(position).getTime());
-
+        if(mData.get(position).getState() == 1){
+            holder.type.setBackground(mContext.getDrawable(R.drawable.main_huanjing_icon));
+        }else{
+            holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
+        }
         return convertView;
     }
 
@@ -74,5 +82,6 @@ public class InstantMessageAdapter extends BaseAdapter {
         public TextView map;
         public TextView info;
         public TextView time;
+        public ImageView type;
     }
 }

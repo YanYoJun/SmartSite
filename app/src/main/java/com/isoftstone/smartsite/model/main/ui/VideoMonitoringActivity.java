@@ -223,7 +223,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
 
     @Override
     public void onBackPressed() {
-        if (mAlertViewExt.isShowing()) {
+        if (null != mAlertViewExt && mAlertViewExt.isShowing()) {
             mAlertViewExt.dismiss();
         } else {
             super.onBackPressed();

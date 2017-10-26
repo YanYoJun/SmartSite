@@ -10,10 +10,10 @@ import com.isoftstone.smartsite.base.BaseFragment;
  * 显示回复巡查报告的Fragment页
  */
 
-public class ViewReplyInsepectReportFrag extends BaseFragment {
+public class ViewRevisitInsepectReportFrag extends BaseFragment {
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_view_reply_inspect_report;
+        return R.layout.fragment_view_revisit_inspect_report;
     }
 
     @Override

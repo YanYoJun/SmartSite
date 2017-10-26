@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.tripartite.ui;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -12,7 +13,6 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
 import com.isoftstone.smartsite.model.tripartite.data.CheckReportData;
-import com.isoftstone.smartsite.model.tripartite.data.InspectReportData;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ import java.util.Map;
  */
 
 public class CheckReportFragment extends BaseFragment {
-    public static final String ITEM_REPORT_NAME = "lab_check_report_name";
-    public static final String ITEM_NAME = "lab_check_name";
-    public static final String ITEM_TIME = "lab_check_time";
-    public static final String ITEM_ADDRESS = "lab_check_address";
-    public static final String ITEM_STATS = "lab_check_stats";
+    public static final String ITEM_TITLE = "lab_title";
+    public static final String ITEM_NAME = "lab_name";
+    public static final String ITEM_TIME = "lab_time";
+    public static final String ITEM_COMPANY = "lab_company";
+    public static final String ITEM_STATS = "lab_status";
 
     private Activity mActivity = null;
     private ListView mListView = null;
@@ -48,10 +48,10 @@ public class CheckReportFragment extends BaseFragment {
 
 
     private void init() {
-        mListView = (ListView) mActivity.findViewById(R.id.listview_frag_check_report);
-        SimpleAdapter adapter = new CheckReportAdapter(mActivity, getData(), R.layout.frag_check_report_item,
-                new String[]{ITEM_REPORT_NAME, ITEM_NAME, ITEM_TIME, ITEM_ADDRESS, ITEM_STATS},
-                new int[]{R.id.lab_check_report_name, R.id.lab_check_name, R.id.lab_check_time, R.id.lab_check_address, R.id.lab_check_stats});
+        mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
+        SimpleAdapter adapter = new CheckReportAdapter(mActivity, getData(), R.layout.listview_check_report_item,
+                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY, ITEM_STATS},
+                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company, R.id.lab_status});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,6 +59,7 @@ public class CheckReportFragment extends BaseFragment {
                 //TODO
             }
         });
+        mListView.setDividerHeight(40);
     }
 
     /**
@@ -75,14 +76,15 @@ public class CheckReportFragment extends BaseFragment {
         String stats = res.getString(R.string.report_stats);
         String name = res.getString(R.string.report_name);
         for (ReportData data : datas) {
+            Log.e(TAG,"yanlog getData:"+data);
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put(ITEM_REPORT_NAME, data.getReportName());
-            map.put(ITEM_NAME, String.format(name, data.getName()));
-            map.put(ITEM_ADDRESS, String.format(address, data.getAddress()));
+            map.put(ITEM_TITLE, data.getReportName());
+            map.put(ITEM_NAME, data.getName());
+            map.put(ITEM_COMPANY, data.getAddress());
             if (data.getStats() == ReportData.STATS_DEALING) {
-                map.put(ITEM_STATS, String.format(stats, res.getString(R.string.dealing)));
+                map.put(ITEM_STATS, res.getString(R.string.dealing));
             } else if (data.getStats() == ReportData.STATS_VISITED) {
-                map.put(ITEM_STATS, String.format(stats, res.getString(R.string.rechecked)));
+                map.put(ITEM_STATS, res.getString(R.string.rechecked));
             }
             map.put(ITEM_TIME, data.getTime());
             list.add(map);
@@ -102,13 +104,13 @@ public class CheckReportFragment extends BaseFragment {
         ReportData data = new CheckReportData(1234, "东湖高新区验收报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_DEALING);
         mDatas.add(data);
 
-        data = new InspectReportData(1234, "东湖高新区验收报告", "李四", "2017-09-19", "江夏区未来科技城", ReportData.STATS_DEALING);
+        data = new CheckReportData(1234, "东湖高新区验收报告", "李四", "2017-09-19", "江夏区未来科技城", ReportData.STATS_DEALING);
         mDatas.add(data);
 
-        data = new InspectReportData(1234, "未来科技城验收报告", "张三", "2017-09-19", "江夏区未来科技城", ReportData.STATS_VISITED);
+        data = new CheckReportData(1234, "未来科技城验收报告", "张三", "2017-09-19", "江夏区未来科技城", ReportData.STATS_VISITED);
         mDatas.add(data);
 
-        data = new InspectReportData(1234, "东湖高新区巡查报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_VISITED);
+        data = new CheckReportData(1234, "东湖高新区巡查报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_VISITED);
         mDatas.add(data);
 
         return mDatas;

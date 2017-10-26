@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:clipToPadding="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/homeAsUpIndicator"
+                android:onClick="onBtnBackClick" />
+
+            <TextView
+                android:id="@+id/lab_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/add_report"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:elevation="1dp"
+                android:onClick="onBtnSaveClick"
+                android:paddingRight="4dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -11,7 +65,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/linear_frag_group">
 
             <fragment
                 android:id="@+id/frag_inspect_report_view"
@@ -21,7 +76,7 @@
 
             <fragment
                 android:id="@+id/frag_view_reply_inspect_report"
-                android:name="com.isoftstone.smartsite.model.tripartite.ui.ViewReplyInsepectReportFrag"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.ViewRevisitInsepectReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
         </LinearLayout>

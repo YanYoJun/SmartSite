@@ -69,60 +69,160 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/inspect_report_address"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_address" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/inspect_report_time"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_time" />
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_report_people" />
 
-            <EditText
-                android:id="@+id/inspect_report_company"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_company" />
+                <EditText
+                    android:id="@+id/inspect_report_report_people"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_report_people" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/inspect_report_check_people"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_check_people" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/inspect_report_report_people"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_report_people" />
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_build_time" />
 
-            <EditText
-                android:id="@+id/inspect_report_build_time"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_build_time" />
+                <EditText
+                    android:id="@+id/inspect_report_build_time"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_build_time" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/inspect_report_build_company"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_build_company" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/inspect_report_construction_company"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_construction_company" />
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_address" />
 
-            <EditText
-                android:id="@+id/inspect_report_supervision_company"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_supervision_company" />
+                <EditText
+                    android:id="@+id/inspect_report_address"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_address" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/inspect_report_message"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_message" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/inspect_report_description"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_description" />
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_time" />
+
+                <EditText
+                    android:id="@+id/inspect_report_time"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_time" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_company"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_company" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_check_people" />
+
+                <EditText
+                    android:id="@+id/inspect_report_check_people"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_check_people" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_build_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_build_company"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_build_company" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_construction_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_construction_company"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_construction_company" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_supervision_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_supervision_company"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_supervision_company" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_message" />
+
+                <EditText
+                    android:id="@+id/inspect_report_message"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_message" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_description" />
+
+                <EditText
+                    android:id="@+id/inspect_report_description"
+                    style="@style/add_report_edittext"
+                    android:hint="@string/inspect_report_description" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -168,10 +268,10 @@
                 android:hint="@string/inspect_report_recheck_time" />
 
             <GridView
-                android:layout_width="match_parent"
-                android:numColumns="5"
                 android:id="@+id/grid_view"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="5">
 
             </GridView>
 

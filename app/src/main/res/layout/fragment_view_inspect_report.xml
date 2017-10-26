@@ -26,7 +26,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_address"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="光谷大道金融港" />
             </LinearLayout>
 
             <LinearLayout
@@ -40,7 +41,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_time"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="2017-10-18 20:57" />
             </LinearLayout>
 
             <LinearLayout
@@ -54,7 +56,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_company"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="武汉巡查有限公司" />
             </LinearLayout>
 
             <LinearLayout
@@ -68,7 +71,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_check_people"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="张三、李四、王五" />
             </LinearLayout>
 
             <LinearLayout
@@ -82,7 +86,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_report_people"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="刘强" />
             </LinearLayout>
 
             <LinearLayout
@@ -96,7 +101,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_build_time"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="2017-09-26" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,7 +116,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_build_company"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="武汉建设有限公司" />
             </LinearLayout>
 
             <LinearLayout
@@ -124,7 +131,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_construction_company"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="武汉施工有限公司" />
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +146,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_supervision_company"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="武汉监理有限公司" />
             </LinearLayout>
 
             <LinearLayout
@@ -152,7 +161,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_message"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="违章巡查" />
             </LinearLayout>
 
             <LinearLayout
@@ -166,7 +176,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_description"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="在光谷中心城1号工地发现违章行为" />
             </LinearLayout>
 
             <LinearLayout
@@ -180,7 +191,8 @@
 
                 <TextView
                     android:id="@+id/inspect_report_recheck"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="是" />
             </LinearLayout>
 
             <LinearLayout
@@ -194,22 +206,20 @@
 
                 <TextView
                     android:id="@+id/inspect_report_recheck_time"
-                    style="@style/add_report_edittext" />
+                    style="@style/add_report_edittext"
+                    android:text="2017-10-09" />
             </LinearLayout>
 
-            <LinearLayout
+
+            <TextView
+                style="@style/add_report_lab"
+                android:text="@string/inspect_report_view_attach" />
+
+            <GridView
+                android:id="@+id/gridview_view_sub"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"></GridView>
 
-                <TextView
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_sub_attach" />
-
-                <TextView
-                    android:id="@+id/inspect_report_sub_attach"
-                    style="@style/add_report_edittext" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -107,8 +107,8 @@
     <!--验收报告验收页-->
     <string name="check_report_submit_title">验收报告验收</string>
     <string name="check_report_address">巡查地点</string>
-    <string name="check_report_time">巡查时间</string>
-    <string name="check_report_report_name">报告人</string>
+    <string name="check_report_time">回访时间</string>
+    <string name="check_report_report_name">报告人员</string>
     <string name="check_report_report_company">报告单位</string>
     <string name="check_report_build_company">建筑单位</string>
     <string name="check_report_construction_company">施工单位</string>
@@ -138,6 +138,7 @@
     <string name="cancle">放弃</string>
     <string name="save">保存</string>
     <string name="frag_msg_vcr_des_temp">120965设备损坏</string>
+    <string name="des_visit_problem">回访问题描述：</string>
     <!--          system   end            -->
 
 

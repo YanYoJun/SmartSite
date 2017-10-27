@@ -33,7 +33,7 @@
         android:id="@+id/conlayout_vcr"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="@color/white"
+        android:background="@drawable/msg_item_press_bg"
         android:paddingLeft="14dp"
         android:paddingRight="14dp">
 
@@ -44,6 +44,20 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             app:srcCompat="@drawable/video_button" />
+
+        <TextView
+            android:id="@+id/lab_vcr_unread_num"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignTop="@id/img_vcr"
+            android:layout_marginLeft="-7dp"
+            android:layout_marginTop="-5dp"
+            android:layout_toRightOf="@id/img_vcr"
+            android:background="@drawable/shape_corner_msg_num"
+            android:gravity="center"
+            android:text="12"
+            android:textColor="#ffffff"
+            android:textSize="9dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -100,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@drawable/msg_item_press_bg"
         android:paddingLeft="14dp"
         android:paddingRight="14dp">
 
@@ -111,6 +125,19 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             app:srcCompat="@drawable/air_button" />
+        <TextView
+            android:id="@+id/lab_environ_unread_num"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignTop="@id/img_environ"
+            android:layout_marginLeft="-7dp"
+            android:layout_marginTop="-5dp"
+            android:layout_toRightOf="@id/img_environ"
+            android:background="@drawable/shape_corner_msg_num"
+            android:gravity="center"
+            android:text="12"
+            android:textColor="#ffffff"
+            android:textSize="9dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -168,7 +195,7 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@drawable/msg_item_press_bg"
         android:paddingLeft="14dp"
         android:paddingRight="14dp">
 
@@ -179,6 +206,19 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             app:srcCompat="@drawable/threeparty_button" />
+        <TextView
+            android:id="@+id/lab_threeparty_unread_num"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignTop="@id/img_thirpartite"
+            android:layout_marginLeft="-7dp"
+            android:layout_marginTop="-5dp"
+            android:layout_toRightOf="@id/img_thirpartite"
+            android:background="@drawable/shape_corner_msg_num"
+            android:gravity="center"
+            android:text="12"
+            android:textColor="#ffffff"
+            android:textSize="9dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

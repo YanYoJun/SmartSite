@@ -9,7 +9,7 @@ import android.support.multidex.MultiDexApplication;
  * Created by zw on 2017/10/11.
  */
 
-public class App extends MultiDexApplication {
+public class App extends Application {
 
     private static App mInstance;
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:background="#c8c8c8"
+    android:background="#f5f5f5"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="180dp">
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -58,64 +58,244 @@
                 android:text="26" />
 
             <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/text_temperature"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="18dp"
-                android:layout_marginEnd="31dp"
-                android:layout_marginRight="31dp"
-                app:srcCompat="@android:drawable/btn_star_big_on" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/textView2"
-                android:layout_alignRight="@+id/textView2"
+                android:layout_width="1dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="46dp"
-                android:layout_marginRight="46dp"
-                android:text="西南风2级"
-                tools:text="西南风2级" />
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@id/text_temperature"
+                android:background="#ffffff"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:layout_toRightOf="@id/text_temperature">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_fengxiang"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="东南风2级"
+                        android:textColor="#ffffff"
+                        android:textSize="12dp"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_shidu"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="51%"
+                        android:textColor="#ffffff"
+                        android:textSize="12dp"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="64dp"
+                android:layout_height="70dp"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="22dp"
+                android:background="#17000000">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    android:background="#654123"
+                    android:layout_margin="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="轻度污染"
+                    android:textColor="#ffffff"
+                    android:textSize="12dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="168"
+                        android:textColor="#ffffff"
+                        android:textSize="12dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/main_aqi"/>
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/textView10"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="12dp">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="未查看消息"/>
-
-            <TextView
-                android:id="@+id/textView11"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_message"
+                        android:layout_marginTop="6dp"/>
+                    <TextView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@android:color/holo_red_dark"
+                        android:layout_gravity="right"
+                        android:textColor="#ffffff"
+                        android:textSize="9dp"
+                        android:gravity="center"
+                        android:text="12"/>
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="8dp"
+                    android:text="未查看消息"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="待处理报告" />
-
-            <TextView
-                android:id="@+id/textView12"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_report"
+                        android:layout_marginTop="6dp"/>
+                    <TextView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@android:color/holo_red_dark"
+                        android:layout_gravity="right"
+                        android:textColor="#ffffff"
+                        android:textSize="9dp"
+                        android:gravity="center"
+                        android:text="2"/>
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="8dp"
+                    android:text="待处理报告" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="视屏监控设备" />
-
-            <TextView
-                android:id="@+id/textView13"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_video"
+                        android:layout_marginTop="6dp"/>
+                    <TextView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@android:color/holo_red_dark"
+                        android:layout_gravity="right"
+                        android:textColor="#ffffff"
+                        android:textSize="9dp"
+                        android:gravity="center"
+                        android:text="112"/>
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="8dp"
+                    android:text="视屏监控设备" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="环境监控设备" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/main_air"
+                        android:layout_marginTop="6dp"/>
+                    <TextView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@android:color/holo_red_dark"
+                        android:layout_gravity="right"
+                        android:textColor="#ffffff"
+                        android:textSize="9dp"
+                        android:gravity="center"
+                        android:text="4"/>
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="8dp"
+                    android:text="环境监控设备" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <!-- 视屏播放   环境监控   三方系统按钮 -->
@@ -211,11 +391,11 @@
     <!-- 消息listview  -->
     <ListView
         android:id="@+id/list"
-        android:background="@color/white"
+        android:background="#f9f9f9"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:divider="#c8c8c8"
-        android:dividerHeight="5dp"
+        android:divider="#f5f5f5"
+        android:dividerHeight="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

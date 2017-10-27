@@ -170,7 +170,7 @@ public class MainFragment extends BaseFragment{
         mHttpPost = new HttpPost();
         mHomeBean =  mHttpPost.getHomeDate();
         mCityTestView.setText(mHomeBean.getCity());
-        mTemperatureTextView.setText(mHomeBean.getTemperature());
+        //mTemperatureTextView.setText(mHomeBean.getTemperature());
         InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
         adapter.setData(mHomeBean.getMessagelist());
         mListView.setAdapter(adapter);

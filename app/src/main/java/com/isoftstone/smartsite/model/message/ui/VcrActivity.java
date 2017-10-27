@@ -45,8 +45,8 @@ public class VcrActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_vcr);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE,ITEM_TITLE,ITEM_DETAILS,  },
-                new int[]{R.id.lab_time, R.id.lab_title,R.id.lab_details});
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE, ITEM_TITLE, ITEM_DETAILS,},
+                new int[]{R.id.lab_time, R.id.lab_title, R.id.lab_details});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class VcrActivity extends BaseActivity {
                 mActivity.startActivity(intent);
             }
         });
-        mListView.setDividerHeight(40);//TODO
+        mListView.setDividerHeight(20);
     }
 
     /**
@@ -76,14 +76,14 @@ public class VcrActivity extends BaseActivity {
         for (VCRData data : vcrDatas) {
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == VCRData.TYPE_ERROR) {
-                map.put(ITEM_TITLE,"NXC-12检测到PM超标");
+                map.put(ITEM_TITLE, "NXC-12检测到PM超标");
                 map.put(ITEM_DETAILS, String.format(vcrError, data.getId()));
-                map.put( ITEM_DATE, data.getStringDate());
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             } else if (data.getType() == VCRData.TYPE_NEED_REPAIR) {
-                map.put(ITEM_TITLE,"NXC-12设备损坏");
+                map.put(ITEM_TITLE, "NXC-12设备损坏");
                 map.put(ITEM_DETAILS, String.format(vcrNeedRepair, data.getId()));
-                map.put( ITEM_DATE, data.getStringDate());
+                map.put(ITEM_DATE, data.getStringDate());
                 list.add(map);
             }
         }
@@ -123,6 +123,51 @@ public class VcrActivity extends BaseActivity {
         data.setType(VCRData.TYPE_NEED_REPAIR);
         data.setId(13005);
         mDatas.add(data);
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
 
         return mDatas;
     }

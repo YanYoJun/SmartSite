@@ -36,7 +36,7 @@
     <!-- map   end -->
 
     <!--msg   start -->
-
+    <dimen name="listview_divider">10dp</dimen>
     <!--msg   end -->
     <!--system   start -->
 

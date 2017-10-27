@@ -58,7 +58,7 @@ public class EnvironActivity extends BaseActivity {
                 mActivity.startActivity(intent);
             }
         });
-        mListView.setDividerHeight(40);//TODO
+        mListView.setDividerHeight(20);//TODO
     }
 
     /**

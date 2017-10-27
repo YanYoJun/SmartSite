@@ -47,8 +47,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private RoundMenuView mRoundMenuView;
     private ImageView mImageView;
     private String mCameraCode;
-    private static  final int GRAY_9999 = Color.GREEN;
-    private static  final int GRAY_F2F2 = Color.BLUE;
+    private static  final int SELECT_SOLID_COLOR = 0x00000000;
+    private static  final int STROKR_COKOR = 0x00000000;
 
     private int mSurfaceViewWidth;
     private int mSurfaceViewHeight;
@@ -105,6 +105,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             Log.i(TAG,"--------------zyf----GONE---");
             mRoundMenuView.setVisibility(View.GONE);
         }
+        //startLive(mCameraCode);
     }
 
     /**
@@ -211,8 +212,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
 
     public void initRoundMenuView() {
         RoundMenuView.RoundMenu roundMenu = new RoundMenuView.RoundMenu();
-        roundMenu.selectSolidColor = GRAY_9999;//Integer.parseInt(toHexEncoding(Color.GRAY));
-        roundMenu.strokeColor = GRAY_F2F2;//Integer.parseInt(toHexEncoding(Color.GRAY));//ColorUtils.getColor(mContext, R.color.gray_9999);
+        roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(Color.GRAY));
+        roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(Color.GRAY));//ColorUtils.getColor(mContext, R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
@@ -224,8 +225,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
-        roundMenu.selectSolidColor = GRAY_9999;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.strokeColor = GRAY_F2F2;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.strokeColor = STROKR_COKOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
@@ -237,8 +238,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
-        roundMenu.selectSolidColor = GRAY_9999;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.strokeColor = GRAY_F2F2;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
@@ -250,8 +251,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
-        roundMenu.selectSolidColor = GRAY_9999;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.strokeColor = GRAY_F2F2;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
+        roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
@@ -262,17 +263,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         };
         mRoundMenuView.addRoundMenu(roundMenu);
 
-        /**mRoundMenuView.setCoreMenu(ColorUtils.getColor(getActivity(), R.color.gray_f2f2),
-                ColorUtils.getColor(getActivity(), R.color.gray_9999), ColorUtils.getColor(getActivity(), R.color.gray_9999)
-                , 1, 0.43,ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_ok), new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ToastUtils.showToast(getActivity(),"点击了中心圆圈");
-                    }
-                });*/
-
-        mRoundMenuView.setCoreMenu(GRAY_F2F2, GRAY_9999, GRAY_F2F2
-                , 1, 0.43, drawableToBitmap(mContext, R.drawable.ic_stop)
+        mRoundMenuView.setCoreMenu(STROKR_COKOR, SELECT_SOLID_COLOR, STROKR_COKOR
+                , 1, 0.43, drawableToBitmap(mContext, R.drawable.slidicon)
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

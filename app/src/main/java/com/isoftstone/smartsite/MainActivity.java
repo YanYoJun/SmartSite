@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements IndividualCenterFragme
 
     @Override
     public void onBackPressed() {
-        if (!mFrame.onFragmentBackPressed()) {
+        if ((null != mFrame) && !mFrame.onFragmentBackPressed()) {
             super.onBackPressed();
         }
     }

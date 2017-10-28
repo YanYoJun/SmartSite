@@ -72,8 +72,11 @@
     <color name="msg_item_press_bg">#eeeeee</color>
     <color name="trans">#00000000</color>
     <color name="dividing_line">#eeeeee</color>
-
+    <color name="lab_add_item">#666666</color>
     <!--msg   end -->
+    <!-- three party begin-->
+    <color name="title_save">#FEFEFE</color>
+    <!-- three party end -->
     <!--system   start -->
 
     <!--system   end -->

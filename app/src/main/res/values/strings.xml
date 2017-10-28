@@ -62,8 +62,8 @@
     <string name="check">验收</string>
     <string name="unread_msg_title">未读消息</string>
     <!--添加回访报告页-->
-    <string name="add_report">添加回访报告页</string>
     <string name="report_address">地址：%1$s</string>
+    <string name="add_report">新增巡查报告</string>
     <string name="report_name">发布人：%1$s</string>
     <string name="report_stats">状态：%1$s</string>
     <string name="dealing">处理中</string>
@@ -81,11 +81,19 @@
     <string name="inspect_report_build_time">报告时间</string>
     <string name="inspect_report_construction_company">施工单位</string>
     <string name="inspect_report_supervision_company">监理单位</string>
-    <string name="inspect_report_message">巡查内容</string>
+    <string name="inspect_report_message">报告内容</string>
     <string name="inspect_report_description">问题描述</string>
     <string name="inspect_report_is_need_recheck">是否回访</string>
     <string name="yes">是</string>
+    <string name="inspect_report_status">报告状态</string>
+    <string name="inspect_report_types">报告类型</string>
     <string name="no">否</string>
+    <string name="pls_choose">请选择</string>
+    <string name="begin_time">开始时间</string>
+    <string name="enter_time">填写时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="inpsect_report_name">报告名称</string>
+    <string name="pls_enter_msg">请输入内容</string>
 
     <string name="inspect_report_sub_attach">提交附件：</string>
     <string name="inspect_report_view_attach">查看附件：</string>

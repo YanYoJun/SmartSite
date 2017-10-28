@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -132,17 +133,8 @@ public class TripartiteActivity extends BaseActivity {
     }
 
     private void initTitleOnClickListener(int position){
-/*        Button btnAddPeport = (Button)findViewById(R.id.btn_title_add);
-        btnAddPeport.setVisibility(View.VISIBLE);*/
         switch (position){
             case FRAGMENT_TYPE_INSPECT_REPORT:
-/*                btnAddPeport.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(TripartiteMsgActivity.this,AddInspectReportActivity.class);
-                        startActivity(intent);
-                    }
-                });*/
                 break;
             case FRAGMENT_TYPE_CHECK_REPORT:
                 break;
@@ -157,5 +149,14 @@ public class TripartiteActivity extends BaseActivity {
      */
     public void onBackBtnClick(View v){
         finish();
+    }
+
+    /**
+     * 点击新增报告界面按钮
+     * @param v
+     */
+    public void onAddReportBtnClick(View v){
+        Intent intent = new Intent(this,AddReportActivity.class);
+        startActivity(intent);
     }
 }

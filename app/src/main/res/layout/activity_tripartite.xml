@@ -59,6 +59,7 @@
                 android:background="@drawable/btn_back_press_bg"
                 android:paddingLeft="12dp"
                 android:paddingRight="16dp"
+                android:onClick="onAddReportBtnClick"
                 android:src="@drawable/addreport" />
 
         </RelativeLayout>

@@ -14,7 +14,12 @@
     <!-- map   end -->
 
     <!--msg   start -->
-
+    <array name="spinner_temp">
+        <item>下拉选择1</item>
+        <item>下拉选择2</item>
+        <item>下拉选择3</item>
+        <item>下拉选择4</item>
+    </array>
     <!--msg   end -->
     <!--system   start -->
 

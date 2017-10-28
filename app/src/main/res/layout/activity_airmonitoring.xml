@@ -3,43 +3,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#c0c0c0">
-
+    android:background="@color/app_background">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="@color/mainColor"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bigarrow"
+            android:layout_marginLeft="16dp"
+            android:id="@+id/image_back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:text="环境监控"
+            android:textColor="@color/white"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/environmentlist"
+            android:layout_marginRight="16dp"
+            android:id="@+id/image_devices"/>
+    </LinearLayout>
     <ScrollView
-        android:layout_margin="10dp"
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="区域月度排名"/>
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/title_icon"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textColor="#666666"
+                    android:textSize="12dp"
+                    android:text="区域月度综合排名" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/white">
+
+            </LinearLayout>
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart1"
                 android:layout_width="fill_parent"
                 android:layout_height="220dp"
                 android:background="@android:color/white"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="优良天气占比"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/title_icon"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textColor="#666666"
+                    android:textSize="12dp"
+                    android:text="优良天气占比" />
+            </LinearLayout>
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/chart2"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="320dp"
                 android:layout_above="@+id/seekBar1"
                 android:background="@android:color/white"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="气温曲线图"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/title_icon"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textColor="#666666"
+                    android:textSize="12dp"
+                    android:text="AQI变化趋势同期对比" />
+            </LinearLayout>
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart3"
                 android:layout_width="match_parent"

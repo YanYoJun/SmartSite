@@ -1,15 +1,21 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -46,25 +52,48 @@ public class AirMonitoringActivity extends Activity {
     private HorizontalBarChart mBarChart = null;
     private PieChart mPieChart = null;
     private LineChart mLineChart = null;
+    private ImageView mImageView_back = null;
+    private ImageView mImageView_devices = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_airmonitoring);
         init();
+        setOnCliceked();
         setHorizontalBarChart();
         setPieChart();
         setLineChart();
     }
     private void init(){
+        mImageView_back = (ImageView)findViewById(R.id.image_back);
+        mImageView_devices = (ImageView)findViewById(R.id.image_devices);
         mBarChart = (HorizontalBarChart)findViewById(R.id.chart1);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
     }
+    private void setOnCliceked(){
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mImageView_devices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(AirMonitoringActivity.this,PMDevicesListActivity.class);
+                AirMonitoringActivity.this.startActivity(intent);
+            }
+        });
+    }
+
 
     private void setHorizontalBarChart(){
         mBarChart.setDrawBarShadow(true);
 
-        mBarChart.setDrawValueAboveBar(true);
+        mBarChart.setDrawValueAboveBar(false);
 
         mBarChart.getDescription().setEnabled(false);
 
@@ -79,16 +108,21 @@ public class AirMonitoringActivity extends Activity {
         // mChart.setDrawBarShadow(true);
 
         mBarChart.setDrawGridBackground(false);
+        mBarChart.setExtraBottomOffset(10);
+        mBarChart.setExtraLeftOffset(10);
+        mBarChart.setExtraTopOffset(10);
+        mBarChart.setExtraRightOffset(20);
 
         final String lable[]={"1","2","3","4","5"};
         XAxis xl = mBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xl.setTypeface(mTfLight);
-        xl.setDrawAxisLine(true);
+        xl.setDrawAxisLine(false);
         xl.setDrawGridLines(false);
-        xl.setGranularity(10f);
+        xl.setGranularity(5f);
         xl.setLabelCount(lable.length);
         xl.setDrawLabels(true);
+        //xl.setXOffset(30);
         xl.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -103,18 +137,21 @@ public class AirMonitoringActivity extends Activity {
         yl.setEnabled(false);   //设置上边不划线
         yl.setDrawGridLines(false);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-//        yl.setInverted(true);
+        //yl.setInverted(true);
 
         YAxis yr = mBarChart.getAxisRight();
         //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(true);
+        yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
-        yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-//        yr.setInverted(true);
+        yr.setAxisMinimum(0f);
+        yr.setEnabled(false);
+        //yr.setInverted(true);
 
         setHorizontalBarChartData(5, 5);
         mBarChart.setFitBars(true);
         mBarChart.animateY(2500);
+        mBarChart.setClickable(false);
+        mBarChart.setFocusable(false);
 
         Legend l = mBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -123,21 +160,24 @@ public class AirMonitoringActivity extends Activity {
         l.setDrawInside(false);
         l.setFormSize(8f);
         l.setXEntrySpace(4f);
-        l.setEnabled(false);
+        l.setEnabled(false);  //设置不显示
     }
 
     private void setHorizontalBarChartData(int count, float range) {
 
-        float barWidth = 9f;
-        float spaceForBar = 10f;
+        float barWidth = 2f;  //线条粗细
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
-        for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range);
-            yVals1.add(new BarEntry(i * spaceForBar, val,
-                    getResources().getDrawable(R.drawable.star)));
-        }
-
+        BarEntry entry_1 = new BarEntry(0,10);
+        BarEntry entry_2 = new BarEntry(10,8);
+        BarEntry entry_3 = new BarEntry(20,6);
+        BarEntry entry_4 = new BarEntry(30,5);
+        BarEntry entry_5 = new BarEntry(40,2);
+        yVals1.add(entry_1);
+        yVals1.add(entry_2);
+        yVals1.add(entry_3);
+        yVals1.add(entry_4);
+        yVals1.add(entry_5);
         BarDataSet set1;
 
         if (mBarChart.getData() != null &&
@@ -166,7 +206,7 @@ public class AirMonitoringActivity extends Activity {
     private void setPieChart(){
         mPieChart.setUsePercentValues(true);
         mPieChart.getDescription().setEnabled(false);
-        mPieChart.setExtraOffsets(5, 10, 5, 5);
+        mPieChart.setExtraOffsets(10, 30, 10, 30);
 
         mPieChart.setDragDecelerationFrictionCoef(0.95f);
 
@@ -179,8 +219,8 @@ public class AirMonitoringActivity extends Activity {
         mPieChart.setTransparentCircleColor(Color.WHITE);
         mPieChart.setTransparentCircleAlpha(110);
 
-        mPieChart.setHoleRadius(30f);
-        mPieChart.setTransparentCircleRadius(30f);
+        mPieChart.setHoleRadius(65f);
+        mPieChart.setTransparentCircleRadius(65f);
 
         mPieChart.setDrawCenterText(true);
 
@@ -200,27 +240,30 @@ public class AirMonitoringActivity extends Activity {
         mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
 
-        //mPieChart.setOnSeekBarChangeListener(this);
-        //mPieChart.setOnSeekBarChangeListener(this);
 
         Legend l = mPieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setTextSize(12);//文字颜色
+        l.setFormSize(12);
+        l.setFormToTextSpace(6); //图标和文字距离
+        l.setXEntrySpace(20f);  //左右间隔
+        l.setYEntrySpace(0f); //
+        l.setXOffset(10f);  //距离左边距离
+        l.setYOffset(16f); //距离底部距离
 
         // entry label styling
-        mPieChart.setEntryLabelColor(Color.WHITE);
-        //mPieChart.setEntryLabelTypeface(mTfRegular);
-        mPieChart.setEntryLabelTextSize(12f);
+        mPieChart.setEntryLabelColor(Color.WHITE);//分区内部文字颜色
+        mPieChart.setEntryLabelTextSize(12f);//分区内部文字大小
+        mPieChart.setDrawEntryLabels(false); //分区不显示文字
+
+        mPieChart.setClickable(false);
+        mPieChart.setEnabled(false);
+
+
     }
 
-    protected String[] mParties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H"
-    };
     private void setPieChartData(int count, float range) {
 
         float mult = range;
@@ -230,47 +273,62 @@ public class AirMonitoringActivity extends Activity {
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         for (int i = 0; i < count ; i++) {
-            entries.add(new PieEntry((float) ((Math.random() * mult) + mult / 5),
-                    mParties[i % mParties.length],
-                    getResources().getDrawable(R.drawable.star)));
+
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+        PieEntry entry_1 = new PieEntry(10);
+        entry_1.setLabel("优");
+        entry_1.setData("10天");
+        entries.add(entry_1);
+        PieEntry entry_2 = new PieEntry(20);
+        entry_2.setLabel("良");
+        entry_2.setData("20天");
+        entries.add(entry_2);
+        PieEntry entry_3 = new PieEntry(30);
+        entry_3.setLabel("轻度污染");
+        entry_3.setData("30天");
+        entries.add(entry_3);
+        PieEntry entry_4 = new PieEntry(40);
+        entry_4.setLabel("重度污染");
+        entry_4.setData("40天");
+        entries.add(entry_4);
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
 
         dataSet.setDrawIcons(false);
 
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
+        dataSet.setSelectionShift(3f);
 
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
+        colors.add((Integer)getColor(R.color.huanjin_you));
+        colors.add((Integer)getColor(R.color.huanjin_liang));
+        colors.add((Integer)getColor(R.color.huanjin_qingdu));
+        colors.add((Integer)getColor(R.color.huanjin_zhongdu));
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
+        dataSet.setValueLinePart1OffsetPercentage(75.f);
+        dataSet.setValueLinePart1Length(0.2f);
+        dataSet.setValueLinePart2Length(0.6f);
+        dataSet.setValueTextColor(Color.RED);
+        dataSet.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
+                return entry.getData().toString();
+            }
+        });
+        //dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
+        //data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.BLACK);
         //data.setValueTypeface(mTfLight);
         mPieChart.setData(data);
 
@@ -297,6 +355,7 @@ public class AirMonitoringActivity extends Activity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         mLineChart.setPinchZoom(true);
+        mLineChart.setExtraOffsets(20,20,20,20);
 
         // set an alternative background color
         // mChart.setBackgroundColor(Color.GRAY);
@@ -318,6 +377,9 @@ public class AirMonitoringActivity extends Activity {
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -361,7 +423,6 @@ public class AirMonitoringActivity extends Activity {
 
         // add data
         setLineChartData(15, 30);
-
 //        mChart.setVisibleXRange(20);
 //        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
 //        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
@@ -374,7 +435,9 @@ public class AirMonitoringActivity extends Activity {
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
-
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         // // dont forget to refresh the drawing
         // mChart.invalidate();
     }
@@ -386,55 +449,82 @@ public class AirMonitoringActivity extends Activity {
         for (int i = 0; i < count; i++) {
 
             float val = (float) (Math.random() * range) + 3;
-            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
+            Entry entry = new Entry(i,val);
+            values.add(entry);
         }
 
-        LineDataSet set1;
+        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+        set1.setDrawIcons(false);
+        // set the line to be drawn like this "- - - - - -"
+        set1.enableDashedLine(10f, 5f, 0f);
+        set1.enableDashedHighlightLine(10f, 5f, 0f);
+        set1.setColor(Color.BLACK);
+        set1.setCircleColor(Color.BLACK);
+        set1.setLineWidth(1f);
+        set1.setCircleRadius(3f);
+        set1.setDrawCircleHole(false);
+        set1.setValueTextSize(9f);
+        set1.setDrawFilled(false);
+        set1.setFormLineWidth(1f);
+        set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+        set1.setFormSize(15.f);
 
-        if (mLineChart.getData() != null &&
-                mLineChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet)mLineChart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            mLineChart.getData().notifyDataChanged();
-            mLineChart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
-
-            set1.setDrawIcons(false);
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(false);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
-            }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            mLineChart.setData(data);
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+            //set1.setFillDrawable(drawable);
         }
+        else {
+            set1.setFillColor(Color.BLACK);
+        }
+
+        ArrayList<Entry> values_2 = new ArrayList<Entry>();
+
+        for (int i = 0; i < count; i++) {
+
+            float val = (float) (Math.random() * range) + 3;
+            Entry entry = new Entry(i,val);
+            values_2.add(entry);
+        }
+
+        LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+        set2.setDrawIcons(false);
+        // set the line to be drawn like this "- - - - - -"
+        //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式
+        set2.setColor(Color.BLACK);
+        set2.setCircleColor(Color.RED);
+        set2.setDrawCircleHole(false);
+        set2.setFormLineWidth(1f);
+        set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+        set2.setFormSize(15.f);
+        set2.setLineWidth(1f);//设置线宽
+        set2.setCircleRadius(3f);//设置焦点圆心的大小
+        set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+        set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+        set2.setHighlightEnabled(true);//是否禁用点击高亮线
+        set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+        set2.setValueTextSize(9f);//设置显示值的文字大小
+        set2.setDrawFilled(false);//设置禁用范围背景填充
+
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+            //set1.setFillDrawable(drawable);
+        }
+        else {
+            set2.setFillColor(Color.BLACK);
+        }
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set2); // add the datasets
+        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(dataSets);
+
+        // set data
+        mLineChart.setData(data);
+
     }
 
     public class CustomerPercentFormatter implements IValueFormatter {
@@ -460,7 +550,7 @@ public class AirMonitoringActivity extends Activity {
         @Override
         public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
 
-            return "QIA" + " : "+mXVals.get(i).getY();
+            return "QIA" + " : "+mXVals.get(i).getX();
         }
     }
 }

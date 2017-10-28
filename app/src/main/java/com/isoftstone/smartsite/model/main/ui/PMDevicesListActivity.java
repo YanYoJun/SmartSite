@@ -1,7 +1,10 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.isoftstone.smartsite.R;
@@ -16,17 +19,38 @@ import java.util.ArrayList;
 public class PMDevicesListActivity extends Activity{
 
     private ListView mListView = null;
+    private ImageView mImageView_back = null;
+    private ImageView mImageView_devices = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pmdeviceslist);
 
         init();
+        setOnCliceked();
         setData();
     }
 
     private void init(){
+        mImageView_back = (ImageView)findViewById(R.id.image_back);
+        mImageView_devices = (ImageView)findViewById(R.id.image_devices);
         mListView = (ListView)findViewById(R.id.listview);
+    }
+
+    private void setOnCliceked(){
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mImageView_devices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void setData(){

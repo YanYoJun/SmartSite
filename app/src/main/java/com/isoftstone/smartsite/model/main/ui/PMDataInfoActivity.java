@@ -5,7 +5,13 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amap.api.maps.model.Text;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -17,6 +23,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 
 import java.util.ArrayList;
 
@@ -26,16 +33,56 @@ import java.util.ArrayList;
 
 public class PMDataInfoActivity extends Activity {
     private LineChart mLineChart = null;
+    private TextView mDevicesName = null;
+    private TextView mMap = null;
+    private ImageView mImageView_back = null;
+    private ImageView mImageView_devices = null;
+    private LinearLayout mGotoMap = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmdatainfo);
         init();
+        setOnCliceked();
+        setData();
         setLineChart();
     }
 
     private void init(){
+        mImageView_back = (ImageView)findViewById(R.id.image_back);
+        mImageView_devices = (ImageView)findViewById(R.id.image_devices);
         mLineChart = (LineChart)findViewById(R.id.chart3);
+        mDevicesName = (TextView)findViewById(R.id.textView1);
+        mMap = (TextView)findViewById(R.id.textView4);
+        mGotoMap = (LinearLayout)findViewById(R.id.gotomap);
+    }
+
+    private void setOnCliceked(){
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mImageView_devices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        mGotoMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(PMDataInfoActivity.this,"进入地图显示单个设备",2000).show();
+            }
+        });
+    }
+
+    private void setData(){
+        mDevicesName.setText("dv5823");
+        mMap.setText("高新大道53825号");
     }
 
     private void setLineChart(){
@@ -55,6 +102,7 @@ public class PMDataInfoActivity extends Activity {
 
         // if disabled, scaling can be done on x- and y-axis separately
         mLineChart.setPinchZoom(true);
+        mLineChart.setExtraOffsets(20,20,20,20);
 
         // set an alternative background color
         // mChart.setBackgroundColor(Color.GRAY);
@@ -76,6 +124,9 @@ public class PMDataInfoActivity extends Activity {
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -119,7 +170,6 @@ public class PMDataInfoActivity extends Activity {
 
         // add data
         setLineChartData(15, 30);
-
 //        mChart.setVisibleXRange(20);
 //        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
 //        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
@@ -132,7 +182,9 @@ public class PMDataInfoActivity extends Activity {
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
-
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         // // dont forget to refresh the drawing
         // mChart.invalidate();
     }
@@ -144,54 +196,57 @@ public class PMDataInfoActivity extends Activity {
         for (int i = 0; i < count; i++) {
 
             float val = (float) (Math.random() * range) + 3;
-            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
+            Entry entry = new Entry(i,val);
+            values.add(entry);
         }
 
-        LineDataSet set1;
 
-        if (mLineChart.getData() != null &&
-                mLineChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet)mLineChart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            mLineChart.getData().notifyDataChanged();
-            mLineChart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
 
-            set1.setDrawIcons(false);
+        ArrayList<Entry> values_2 = new ArrayList<Entry>();
 
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(false);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
+        for (int i = 0; i < count; i++) {
 
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
-            }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            mLineChart.setData(data);
+            float val = (float) (Math.random() * range) + 3;
+            Entry entry = new Entry(i,val);
+            values_2.add(entry);
         }
+
+        LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+        set2.setDrawIcons(false);
+        // set the line to be drawn like this "- - - - - -"
+        //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式
+        set2.setColor(Color.BLACK);
+        set2.setCircleColor(Color.RED);
+        set2.setDrawCircleHole(false);
+        set2.setFormLineWidth(1f);
+        set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+        set2.setFormSize(15.f);
+        set2.setLineWidth(1f);//设置线宽
+        set2.setCircleRadius(3f);//设置焦点圆心的大小
+        set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+        set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+        set2.setHighlightEnabled(true);//是否禁用点击高亮线
+        set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+        set2.setValueTextSize(9f);//设置显示值的文字大小
+        set2.setDrawFilled(false);//设置禁用范围背景填充
+
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+            //set1.setFillDrawable(drawable);
+        }
+        else {
+            set2.setFillColor(Color.BLACK);
+        }
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set2); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(dataSets);
+
+        // set data
+        mLineChart.setData(data);
+
     }
 }

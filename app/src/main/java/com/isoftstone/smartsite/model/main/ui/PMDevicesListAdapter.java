@@ -3,11 +3,13 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,18 +82,21 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder.PM25 = (TextView)convertView.findViewById(R.id.textView6);
             holder.SO2 = (TextView)convertView.findViewById(R.id.textView7);
             holder.NO2 = (TextView)convertView.findViewById(R.id.textView8);
-            holder.button_1 = (Button)convertView.findViewById(R.id.button1);
-            holder.button_2 = (Button)convertView.findViewById(R.id.button2);
+            holder.button_1 = (TextView)convertView.findViewById(R.id.button1);
+            holder.button_2 = (TextView)convertView.findViewById(R.id.button2);
+            holder.gotomap = (LinearLayout) convertView.findViewById(R.id.gotomap);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.resName.setText("设备名称"+mData.get(position).getName());
+        holder.resName.setText(mData.get(position).getName());
+        TextPaint paint = holder.resName.getPaint();
+        paint.setFakeBoldText(true);
         if(mData.get(position).getState() == 1){
-            holder.isOnline.setText("在线");
+            holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.online));
         }else{
-            holder.isOnline.setText("离线");
+            holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
         }
         holder.installTime.setText("安装时间 "+mData.get(position).getTime());
         holder.address.setText("地址 "+mData.get(position).getAddress());
@@ -136,6 +141,14 @@ public class PMDevicesListAdapter extends BaseAdapter {
             }
         });
 
+        holder.gotomap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到地图
+                Toast.makeText(mContext,"单个设备跳转到地图",2000).show();
+            }
+        });
+
         return convertView;
     }
 
@@ -150,8 +163,10 @@ public class PMDevicesListAdapter extends BaseAdapter {
         public TextView  SO2;//SO2
         public TextView  NO2;//NO2
 
-        public Button button_1;//实时数据
-        public Button button_2;//历史数据
+        public TextView button_1;//实时数据
+        public TextView button_2;//历史数据
+
+        public LinearLayout gotomap ; //跳转到地图
     }
 
 

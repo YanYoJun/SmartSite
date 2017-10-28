@@ -50,6 +50,15 @@
     <color name="bgColor_alert_button_press">#EAEAEA</color>
     <!--actionsheet模式的取消按钮背景颜色-->
     <color name="bgColor_actionsheet_cancel_nor">#ffffff</color>
+
+    <!--环境监控  优-->
+    <color name="huanjin_you">#3cd080</color>
+    <!--环境监控  良-->
+    <color name="huanjin_liang">#599fff</color>
+    <!--环境监控  轻度-->
+    <color name="huanjin_qingdu">#ffcc00</color>
+    <!--环境监控  重度-->
+    <color name="huanjin_zhongdu">#ff0000</color>
     <!-- main   end -->
     <!-- map   start -->
     <color name="devices_press">#88ffffff</color>

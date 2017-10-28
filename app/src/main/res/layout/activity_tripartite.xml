@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
     android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity">
 
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
+        android:id="@+id/toolbar"
+        style="@style/toolbar_style"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="27dp"
-                android:layout_height="28dp"
-                android:background="?android:attr/homeAsUpIndicator"
-                android:onClick="onBackBtnClick" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_back_press_bg"
+                android:onClick="onBackBtnClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:src="@drawable/bigarrow" />
 
             <TextView
                 android:id="@+id/lab_title_name"
@@ -38,32 +40,35 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_search"
-                android:layout_width="27dp"
-                android:layout_height="28dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="3dp"
-                android:background="@android:drawable/ic_menu_search" />
+                android:background="@drawable/btn_back_press_bg"
+                android:paddingLeft="16dp"
+                android:paddingRight="12dp"
+                android:src="@drawable/search" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_add"
-                android:layout_width="27dp"
-                android:layout_height="28dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_toStartOf="@id/btn_search"
-                android:background="@android:drawable/ic_input_add" />
+                android:background="@drawable/btn_back_press_bg"
+                android:paddingLeft="12dp"
+                android:paddingRight="16dp"
+                android:src="@drawable/addreport" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
         <!-- 巡查 -->
         <TextView
             android:id="@+id/lab_inspect"
@@ -74,6 +79,29 @@
             android:id="@+id/lab_check"
             style="@style/frag_msg_swtich_title"
             android:text="@string/check_report_title" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+        <!-- 巡查 -->
+        <ImageView
+            android:id="@+id/img_inspect"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_weight="1"
+            android:src="@color/mainColor" />
+        <!-- 验收-->
+        <ImageView
+            android:id="@+id/img_check"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_weight="1"
+            android:src="@color/mainColor"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

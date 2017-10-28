@@ -68,9 +68,10 @@
     <!-- map   end -->
 
     <!--msg   start -->
-    <color name="back_btn_press_bg">#77777777</color>
+    <color name="back_btn_press_bg">#4d7ef9</color>
     <color name="msg_item_press_bg">#eeeeee</color>
     <color name="trans">#00000000</color>
+    <color name="dividing_line">#eeeeee</color>
 
     <!--msg   end -->
     <!--system   start -->

@@ -50,8 +50,8 @@ public class CheckReportFragment extends BaseFragment {
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
         SimpleAdapter adapter = new CheckReportAdapter(mActivity, getData(), R.layout.listview_check_report_item,
-                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY, ITEM_STATS},
-                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company, R.id.lab_status});
+                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY},
+                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,7 +59,7 @@ public class CheckReportFragment extends BaseFragment {
                 //TODO
             }
         });
-        mListView.setDividerHeight(40);
+        mListView.setDividerHeight(20);
     }
 
     /**

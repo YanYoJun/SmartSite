@@ -1,11 +1,8 @@
 package com.isoftstone.smartsite.model.tripartite.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -35,7 +32,7 @@ public class InspectReportFragment extends BaseFragment {
     private Activity mActivity = null;
     private ListView mListView = null;
     private List<ReportData> mDatas = null;
-    private Button mAdd = null;
+/*    private Button mAdd = null;*/
 
     @Override
     protected int getLayoutRes() {
@@ -52,20 +49,20 @@ public class InspectReportFragment extends BaseFragment {
         //初始化Listview
         mListView = (ListView) mActivity.findViewById(R.id.listview);
         SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.listview_inspect_report_item,
-                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY, ITEM_STATS},
-                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company, R.id.lab_status});
+                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY},
+                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company});
         mListView.setAdapter(adapter);
 
         //输出化btn
-        mAdd = (Button) mActivity.findViewById(R.id.btn_add);
+/*        mAdd = (Button) mActivity.findViewById(R.id.btn_add);
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, AddInspectReportActivity.class);
                 startActivity(intent);
             }
-        });
-        mListView.setDividerHeight(40);
+        });*/
+        mListView.setDividerHeight(20);
     }
 
 

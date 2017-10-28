@@ -11,7 +11,6 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.RecheckInspectReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class InspectReportAdapter extends SimpleAdapter {
                 });
             }
 
-            Button btnReCheck = (Button) view.findViewById(R.id.btn_recheck);
+/*            Button btnReCheck = (Button) view.findViewById(R.id.btn_recheck);
             if (btnReCheck != null) {
                 btnReCheck.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -53,7 +52,7 @@ public class InspectReportAdapter extends SimpleAdapter {
                         mContext.startActivity(intent);
                     }
                 });
-            }
+            }*/
         }
         return view;
     }

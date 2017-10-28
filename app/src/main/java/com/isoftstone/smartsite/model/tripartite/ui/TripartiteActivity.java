@@ -1,12 +1,14 @@
 package com.isoftstone.smartsite.model.tripartite.ui;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -23,6 +25,7 @@ public class TripartiteActivity extends BaseActivity {
     private ViewPager mViewPager = null;
     ArrayList<Fragment> mFragList = new ArrayList<Fragment>();
     private SparseArray<TextView> mSwitchLab = new SparseArray<>();
+    private SparseArray<ImageView> mSwitchImg = new SparseArray<>();
 
     public static final int FRAGMENT_TYPE_INSPECT_REPORT = 0;
     public static final int FRAGMENT_TYPE_CHECK_REPORT = 1;
@@ -102,6 +105,11 @@ public class TripartiteActivity extends BaseActivity {
 
         mSwitchLab.put(0, v1);
         mSwitchLab.put(1, v2);
+        ImageView img1 = (ImageView)findViewById(R.id.img_inspect);
+        mSwitchImg.put(0,img1);
+        ImageView img2 = (ImageView)findViewById(R.id.img_check);
+        mSwitchImg.put(1,img2);
+
         chooseFrag(0);
         initTitleOnClickListener(0);
         mViewPager.setCurrentItem(0);
@@ -109,14 +117,16 @@ public class TripartiteActivity extends BaseActivity {
 
     private void chooseFrag(int position) {
         Resources res = getResources();
+        Drawable drawable = res.getDrawable(R.drawable.shape_threeparty_lab);
+        drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
         for (int i = 0; i < mSwitchLab.size(); i++) {
             TextView v = mSwitchLab.get(i);
             if (i == position) {
-                v.setTextColor(res.getColor(R.color.white));
-                v.setBackgroundColor(res.getColor(R.color.tab_text_normal));
+                v.setTextColor(res.getColor(R.color.mainColor));
+                mSwitchImg.get(i).setVisibility(View.VISIBLE);
             } else {
-                v.setTextColor(res.getColor(R.color.tab_text_normal));
-                v.setBackgroundColor(res.getColor(R.color.white));
+                v.setTextColor(res.getColor(R.color.main_text_color));
+                mSwitchImg.get(i).setVisibility(View.INVISIBLE);
             }
         }
     }

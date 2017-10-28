@@ -13,11 +13,10 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
-import com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity;
-import com.isoftstone.smartsite.model.message.data.SynergyData;
+import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
-import com.isoftstone.smartsite.model.message.ui.UnReadMsgActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity;
 
 
 /**
@@ -122,8 +121,8 @@ public class MainFragment extends BaseFragment{
     }
 
     private void onItemClicked(){
-        SynergyData data = new SynergyData();
-        data.setType(SynergyData.TYPE_RECEIVE_REPORT);
+        ThreePartyData data = new ThreePartyData();
+        data.setType(ThreePartyData.TYPE_RECEIVE_REPORT);
         data.setName("张珊");
         Intent intent = new Intent(getActivity(), DetailsActivity.class);
         intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
@@ -133,9 +132,7 @@ public class MainFragment extends BaseFragment{
 
     private void enterUnChekMsg(){
           //进入未查看消息
-        /*((MainActivity)getActivity()).setCurrentTab(2);*/
-        Intent intent = new Intent(getActivity(), UnReadMsgActivity.class);
-        startActivity(intent);
+        ((MainActivity)getActivity()).setCurrentTab(2);
     }
 
     private void enterUntreatedReport(){

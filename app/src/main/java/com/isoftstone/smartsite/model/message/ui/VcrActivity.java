@@ -1,16 +1,15 @@
 package com.isoftstone.smartsite.model.message.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
+import com.isoftstone.smartsite.model.message.data.MsgData;
 import com.isoftstone.smartsite.model.message.data.VCRData;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class VcrActivity extends BaseActivity {
 
     private Activity mActivity = null;
     private ListView mListView = null;
-    private List<VCRData> mDatas = null;
+    private List<MsgData> mDatas = null;
 
     @Override
     protected int getLayoutRes() {
@@ -45,18 +44,9 @@ public class VcrActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_vcr);
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE, ITEM_TITLE, ITEM_DETAILS,},
-                new int[]{R.id.lab_time, R.id.lab_title, R.id.lab_details});
+        SimpleAdapter adapter = new MsgListAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE, ITEM_TITLE, ITEM_DETAILS,},
+                new int[]{R.id.lab_time, R.id.lab_title, R.id.lab_details},mDatas);
         mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mActivity, DetailsActivity.class);
-                intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_VCR);
-                intent.putExtra(MsgFragment.FRAGMENT_DATA, mDatas.get(position));
-                mActivity.startActivity(intent);
-            }
-        });
         mListView.setDividerHeight(20);
     }
 
@@ -70,10 +60,11 @@ public class VcrActivity extends BaseActivity {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Resources res = mActivity.getResources();
 
-        List<VCRData> vcrDatas = readDataFromSDK();
+        List<MsgData> vcrDatas = readDataFromSDK();
         String vcrError = res.getString(R.string.vcr_error);
         String vcrNeedRepair = res.getString(R.string.vcr_need_repair);
-        for (VCRData data : vcrDatas) {
+        for (MsgData temp : vcrDatas) {
+            VCRData data = (VCRData)temp;
             Map<String, Object> map = new HashMap<String, Object>();
             if (data.getType() == VCRData.TYPE_ERROR) {
                 map.put(ITEM_TITLE, "NXC-12检测到PM超标");
@@ -95,7 +86,7 @@ public class VcrActivity extends BaseActivity {
      *
      * @return
      */
-    private List<VCRData> readDataFromSDK() {
+    private List<MsgData> readDataFromSDK() {
         //TODO
         mDatas = new ArrayList<>();
 
@@ -155,6 +146,11 @@ public class VcrActivity extends BaseActivity {
 
         data = new VCRData();
         data.setType(VCRData.TYPE_NEED_REPAIR);
+        data.setId(13005);
+        mDatas.add(data);
+
+        data = new VCRData();
+        data.setType(VCRData.TYPE_YEAR);
         data.setId(13005);
         mDatas.add(data);
 

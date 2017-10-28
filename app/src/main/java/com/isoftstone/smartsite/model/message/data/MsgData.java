@@ -1,24 +1,18 @@
 package com.isoftstone.smartsite.model.message.data;
 
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
- * Created by yanyongjun on 2017/10/15.
+ * Created by yanyongjun on 2017/10/28.
  */
 
-public class SynergyData implements Serializable {
-    //消息类型
+public abstract class MsgData implements Serializable {
     public final static int TYPE_DEFAULT = 0;
-    public final static int TYPE_RECEIVE_REPORT = 1;//接收到一份巡查报告
-    public final static int TYPE_SEND_REPORT = 2; //发送一份报告
+    public final static int TYPE_YEAR = 3;
 
     private int mType = TYPE_DEFAULT;
     private int mId = -1;
     private long mTime = -1;
-    private String mName = "";
     private String mLoc = "光谷中心城1号工地";
     private String mDate = "2017-10-15";//TODO just for test
 
@@ -46,14 +40,6 @@ public class SynergyData implements Serializable {
         return mTime;
     }
 
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
     public void setLoc(String loc) {
         mLoc = loc;
     }
@@ -63,13 +49,15 @@ public class SynergyData implements Serializable {
     }
 
     public String getStringDate() {
-        if (mDate != null) {
+        if(mType == TYPE_YEAR){
+            return "2016年";
+        }
+        return "昨天";
+/*        if (mDate != null) {
             return mDate;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date(mTime);
-        return format.format(date);
+        Date date = new Date(mTime);*/
+/*        return format.format(date);*/
     }
-
 }
-

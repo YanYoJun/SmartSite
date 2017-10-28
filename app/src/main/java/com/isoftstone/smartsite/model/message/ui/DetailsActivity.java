@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.message.data.EnvironData;
-import com.isoftstone.smartsite.model.message.data.SynergyData;
+import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.data.VCRData;
 
 /**
@@ -61,11 +61,11 @@ public class DetailsActivity extends BaseActivity {
                 break;
             }
             case MsgFragment.FRAGMENT_TYPE_SYNERGY: {
-                SynergyData data = (SynergyData) intent.getSerializableExtra(MsgFragment.FRAGMENT_DATA);
+                ThreePartyData data = (ThreePartyData) intent.getSerializableExtra(MsgFragment.FRAGMENT_DATA);
                 details = "";
-                if (data.getType() == SynergyData.TYPE_RECEIVE_REPORT) {
+                if (data.getType() == ThreePartyData.TYPE_RECEIVE_REPORT) {
                     details = String.format(res.getString(R.string.receive_report), data.getName());
-                } else if (data.getType() == SynergyData.TYPE_SEND_REPORT) {
+                } else if (data.getType() == ThreePartyData.TYPE_SEND_REPORT) {
                     details = res.getString(R.string.send_report);
                 }
                 loc = String.format(res.getString(R.string.location), data.getLoc());

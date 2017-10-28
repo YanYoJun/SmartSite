@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:background="@color/app_background"
     tools:context="com.isoftstone.smartsite.model.message.ui.VcrActivity">
 
     <android.support.v7.widget.Toolbar
@@ -24,12 +24,12 @@
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/bigarrow"
-                android:background="@drawable/btn_back_press_bg"
                 android:layout_centerVertical="true"
+                android:background="@drawable/btn_back_press_bg"
+                android:onClick="onBackBtnClick"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:onClick="onBackBtnClick" />
+                android:src="@drawable/bigarrow" />
 
             <TextView
                 android:id="@+id/lab_title_name"
@@ -45,10 +45,10 @@
 
     <ListView
         android:id="@+id/listview_frag_vcr"
-        android:divider="@null"
         android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
+        android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
-        android:paddingTop="16dp"
-        android:layout_height="match_parent"></ListView>
+        android:layout_marginRight="16dp"
+        android:divider="@null"
+        android:paddingTop="16dp"></ListView>
 </LinearLayout>

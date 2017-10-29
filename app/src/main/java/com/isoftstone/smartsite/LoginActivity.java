@@ -6,12 +6,14 @@ import java.util.logging.LogRecord;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -24,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -48,7 +51,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	private String mIdString;
 	private String mPwdString;
 	private ArrayList<User> mUsers; // 用户列表
-    private HttpPost mHttpPost = new HttpPost();
+    private HttpPost mHttpPost = null;
 	private static final  int HANDLER_LOGIN_START = 1;
 	private static final  int HANDLER_LOGIN_END = 2;
 	private static final int HANDLER_SHOW_TOAST = 3;
@@ -58,6 +61,10 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	private KeepaliveService mKeepService = null;
 	private boolean isBound = false;
+	private View mIdView = null;
+	private View mPwdView = null;
+	private ImageView mIdImageView = null;
+	private ImageView mPwdImageView = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,16 +77,16 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		/* 获取已经保存好的用户密码 */
 		mUsers = UserUtils.getUserList(LoginActivity.this);
 
-		if (mUsers.size() > 0) {
-			/* 将列表中的第一个user显示在编辑框 */
+		/*if (mUsers.size() > 0) {
+			//将列表中的第一个user显示在编辑框
 			Log.i("test","mUsers.get(0).getId() ="+mUsers.get(0).getId());
 			mIdEditText.setText(mUsers.get(0).getId());
 			mPwdEditText.setText(mUsers.get(0).getPwd());
 			Message message = new Message();
 			message.what = HANDLER_LOGIN_START;
 			mHandler.sendMessage(message);
-		}
-
+		}*/
+		mHttpPost = new HttpPost();
 	}
 
 
@@ -116,6 +123,10 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	}
 
 	private void initView() {
+		mIdView = (View) findViewById(R.id.view_1);
+		mPwdView = (View) findViewById(R.id.view_2);
+		mIdImageView = (ImageView) findViewById(R.id.imageView_2);
+		mPwdImageView = (ImageView)findViewById(R.id.imageView_2);
 		mIdEditText = (EditText) findViewById(R.id.login_edtId);
 		mPwdEditText = (EditText) findViewById(R.id.login_edtPwd);
 		mLoginButton = (Button) findViewById(R.id.login_btnLogin);
@@ -128,6 +139,33 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 		mIdEditText.setText("admin");
 		mPwdEditText.setText("bmeB4000");
+
+		mIdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+					mIdView.setBackgroundColor(LoginActivity.this.getResources().getColor(R.color.mainColor));
+					mIdImageView.setImageDrawable(getResources().getDrawable(R.drawable.loginuser_blue));
+				}else{
+					mIdView.setBackgroundColor(LoginActivity.this.getResources().getColor(R.color.hit_text_color));
+					mIdImageView.setImageDrawable(getResources().getDrawable(R.drawable.loginuser_gray));
+				}
+			}
+		});
+
+		mPwdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+
+				if(hasFocus){
+					mPwdView.setBackgroundColor(LoginActivity.this.getResources().getColor(R.color.mainColor));
+					mPwdImageView.setImageDrawable(getResources().getDrawable(R.drawable.loginpassword_blue));
+				}else{
+					mPwdView.setBackgroundColor(LoginActivity.this.getResources().getColor(R.color.hit_text_color));
+					mPwdImageView.setImageDrawable(getResources().getDrawable(R.drawable.loginpassword_gray));
+				}
+			}
+		});
 	}
 
 	/* 初始化正在登录对话框 */
@@ -135,30 +173,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 		mLoginingDlg = new Dialog(this, R.style.loginingDlg);
 		mLoginingDlg.setContentView(R.layout.logining_dlg);
-
-		Window window = mLoginingDlg.getWindow();
-		WindowManager.LayoutParams params = window.getAttributes();
-		// 获取和mLoginingDlg关联的当前窗口的属性，从而设置它在屏幕中显示的位置
-
-		// 获取屏幕的高宽
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int cxScreen = dm.widthPixels;
-		int cyScreen = dm.heightPixels;
-
-		int height = (int) getResources().getDimension(
-				R.dimen.loginingdlg_height);// 高42dp
-		int lrMargin = (int) getResources().getDimension(
-				R.dimen.loginingdlg_lr_margin); // 左右边沿10dp
-		int topMargin = (int) getResources().getDimension(
-				R.dimen.loginingdlg_top_margin); // 上沿20dp
-
-		params.y = (-(cyScreen - height) / 2) + topMargin; // -199
-		/* 对话框默认位置在屏幕中心,所以x,y表示此控件到"屏幕中心"的偏移量 */
-
-		params.width = cxScreen;
-		params.height = height;
-		// width,height表示mLoginingDlg的实际大小
 
 		mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
 	}
@@ -244,8 +258,35 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		String strResult = "";
 		if((!mIdString.equals("test")) && (!mPwdString.equals("test"))){
 			 LoginBean loginBean = null;
-			 loginBean = mHttpPost.login(mIdString,mPwdString);
-             if(loginBean.isLoginSuccess()){
+			 String mobileDeviceId = ((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+			 loginBean = mHttpPost.login(mIdString,mPwdString,mobileDeviceId);
+             /*
+             String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
+             Log.i("test",day);
+             */
+			/*
+			int size = mHttpPost.getWeatherConditionDay("29","2017-10").size();
+			Log.i("test",size+" size ");
+			*/
+
+			/*
+			mHttpPost.onePMDevicesDataList("[1,2]","0","2017-10-01 00:00:00","2017-10-11 00:00:00");
+			 */
+			/*
+			int size = mHttpPost.getOneDevicesHistoryData("1").size();
+			Log.i("test",size+" size ");
+			*/
+
+			/*mHttpPost.onePMDevices24Data("2","2017-10-10");*/
+			/*
+			int size = mHttpPost.getDevices("","","","").size();
+			Log.i("test",size+" size ");
+             */
+
+			int size = mHttpPost.getMessage("","","","2").size();
+			Log.i("test",size+" size ");
+
+			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
 				 try {
 					 Log.i(TAG, "保存用户列表");

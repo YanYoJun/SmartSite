@@ -1,15 +1,31 @@
 package com.isoftstone.smartsite.http;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -18,31 +34,162 @@ import okhttp3.Response;
 import static android.R.attr.name;
 import static android.R.attr.password;
 import static android.R.attr.port;
+import static android.R.attr.radioButtonStyle;
 
 /**
  * Created by guowei on 2017/10/14.
  */
 
 public class HttpPost {
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient  mClient = null;
-    private String URL = "http://61.160.82.83:19090/ctess/";
-    private String LOGIN_URL = URL + "login";
+    public static String URL = "http://61.160.82.83:19090/ctess";
+    private String LOGIN_URL = URL + "/login";                        //登录
+    private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";
+    private String EQI_DATA_RANKING = URL + "/eqi/dataRanking";      //区域月度综合排名
+    private String EQI_DATA_COMPARISON = URL + "/eqi/dataComparison";  //区域月度数据对比
+    private String EQI_DAYS_PROPORTION = URL + "/eqi/daysProportion";  //优良天数占比
+    private String EQI_WEATHER_LIVE = URL + "/eqi/weatherLive";
+    private String EQI_LIST = URL + "/eqi/list";                       //单设备PM数据列表
+    private String EQI_BYDEVICE_HISTORY = URL + "/eqi/byDevice/history/";
+    private String EQI_BYDEVICE_DAYS = URL + "/eqi/byDevice/days";
+    private String ESS_DEVICE_LIST = URL + "/EssDevice/list";
+    private String MESSAGE_LIST = URL + "/message/list";
+    private String MESSAGE_ID_READ = URL + "/message/{id}/read";
+    private String USER_GET_LOGINUSER = URL + "/user/getLoginUser";
+    private String USER_UPDATE_USER = URL + "/user/updateUser";
+
+
+
     private LoginBean mLoginBean = null;
+    private static HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
     public HttpPost(){
         if (mClient == null){
-            mClient = new OkHttpClient();
+            mClient = new OkHttpClient.Builder()
+                    .cookieJar(new CookiesManager(App.getAppContext()))
+                    .build();
         }
     }
 
-    public LoginBean login(String username,String password){
-        LoginBean loginBean = null;
+    public static <T>  ArrayList<T> stringToList(String json ,Class<T> cls  ){
+        Gson gson = new Gson();
+        ArrayList<T> list = new ArrayList<T>();
+        JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+        for(final JsonElement elem : array){
+            list.add(gson.fromJson(elem, cls));
+        }
+        return list ;
+    }
+
+    public void test12(){
+        //更新用户信息
         FormBody  body = new FormBody.Builder()
-                .add("username", username)
-                .add("password", password)
+                .add("id", "7")
                 .build();
         Request request = new Request.Builder()
-                .url(LOGIN_URL)
-                .post(body)
+                .url(USER_UPDATE_USER)
+                .patch(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            Log.i("text10","------------------------------------"+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                Log.i("text","------------------------------------"+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test11(){
+        //获取用户信息
+        FormBody  body = new FormBody.Builder()
+                .add("id", "7")
+                .build();
+        Request request = new Request.Builder()
+                .url(USER_GET_LOGINUSER)
+                .patch(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            Log.i("text10","------------------------------------"+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                Log.i("text","------------------------------------"+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test10(){
+        //阅读消息
+        FormBody  body = new FormBody.Builder()
+                .add("id", "256")
+                .build();
+        Request request = new Request.Builder()
+                .url(MESSAGE_ID_READ)
+                .patch(body)
+                .build();
+        Response response = null;
+        try {
+            Log.i("text10","------------------------------------"+request.url().toString());
+            response = mClient.newCall(request).execute();
+            Log.i("text10","------------------------------------"+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                Log.i("text","------------------------------------"+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void test4(){
+        try {
+            //天气实况
+            JSONObject object = new JSONObject();
+            //object.put("archId",47);
+            //object.put("time","2017-10");
+            Log.i("text","------------------------------------"+object.toString());
+            RequestBody body = RequestBody.create(JSON, object.toString());
+            Request request = new Request.Builder()
+                    .url(EQI_WEATHER_LIVE)
+                    .post(body)
+                    .build();
+
+
+            Response response = null;
+            response = mClient.newCall(request).execute();
+            Log.i("text","------------------------------------"+response.code());
+            if(response.isSuccessful()){
+                String responsebody = response.body().string();
+                Log.i("text","------------------------------------"+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } /*catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+
+
+
+
+
+    public void getVideoConfig(){
+        Request request = new Request.Builder()
+                .url(GET_VIDEO_CONFIG)
+                .get()
                 .build();
         Response response = null;
         try {
@@ -52,25 +199,15 @@ public class HttpPost {
                 String responsebody = response.body().string();
                 Log.i("text","------------------------------------"+responsebody);
                 JSONObject json = new JSONObject(responsebody);
-                boolean success = json.getBoolean("success");
-                if(success){
-                    mLoginBean.setmName(username);
-                    mLoginBean.setmPassword(password);
-                    mLoginBean.setLoginSuccess(true);
-                }else{
-                    int errorinfo = json.getInt("reason");
-                    mLoginBean.setmErrorCode(errorinfo);
-                    mLoginBean.setLoginSuccess(false);
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return mLoginBean;
-
     }
+
+
 
     public HomeBean getHomeDate(){
         HomeBean homeBean = null;
@@ -177,60 +314,6 @@ public class HttpPost {
 
     public  PMDevicesListBean getPMDevicesList(String token,String username){
         PMDevicesListBean pmdeviceslist = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONArray pmdevicesListJson = new JSONArray(results);
-                ArrayList<PMDevicesBean> list = new ArrayList<PMDevicesBean>();
-                for (int i = 0; i < pmdevicesListJson.length(); i ++){
-                    JSONObject pmdevicesJsonObje = pmdevicesListJson.getJSONObject(i);
-                    String name = pmdevicesJsonObje.getString("name");
-                    String time = pmdevicesJsonObje.getString("time");
-                    String address = pmdevicesJsonObje.getString("address");
-                    int state = pmdevicesJsonObje.getInt("state");
-                    String PM10 = pmdevicesJsonObje.getString("PM10");
-                    String PM25 = pmdevicesJsonObje.getString("PM25");
-                    String NO2 = pmdevicesJsonObje.getString("NO2");
-                    String device_id = pmdevicesJsonObje.getString("device_id");
-                    double longitude = pmdevicesJsonObje.getDouble("longitude");
-                    double latitude = pmdevicesJsonObje.getDouble("latitude");
-                    PMDevicesBean pmDevicesBean = new PMDevicesBean();
-                    pmDevicesBean.setName(name);
-                    pmDevicesBean.setTime(time);
-                    pmDevicesBean.setAddress(address);
-                    pmDevicesBean.setState(state);
-                    pmDevicesBean.setPM10(PM10);
-                    pmDevicesBean.setPM25(PM25);
-                    pmDevicesBean.setNO2(NO2);
-                    pmDevicesBean.setDevice_id(device_id);
-                    pmDevicesBean.setLongitude(longitude);
-                    pmDevicesBean.setLatitude(latitude);
-                    list.add(pmDevicesBean);
-                }
-
-                pmdeviceslist = new PMDevicesListBean();
-                pmdeviceslist.setErrorcode(errorcode);
-                pmdeviceslist.setErrorinfo(errorinfo);
-                pmdeviceslist.setDate(date);
-                pmdeviceslist.setLsit(list);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         ArrayList<PMDevicesBean> list = new ArrayList<PMDevicesBean>();
         PMDevicesBean pmdevices_1 = new PMDevicesBean();
         pmdevices_1.setName("NCX-05");
@@ -266,61 +349,6 @@ public class HttpPost {
 
     public PMDevicesDataInfoBean getPMDevicesDataInfo(String device_id){
         PMDevicesDataInfoBean pmdevicesDatainfo = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).add("device_id", device_id).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject pmdevicesdatainfojson = new JSONObject(results);
-                String name = pmdevicesdatainfojson.getString("name");
-                String time = pmdevicesdatainfojson.getString("time");
-                String address  = pmdevicesdatainfojson.getString("address");
-                int state   = pmdevicesdatainfojson.getInt("state");
-                String PM10 = pmdevicesdatainfojson.getString("PM10");
-                String PM25 = pmdevicesdatainfojson.getString("PM2.5");
-                String NO2  = pmdevicesdatainfojson.getString("NO2");
-                String device_id  = pmdevicesdatainfojson.getString("device_id");
-                String O3  = pmdevicesdatainfojson.getString("O3");
-                String temperature  = pmdevicesdatainfojson.getString("temperature");
-                String windSpeed  = pmdevicesdatainfojson.getString("windSpeed");
-                String pressure  = pmdevicesdatainfojson.getString("pressure");
-                String humidity  = pmdevicesdatainfojson.getString("humidity");
-                String Precipitation  = pmdevicesdatainfojson.getString("Precipitation");
-
-                pmdevicesDatainfo = new PMDevicesDataInfoBean();
-                pmdevicesDatainfo.setErrorinfo(errorinfo);
-                pmdevicesDatainfo.setErrorcode(errorcode);
-                pmdevicesDatainfo.setDate(date);
-                pmdevicesDatainfo.setName(name);
-                pmdevicesDatainfo.setTime(time);
-                pmdevicesDatainfo.setAddress(address);
-                pmdevicesDatainfo.setState(state);
-                pmdevicesDatainfo.setPM10(PM10);
-                pmdevicesDatainfo.setPM25(PM25);
-                pmdevicesDatainfo.setNO2(NO2);
-                pmdevicesDatainfo.setDevice_id(device_id);
-                pmdevicesDatainfo.setO3(O3);
-                pmdevicesDatainfo.setTemperature(temperature);
-                pmdevicesDatainfo.setWindSpeed(windSpeed);
-                pmdevicesDatainfo.setPressure(pressure);
-                pmdevicesDatainfo.setHumidity(humidity);
-                pmdevicesDatainfo.setPrecipitation(Precipitation);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         pmdevicesDatainfo = new PMDevicesDataInfoBean();
         pmdevicesDatainfo.setErrorinfo("");
         pmdevicesDatainfo.setErrorcode(100);
@@ -342,161 +370,9 @@ public class HttpPost {
         return pmdevicesDatainfo;
     }
 
-    /*public PMDevicesDataListBean getPMDevicesDataList(String device_id){
-        PMDevicesDataListBean pmdevicesdatalist = null;
-        RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).add("device_id", device_id).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject pmdevicesdatalistjson = new JSONObject(results);
-                String name = pmdevicesdatalistjson.getString("name");
-                String time = pmdevicesdatalistjson.getString("time");
-                String address  = pmdevicesdatalistjson.getString("address");
-                int state   = pmdevicesdatalistjson.getInt("state");
-                String data_list = pmdevicesdatalistjson.getString("data_list");
-                JSONArray dataListJson = new JSONArray(data_list);
-                ArrayList<PMDevicesDataInfoBean> list = new ArrayList<PMDevicesDataInfoBean>();
-                for (int i = 0; i < dataListJson.length(); i ++) {
-                    JSONObject datainfoJsonObje = dataListJson.getJSONObject(i);
-                    String datainf_time = datainfoJsonObje.getString("time");
-                    String PM10 = datainfoJsonObje.getString("PM10");
-                    String PM25  = datainfoJsonObje.getString("PM2.5");
-                    String NO2   = datainfoJsonObje.getString("NO2");
-                    String datainfo_device_id   = datainfoJsonObje.getString("device_id");
-                    PMDevicesDataInfoBean datainfo = new PMDevicesDataInfoBean();
-                    datainfo.setTime(datainf_time);
-                    datainfo.setPM10(PM10);
-                    datainfo.setPM25(PM25);
-                    datainfo.setNO2(NO2);
-                    datainfo.setDevice_id(datainfo_device_id);
-                    list.add(datainfo);
-                }
-                pmdevicesdatalist = new PMDevicesDataListBean();
-                pmdevicesdatalist.setErrorinfo(errorinfo);
-                pmdevicesdatalist.setErrorcode(errorcode);
-                pmdevicesdatalist.setDate(date);
-                pmdevicesdatalist.setAddress(address);
-                pmdevicesdatalist.setName(name);
-                pmdevicesdatalist.setState(state);
-                pmdevicesdatalist.setTime(time);
-                pmdevicesdatalist.setLsit(list);
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ArrayList<PMDevicesDataInfoBean> list = new ArrayList<PMDevicesDataInfoBean>();
-        PMDevicesDataInfoBean datainfo_1 = new PMDevicesDataInfoBean();
-        datainfo_1.setTime("2017-09-01 20:56");
-        datainfo_1.setPM10("32");
-        datainfo_1.setPM25("25");
-        datainfo_1.setNO2("123");
-        datainfo_1.setDevice_id("1332");
-        list.add(datainfo_1);
-        PMDevicesDataInfoBean datainfo_2 = new PMDevicesDataInfoBean();
-        datainfo_2.setTime("2017-09-01 20:56");
-        datainfo_2.setPM10("32");
-        datainfo_2.setPM25("25");
-        datainfo_2.setNO2("122");
-        datainfo_2.setDevice_id("1332");
-        list.add(datainfo_2);
-        pmdevicesdatalist = new PMDevicesDataListBean();
-        pmdevicesdatalist.setErrorinfo(errorinfo);
-        pmdevicesdatalist.setErrorcode(errorcode);
-        pmdevicesdatalist.setDate(date);
-        pmdevicesdatalist.setAddress(address);
-        pmdevicesdatalist.setName(name);
-        pmdevicesdatalist.setState(state);
-        pmdevicesdatalist.setTime(time);
-        pmdevicesdatalist.setLsit(list);
-        return pmdevicesdatalist;
-    }*/
 
     public ReportListBean getReportList(){
         ReportListBean reportlist = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject reportlistjson = new JSONObject(results);
-                String reportList = reportlistjson.getString("reportList");
-                String checkreport_list = reportlistjson.getString("checkreport_list");
-                ArrayList<ReportBean> patrolList = new ArrayList<ReportBean>();
-                JSONArray patrolJSONArray = new JSONArray(reportList);
-                for (int i =0 ; i < patrolJSONArray.length(); i ++)
-                {
-                    JSONObject patrolJSON = patrolJSONArray.getJSONObject(i);
-                    String report_id = patrolJSON.getString("report_id");
-                    String report_name = patrolJSON.getString("report_name");
-                    String name = patrolJSON.getString("name");
-                    String time = patrolJSON.getString("time");
-                    String address = patrolJSON.getString("address");
-                    int stat = patrolJSON.getInt("stat");
-                    ReportBean reportBean = new ReportBean();
-                    reportBean.setReport_id(report_id);
-                    reportBean.setReport_name(report_name);
-                    reportBean.setName(name);
-                    reportBean.setTime(time);
-                    reportBean.setAddress(address);
-                    reportBean.setStat(stat);
-                    patrolList.add(reportBean);
-                }
-                ArrayList<ReportBean> checkList = new ArrayList<ReportBean>();
-                JSONArray checkJSONArray = new JSONArray(checkreport_list);
-                for (int i =0 ; i < checkJSONArray.length(); i ++)
-                {
-                    JSONObject checkJSON = checkJSONArray.getJSONObject(i);
-                    String report_id = checkJSON.getString("report_id");
-                    String report_name = checkJSON.getString("report_name");
-                    String name = checkJSON.getString("name");
-                    String time = checkJSON.getString("time");
-                    String address = checkJSON.getString("address");
-                    int stat = checkJSON.getInt("stat");
-                    ReportBean reportBean = new ReportBean();
-                    reportBean.setReport_id(report_id);
-                    reportBean.setReport_name(report_name);
-                    reportBean.setName(name);
-                    reportBean.setTime(time);
-                    reportBean.setAddress(address);
-                    reportBean.setStat(stat);
-                    checkList.add(reportBean);
-                }
-                reportlist = new ReportListBean();
-                reportlist.setErrorcode(errorcode);
-                reportlist.setErrorinfo(errorinfo);
-                reportlist.setDate(date);
-                reportlist.setPatrolRepoList(patrolList);
-                reportlist.setCheckRepoList(checkList);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         ArrayList<ReportBean> patrolList = new ArrayList<ReportBean>();
         ArrayList<ReportBean> checkList = new ArrayList<ReportBean>();
         ReportBean reportBean = new ReportBean();
@@ -521,49 +397,6 @@ public class HttpPost {
 
     public ReportBean getPatrolRepo(String report_id){
         ReportBean reportBean = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).add("report_id", report_id).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject reportjson = new JSONObject(results);
-                String address = reportjson.getString("address");
-                String name  = reportjson.getString("name");
-                String image_list  = reportjson.getString("image_list");
-                JSONArray imagelistJSONArray = new JSONArray(image_list);
-                ArrayList<String> list = new ArrayList<String>();
-                for (int i =0 ; i < imagelistJSONArray.length(); i ++) {
-                    JSONObject imageJSON = imagelistJSONArray.getJSONObject(i);
-                    String image_1 = checkJSON.getString("image_1");
-                    String image_2 = checkJSON.getString("image_2");
-                    String image_3 = checkJSON.getString("image_3");
-                    list.add(image_1);
-                    list.add(image_2);
-                    list.add(image_3);
-                }
-                reportBean = new ReportBean();
-                reportBean.setErrorinfo(errorinfo);
-                reportBean.setErrorcode(errorcode);
-                reportBean.setDate(date);
-                reportBean.setAddress(address);
-                reportBean.setName(name);
-                reportBean.setImage_list(list);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         ArrayList<String> list = new ArrayList<String>();
         list.add("http://www.baodu.com");
         list.add("http://www.baodu.com");
@@ -576,5 +409,99 @@ public class HttpPost {
         reportBean.setName("zhangsan");
         reportBean.setImage_list(list);
         return reportBean;
+    }
+
+
+    public boolean isConnected(){
+        return NetworkUtils.isConnected();
+    }
+
+
+    /*
+    登录专用接口，传入用户名，密码，以及设备ID号
+     */
+    public LoginBean login(String username, String password, String mobileDeviceId){
+
+        if (mLoginBean == null)
+        {
+            mLoginBean = new LoginBean();
+        }
+
+        LoginBean loginBean = UserLogin.login(LOGIN_URL,mClient,username,password,mobileDeviceId);
+        if(loginBean != null){
+            if(loginBean.isLoginSuccess()){
+                mLoginBean.setLoginSuccess(true);
+                mLoginBean.setmName(username);
+                mLoginBean.setmPassword(password);
+            }else{
+                mLoginBean.setmErrorCode(loginBean.getmErrorCode());
+            }
+        }
+
+        return  mLoginBean;
+    }
+
+
+
+
+    /*
+     区域月度综合排名  测试object.put("archId",21); object.put("time","2017-10");
+   */
+    public EQIRankingBean  eqiDataRanking(String archId,String time){
+        return EQIMonitoring.eqiDataRanking(EQI_DATA_RANKING,mClient,archId,time);
+    }
+
+
+    /*
+     区域月度数据对比 测试数据 "29","2017-10","1"
+     */
+    public MonthlyComparisonBean carchMonthlyComparison(String archId,String time,String type){
+        return  EQIMonitoring.carchMonthlyComparison(EQI_DATA_COMPARISON,mClient,archId,time,type);
+    }
+
+    /*
+    优良天数占比
+    "29","2017-10"
+     */
+    public ArrayList<WeatherConditionBean> getWeatherConditionDay(String archId,String time){
+        return  EQIMonitoring.getWeatherConditionDay(EQI_DAYS_PROPORTION,mClient,archId,time);
+    }
+
+    /*
+    2.2	单设备PM数据列表  "[1,2]","0","2017-10-01 00:00:00","2017-10-11 00:00:00"
+    */
+    public  OnePMDevicesData onePMDevicesDataList(String deviceIdsStr,String dataType,String beginTime,String endTime) {
+          return EQIMonitoring.onePMDevicesDataList(EQI_LIST,mClient,deviceIdsStr,dataType,beginTime,endTime);
+    }
+
+
+   /*
+   2.3	单设备PM历史数据    测试数据 "1"
+    */
+    public  ArrayList<OnePMDevicesData.PDDevicesData> getOneDevicesHistoryData(String id){
+       return EQIMonitoring.getOneDevicesHistoryData(EQI_BYDEVICE_HISTORY,mClient,id);
+    }
+
+
+    /*2.5	单设备某天24小时数据  测试数据
+     */
+
+    /*public void onePMDevices24Data(String deviceIdsStr,String pushTime){
+        EQIMonitoring.onePMDevices24Data(EQI_BYDEVICE_DAYS,mClient,deviceIdsStr,pushTime);
+    }*/
+
+    /*
+    //获取设备列表—文昊炅  测试 "","","",""
+     */
+    public  ArrayList<DevicesBean>  getDevices(String deviceType,String deviceName,String archId,String deviceStatus){
+        return EQIMonitoring.getDevicesList(ESS_DEVICE_LIST,mClient,deviceType,deviceName,archId,deviceStatus);
+    }
+
+    /*
+     //获取消息列表   测试"","","","2"
+     */
+    public ArrayList<MessageBean> getMessage(String title, String type, String status, String module) {
+
+        return  MessageOperation.getMessage(MESSAGE_LIST,mClient,title,type,status,module);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,10 +44,10 @@ public class MainFragment extends BaseFragment{
     private Button mVideoMonitoring = null; //视频监控
     private Button mAirMonitoring = null; //环境监测
     private Button mThirdPartReport = null; //三方协同按钮
-    private TextView mVideoMonitoringMsg = null;
-    private TextView mAirMonitoringMsg = null;
-    private TextView mUnCheckMsg = null;
-    private TextView mUntreatedReport = null;
+    private LinearLayout mVideoMonitoringMsg = null;
+    private LinearLayout mAirMonitoringMsg = null;
+    private LinearLayout mUnCheckMsg = null;
+    private LinearLayout mUntreatedReport = null;
     private ListView mListView = null;
     @Override
     protected int getLayoutRes() {
@@ -62,28 +63,28 @@ public class MainFragment extends BaseFragment{
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
-        mUnCheckMsg = (TextView) rootView.findViewById(R.id.textView10);
+        mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
         mUnCheckMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterUnChekMsg();
             }
         });
-        mUntreatedReport = (TextView) rootView.findViewById(R.id.textView11);
+        mUntreatedReport = (LinearLayout) rootView.findViewById(R.id.textView11);
         mUntreatedReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterUntreatedReport();
             }
         });
-        mVideoMonitoringMsg = (TextView) rootView.findViewById(R.id.textView12);
+        mVideoMonitoringMsg = (LinearLayout) rootView.findViewById(R.id.textView12);
         mVideoMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterVideoMonitoring();
             }
         });
-        mAirMonitoringMsg = (TextView) rootView.findViewById(R.id.textView13);
+        mAirMonitoringMsg = (LinearLayout) rootView.findViewById(R.id.textView13);
         mAirMonitoringMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

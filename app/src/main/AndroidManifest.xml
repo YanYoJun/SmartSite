@@ -86,10 +86,7 @@
         <activity
             android:name=".model.tripartite.ui.TripartiteActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.tripartite.ui.AddReportActivity"
-            android:launchMode="singleTask"></activity>
-        <activity android:name=".model.tripartite.ui.ReadReportActivity"
-            android:launchMode="singleTask"></activity>
+
         <activity android:name=".model.tripartite.ui.ReplyInspectReportActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.ui.RecheckInspectReportActivity"
@@ -115,6 +112,13 @@
 
         <service android:name=".common.NewKeepAliveService"/>
         <!--zhangyinfu end-->
+
+        <!--zhangwei begin-->
+        <activity android:name=".model.map.ui.VideoMonitorMapActivity"
+            android:screenOrientation="portrait"></activity>
+
+
+        <!--zhangwei end-->
     </application>
 
 </manifest>

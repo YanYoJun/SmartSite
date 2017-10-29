@@ -63,7 +63,7 @@
     <!-- map   start -->
     <color name="devices_press">#88ffffff</color>
     <color name="report_item_title_bg">#fbfbfb</color>
-    <color name="back_pressed">#eeeeee</color>
+    <color name="back_pressed">#eeeeeeee</color>
     <color name="map_banner_text_color">#424242</color>
     <!-- map   end -->
 

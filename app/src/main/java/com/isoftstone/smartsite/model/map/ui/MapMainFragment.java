@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.map.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTabHost;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
@@ -81,6 +85,10 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         aotiLatLon = new LatLng(30.479736,114.476322);
 
         mapContentView = (FrameLayout) rootView.findViewById(R.id.map_content);
+        ImageView iv_back = (ImageView) rootView.findViewById(R.id.iv_back);
+        ImageView iv_search = (ImageView) rootView.findViewById(R.id.iv_search);
+        iv_back.setOnClickListener(this);
+        iv_search.setOnClickListener(this);
 
     }
 
@@ -95,6 +103,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ToastUtils.showShort(((TextView)view).getText().toString());
+                getActivity().startActivity(new Intent(getActivity(),VideoMonitorMapActivity.class));
                 chooseCameraPopWindow.dismiss();
             }
         });
@@ -284,6 +293,13 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 break;
             case R.id.device_cancel:
                 deviceInfoPopWindow.dismiss();
+                break;
+            case R.id.iv_back:
+                FragmentTabHost tabHost = (FragmentTabHost) getActivity().findViewById(R.id.tab_host);
+                tabHost.setCurrentTab(0);
+                break;
+            case R.id.iv_search:
+                ToastUtils.showShort("search");
                 break;
         }
     }

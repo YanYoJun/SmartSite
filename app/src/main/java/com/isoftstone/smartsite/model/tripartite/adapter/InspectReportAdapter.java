@@ -6,11 +6,10 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -32,27 +31,33 @@ public class InspectReportAdapter extends SimpleAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         if (view != null) {
-            Button btnView = (Button) view.findViewById(R.id.btn_view);
+            View btnView = view.findViewById(R.id.linear_read_report);
             if (btnView != null) {
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, InspectReportViewActivity.class);
+                        Intent intent = new Intent(mContext, ReadReportActivity.class);
                         mContext.startActivity(intent);
                     }
                 });
             }
 
-/*            Button btnReCheck = (Button) view.findViewById(R.id.btn_recheck);
-            if (btnReCheck != null) {
-                btnReCheck.setOnClickListener(new View.OnClickListener() {
+            View btnReply = view.findViewById(R.id.linear_reply_report);
+            if (btnReply != null) {
+                btnReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, RecheckInspectReportActivity.class);
-                        mContext.startActivity(intent);
+                        //TODO
                     }
                 });
-            }*/
+            }
+            View btnRevisit = view.findViewById(R.id.linear_revisit_report);
+            btnReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO
+                }
+            });
         }
         return view;
     }

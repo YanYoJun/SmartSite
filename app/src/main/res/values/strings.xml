@@ -94,6 +94,8 @@
     <string name="end_time">结束时间</string>
     <string name="inpsect_report_name">报告名称</string>
     <string name="pls_enter_msg">请输入内容</string>
+    <!-- 查看巡查报告-->
+    <string name="read_report_title">查看巡查报告</string>
 
     <string name="inspect_report_sub_attach">提交附件：</string>
     <string name="inspect_report_view_attach">查看附件：</string>

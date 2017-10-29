@@ -198,6 +198,71 @@
 
             </RelativeLayout>
 
+            <!-- 建设单位 默认不显示-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_build_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_build_company"
+                    style="@style/add_report_edittext" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/shape_listview_year_bg" />
+
+            <!-- 施工单位，默认不显示-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_construction_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_construction_company"
+                    style="@style/add_report_edittext" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/shape_listview_year_bg" />
+
+            <!-- 监理单位，默认不显示-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    style="@style/add_report_lab"
+                    android:text="@string/inspect_report_supervision_company" />
+
+                <EditText
+                    android:id="@+id/inspect_report_supervision_company"
+                    style="@style/add_report_edittext" />
+            </RelativeLayout>
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
@@ -262,7 +327,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/shape_listview_year_bg" />
-<!--巡查时间-->
+            <!--巡查时间-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -314,9 +379,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:paddingLeft="16dp"
-                android:layout_marginTop="10dp"
                 android:paddingRight="16dp">
 
                 <TextView
@@ -394,13 +459,13 @@
 
                 </RelativeLayout>
             </LinearLayout>
-<!--是否回访-->
+            <!--是否回访-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:paddingLeft="16dp"
-                android:layout_marginTop="10dp"
                 android:paddingRight="16dp">
 
                 <TextView
@@ -472,6 +537,7 @@
 
             <Button
                 android:id="@+id/btn_add_report_submit"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="20dp"
@@ -482,7 +548,6 @@
                 android:elevation="0dp"
                 android:text="@string/submit"
                 android:textColor="@color/white"
-                style="?android:attr/borderlessButtonStyle"
                 android:textSize="16sp"></Button>
 
         </LinearLayout>

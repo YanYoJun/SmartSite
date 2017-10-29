@@ -88,7 +88,7 @@
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.ui.AddReportActivity"
             android:launchMode="singleTask"></activity>
-        <activity android:name=".model.tripartite.ui.InspectReportViewActivity"
+        <activity android:name=".model.tripartite.ui.ReadReportActivity"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.ui.ReplyInspectReportActivity"
             android:launchMode="singleTask"></activity>

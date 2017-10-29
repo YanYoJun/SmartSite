@@ -10,10 +10,10 @@ import com.isoftstone.smartsite.base.BaseFragment;
  * 查看巡查报告的fragment界面，可以嵌套在不同的activity中
  */
 
-public class InspectReportViewFrag extends BaseFragment {
+public class ReadReportFrag extends BaseFragment {
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_view_inspect_report;
+        return R.layout.fragment_read_report;
     }
 
     @Override

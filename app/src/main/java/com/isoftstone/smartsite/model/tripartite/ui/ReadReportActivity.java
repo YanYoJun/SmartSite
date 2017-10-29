@@ -13,10 +13,10 @@ import com.isoftstone.smartsite.base.BaseActivity;
  * 查看巡查报告界面
  */
 
-public class InspectReportViewActivity extends BaseActivity {
+public class ReadReportActivity extends BaseActivity {
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_view_inspect_report;
+        return R.layout.activity_read_report;
     }
 
     @Override

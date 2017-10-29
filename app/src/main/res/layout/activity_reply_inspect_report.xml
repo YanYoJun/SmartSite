@@ -15,7 +15,7 @@
 
             <fragment
                 android:id="@+id/frag_inspect_report_view"
-                android:name="com.isoftstone.smartsite.model.tripartite.ui.InspectReportViewFrag"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.ReadReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
 

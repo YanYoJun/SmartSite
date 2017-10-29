@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--验收报告验收页-->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,127 +7,71 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.isoftstone.smartsite.model.tripartite.ui.AddReportActivity">
+    tools:context="com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:clipToPadding="true"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
+        style="@style/toolbar_style"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:background="?android:attr/homeAsUpIndicator"
-                android:onClick="onBtnBackClick" />
+                android:background="@drawable/btn_back_press_bg"
+                android:onClick="onBackBtnClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:src="@drawable/bigarrow" />
 
             <TextView
-                android:id="@+id/lab_title"
+                android:id="@+id/lab_title_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/add_report"
+                android:text="@string/inspect_report_reply"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btn_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@null"
-                android:elevation="1dp"
-                android:onClick="onBtnSaveClick"
-                android:paddingRight="4dp"
-                android:text="@string/view"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdge="vertical"
-        android:scrollbars="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linear_frag_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/check_report_report_name"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_report_name" />
-            <EditText
-                android:id="@+id/check_report_report_report_time"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_report_report_time" />
-            <EditText
-                android:id="@+id/inspect_report_recheck_time"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_recheck_time" />
-
-
-
-            <EditText
-                android:id="@+id/inspect_report_recheck_people"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_recheck_people" />
-
-            <EditText
-                android:id="@+id/inspect_report_recheck_msg"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_recheck_msg" />
-
-            <EditText
-                android:id="@+id/check_report_construction_company"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_construction_company" />
-
-            <EditText
-                android:id="@+id/inspect_report_recheck_des"
-                style="@style/add_report_edittext"
-                android:hint="@string/inspect_report_recheck_des" />
-
-
-
-            <EditText
-                android:id="@+id/check_report_des"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_des" />
-
-            <EditText
-                android:id="@+id/check_report_is_need_recheck"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_is_need_recheck" />
-
-            <EditText
-                android:id="@+id/check_report_recheck_time"
-                style="@style/add_report_edittext"
-                android:hint="@string/check_report_recheck_time" />
-
-            <Button
+            <fragment
+                android:id="@+id/frag_inspect_report_view"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.ReadReportFrag"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/submit"
-                android:textColor="@color/tab_text_normal"
-                android:textSize="17sp" />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_height="wrap_content"></fragment>
 
+            <fragment
+                android:id="@+id/frag_view_reply_inspect_report"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.ViewReplyReportFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+            <fragment
+                android:id="@+id/frag_reply_inspect_report"
+                android:name="com.isoftstone.smartsite.model.tripartite.ui.CheckFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+
+        </LinearLayout>
+
+
+    </ScrollView>
 </LinearLayout>

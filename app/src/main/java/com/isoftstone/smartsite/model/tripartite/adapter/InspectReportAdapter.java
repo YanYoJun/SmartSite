@@ -7,9 +7,13 @@ import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.ReplyReportActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.RevisitFragment;
+import com.isoftstone.smartsite.model.tripartite.ui.RevistReportActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -47,15 +51,17 @@ public class InspectReportAdapter extends SimpleAdapter {
                 btnReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        Intent intent = new Intent(mContext, ReplyReportActivity.class);
+                        mContext.startActivity(intent);
                     }
                 });
             }
             View btnRevisit = view.findViewById(R.id.linear_revisit_report);
-            btnReply.setOnClickListener(new View.OnClickListener() {
+            btnRevisit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
+                    Intent intent = new Intent(mContext, RevistReportActivity.class);
+                    mContext.startActivity(intent);
                 }
             });
         }

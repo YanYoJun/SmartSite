@@ -11,6 +11,7 @@ import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.tripartite.ui.CheckReportActivity;
+import com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity;
 import com.isoftstone.smartsite.model.tripartite.ui.ViewCheckReportActivity;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class CheckReportAdapter extends SimpleAdapter {
     private Context mContext = null;
 
     public CheckReportAdapter(Context context, List<? extends Map<String, ?>> data,
-                                @LayoutRes int resource, String[] from, @IdRes int[] to) {
+                              @LayoutRes int resource, String[] from, @IdRes int[] to) {
         super(context, data, resource, from, to);
         mContext = context;
     }
@@ -33,12 +34,12 @@ public class CheckReportAdapter extends SimpleAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         if (view != null) {
-            Button btnView = (Button) view.findViewById(R.id.btn_check_view);
+/*            Button btnView = (Button) view.findViewById(R.id.btn_check_view);
             if (btnView != null) {
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, ViewCheckReportActivity.class);
+                        Intent intent = new Intent(mContext, ReadReportActivity.class);
                         mContext.startActivity(intent);
                     }
                 });
@@ -52,7 +53,23 @@ public class CheckReportAdapter extends SimpleAdapter {
                         mContext.startActivity(intent);
                     }
                 });
-            }
+            }*/
+            View v = view.findViewById(R.id.linear_read);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ReadReportActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            View v1 = view.findViewById(R.id.linear_check);
+            v1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, CheckReportActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
         }
         return view;
     }

@@ -1,9 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
@@ -14,6 +11,8 @@ import com.isoftstone.smartsite.base.BaseActivity;
  */
 
 public class ReadReportActivity extends BaseActivity {
+
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_read_report;
@@ -21,18 +20,16 @@ public class ReadReportActivity extends BaseActivity {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        addRevisitFrag();
+        //addRevisitFrag();
 
     }
 
-    private void addRevisitFrag(){
-        FragmentManager fragManager = getSupportFragmentManager();
+    private void addRevisitFrag() {
+/*        FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
 
         Fragment revisitFrag = new ViewRevisitInsepectReportFrag();
-        fragTrans.add(R.id.linear_frag_group,revisitFrag);
-        fragTrans.commit();
-
-
+        fragTrans.add(R.id.linear_frag_group, revisitFrag);
+        fragTrans.commit();*/
     }
 }

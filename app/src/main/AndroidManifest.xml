@@ -85,7 +85,8 @@
             android:launchMode="singleTask"></activity>
         <activity
             android:name=".model.tripartite.ui.TripartiteActivity"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask">
+        </activity>
 
         <activity android:name=".model.tripartite.ui.ReplyInspectReportActivity"
             android:launchMode="singleTask"></activity>
@@ -103,6 +104,15 @@
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.UnReadMsgActivity"
             android:launchMode="singleTask"></activity>
+        <activity android:name=".model.tripartite.ui.AddReportActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.tripartite.ui.ReadReportActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.tripartite.ui.ReplyReportActivity"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".model.tripartite.ui.RevistReportActivity"
+            android:launchMode="singleTask"></activity>
+
         <!--yanyongjun end-->
 
         <!--zhangyinfu begin-->

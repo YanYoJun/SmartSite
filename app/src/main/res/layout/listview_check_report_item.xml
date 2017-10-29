@@ -63,8 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/people"
-            android:singleLine="true"
             android:drawablePadding="2dp"
+            android:singleLine="true"
             android:text="李成辉"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
@@ -75,8 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:drawableLeft="@drawable/company"
-            android:singleLine="true"
             android:drawablePadding="2dp"
+            android:singleLine="true"
             android:text="湖北怡瑞有限公司"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
@@ -98,6 +98,7 @@
 
 
         <LinearLayout
+            android:id="@+id/linear_read"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -120,6 +121,7 @@
             android:src="@color/dividing_line" />
 
         <LinearLayout
+            android:id="@+id/linear_check"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

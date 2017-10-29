@@ -3,15 +3,23 @@ package com.isoftstone.smartsite.model.video;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.utils.DataUtils;
+import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
+import com.uniview.airimos.listener.OnDragReplayListener;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.listener.OnStartReplayListener;
 import com.uniview.airimos.manager.ServiceManager;
@@ -21,13 +29,15 @@ import com.uniview.airimos.parameter.QueryReplayParam;
 import com.uniview.airimos.parameter.StartReplayParam;
 import com.uniview.airimos.thread.RecvStreamThread;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by zhangyinfu on 2017/10/20.
  */
 
-public class VideoRePlayActivity extends Activity{
+public class VideoRePlayActivity extends Activity implements  View.OnClickListener{
     private static final String TAG = "zyf_RePlayVideoActivity";
 
     private SurfaceView mSurfaceView;
@@ -39,11 +49,29 @@ public class VideoRePlayActivity extends Activity{
     private String mEndTime;
     private String mFileName;
     private int mPosition;
+    private LinearLayout  mPalyerControllerLayout;
+    private ImageView mPlayPreviousIV;
+    private ImageView mPlayPlayIV;
+    private ImageView mPlayNextIV;
 
+    //message.what
+    private static final int STATE_CHANGED = 0x111; //播放状态变化
+    private static final int VISIBLE_TOP_BOTTOM = 0x113;    //视频顶部，底部布局的显示隐藏
+    private static final int SEEKBAR_TOUCHED = 0x114;   //滑动进度条被手动滑动后(快进快退)
+    private static final int SYSTEM_TIME_CHANED = 0x115;   //系统时间发生改变时
 
-    //static {
-    //    System.loadLibrary("imosplayer");
-    //}
+    private static final int PLAY = 0;
+    //private static final int PAUSE = 1;
+    private static final int STOP = 2;
+    private int mVideoState = STOP; //播放状态
+
+    private boolean isTopBottomVisible = true;  //视频顶部，底部布局显隐标识
+    private long mStartDateTime;
+    private long mEndDateTime;
+    private String mVideoBeginTime;
+    private String mVideoEndTime;
+
+    private SeekBar  mBottomSeekBar;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -57,6 +85,8 @@ public class VideoRePlayActivity extends Activity{
         //监听SurfaceView的变化
         mSurfaceView.getHolder().addCallback(new surfaceCallback());
 
+        mSurfaceView.setZOrderOnTop(true);
+        mSurfaceView.setZOrderMediaOverlay(true);
         //初始化一个Player对象
         mPlayer = new Player();
         mPlayer.AVInitialize(mSurfaceView.getHolder());
@@ -73,6 +103,45 @@ public class VideoRePlayActivity extends Activity{
         mFileName = bundle.getString("fileName");
         mPosition = bundle.getInt("position");
 
+
+        /**mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mHandler.sendEmptyMessage(VISIBLE_TOP_BOTTOM);
+                        break;
+                }
+                return false;
+            }
+        });*/
+
+        mPalyerControllerLayout = (LinearLayout) findViewById(R.id.media_player_controller_layout);
+        mPlayPreviousIV = (ImageView) findViewById(R.id.play_previous);
+        mPlayPlayIV = (ImageView) findViewById(R.id.play_play);
+        mPlayNextIV = (ImageView) findViewById(R.id.play_next);
+        mBottomSeekBar = (SeekBar) findViewById(R.id.play_seekbar);
+
+        mPlayPreviousIV.setOnClickListener(this);
+        mPlayPlayIV.setOnClickListener(this);
+        mPlayNextIV.setOnClickListener(this);
+        mBottomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                ToastUtils.showShort(seekBar.getProgress() + "");
+                mHandler.sendEmptyMessage(SEEKBAR_TOUCHED);
+            }
+        });
     }
 
     /**
@@ -84,7 +153,7 @@ public class VideoRePlayActivity extends Activity{
 
 
         //查询回放记录参数
-        QueryReplayParam p = new QueryReplayParam(cameraCode, DataUtils.checkDataTime(beginTime, true), DataUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
+        QueryReplayParam p = new QueryReplayParam(cameraCode, DateUtils.checkDataTime(beginTime, true), DateUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
 
         //查询回放记录结果监听
         OnQueryReplayListener queryListener = new OnQueryReplayListener() {
@@ -106,6 +175,8 @@ public class VideoRePlayActivity extends Activity{
                     currentRecord = recordList.get(0);
                 }
 
+                mVideoBeginTime = currentRecord.getBeginTime();
+                mVideoEndTime = currentRecord.getEndTime();
                 /**for (int i = 0; i < recordList.size(); i++) {
                     Log.i(TAG,"fileName= " + fileName);
                     Log.i(TAG,"xxxxName= " + recordList.get(i).getFileName());
@@ -144,10 +215,12 @@ public class VideoRePlayActivity extends Activity{
 
                         //启动播放解码
                         mPlayer.AVStartPlay();
+                        mStartDateTime = getNowDateTime();
 
                         //启动收流线程
                         mRecvStreamThread = new RecvStreamThread(mPlayer, playSession);
                         mRecvStreamThread.start();
+                        changeState(PLAY);
                     }
                 };
 
@@ -165,6 +238,7 @@ public class VideoRePlayActivity extends Activity{
         if(mPlayer != null) {
             //停止回放
             ServiceManager.stopReplay(mPlayer.getPlaySession(), null);
+            mEndDateTime = getNowDateTime();
         }
 
         //停止收流线程
@@ -177,6 +251,7 @@ public class VideoRePlayActivity extends Activity{
             //停止播放解码
             mPlayer.AVStopPlay();
         }
+        changeState(STOP);
     }
 
     @Override
@@ -194,6 +269,42 @@ public class VideoRePlayActivity extends Activity{
     protected void onPause() {
         stopReplay();
         super.onPause();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.play_previous:
+
+                break;
+            case R.id.play_play:
+                if (null == mPlayer) {
+                    return;
+                }
+                if (mPlayer.AVIsPlaying()) {
+                    stopReplay();
+                } else {
+                    if (mVideoState == STOP) {
+
+                        String dragTimeStr = DateUtils.getPauseTime(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(mEndDateTime, mStartDateTime));
+                        ToastUtils.showShort(dragTimeStr);
+                        //拖动回放，"2016-01-10 12:00:00"为要播放的时间，具体能用的时间在queryReplay中返回
+                        ServiceManager.dragReplay(mPlayer.getPlaySession(), dragTimeStr, new OnDragReplayListener() {
+                            @Override
+                            public void onDragReplayResult(long errorCode, String errorDesc) {
+                                ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                            }
+                        });
+                        //ToastUtils.showShort("mVideoBeginTime : " + mVideoBeginTime + "    &  mVideoEndTime:  " + mVideoEndTime);
+                    }
+                }
+                break;
+            case R.id.play_next:
+
+                break;
+            default:
+                break;
+        }
     }
 
     class surfaceCallback implements SurfaceHolder.Callback {
@@ -218,5 +329,103 @@ public class VideoRePlayActivity extends Activity{
             stopReplay();
         }
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STATE_CHANGED:
+                    videoStateChanged();
+                    break;
+                case VISIBLE_TOP_BOTTOM:
+                    visibleSurfaceTopAndBottom();
+                    if (isTopBottomVisible && !mHandler.hasMessages(VISIBLE_TOP_BOTTOM)) {
+                        mHandler.sendEmptyMessageDelayed(VISIBLE_TOP_BOTTOM, 5000);
+                    }
+                    break;
+                case SEEKBAR_TOUCHED:
+                    String dragTimeStr = DateUtils.getProgressTime(mVideoBeginTime, mVideoEndTime, mBottomSeekBar.getProgress());
+                    ToastUtils.showShort(dragTimeStr);
+                    ServiceManager.dragReplay(mPlayer.getPlaySession(), dragTimeStr, new OnDragReplayListener() {
+                        @Override
+                        public void onDragReplayResult(long errorCode, String errorDesc) {
+                            //ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                        }
+                    });
+                    break;
+                case SYSTEM_TIME_CHANED:
+
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 设置顶部，底部布局的显示和隐藏
+     */
+    private void visibleSurfaceTopAndBottom() {
+        if (isTopBottomVisible) {
+            //mRlSurfaceTop.setVisibility(View.GONE);
+            mPalyerControllerLayout.setVisibility(View.GONE);
+            isTopBottomVisible = false;
+        } else {
+            //mRlSurfaceTop.setVisibility(View.VISIBLE);
+            mPalyerControllerLayout.setVisibility(View.VISIBLE);
+            isTopBottomVisible = true;
+        }
+    }
+
+
+    /**
+     * 改变Video的状态
+     *
+     * @param state
+     */
+    private void changeState(int state) {
+        mVideoState = state;
+        mHandler.sendEmptyMessage(STATE_CHANGED);
+        if (state == PLAY) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    /**防止当onDestroy方法调用时，mVideoPlayer
+                     * 已经为null,但是这边还在发消息，导致空指针异常**/
+                    if (mPlayer == null) {
+                        return;
+                    }
+                    int position = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(mEndDateTime, mStartDateTime));
+                    //mBottomSeekBar.setProgress(position);
+                    if (mPlayer.AVIsPlaying()) {
+                        mHandler.postDelayed(this, 1000);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 当Video的状态改变时
+     */
+    private void videoStateChanged() {
+        switch (mVideoState) {
+            case PLAY:
+                mPlayPlayIV.setImageResource(R.drawable.pause);
+                mPlayPlayIV.invalidate();
+                break;
+            /**case PAUSE:
+                mPlayPlayIV.setImageResource(R.drawable.litplay);
+                break;*/
+            case STOP:
+                mPlayPlayIV.setImageResource(R.drawable.litplay);
+                mPlayPlayIV.invalidate();
+                break;
+        }
+    }
+
+    public long getNowDateTime() {
+        Date now = new Date();
+        return now.getTime();
+    }
+
 
 }

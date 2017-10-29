@@ -3,7 +3,6 @@ package com.isoftstone.smartsite.model.video;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.video.Adapter.VideoRePlayAdapter;
-import com.isoftstone.smartsite.utils.DataUtils;
+import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.manager.ServiceManager;
@@ -179,7 +178,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
 
     public void queryReplayVideo(final String cameraCode, final String beginTime, final String endTime) {
         //查询回放记录参数
-        QueryReplayParam p = new QueryReplayParam(cameraCode, DataUtils.checkDataTime(beginTime,true), DataUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
+        QueryReplayParam p = new QueryReplayParam(cameraCode, DateUtils.checkDataTime(beginTime,true), DateUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
 
         //查询回放记录结果监听
         OnQueryReplayListener queryListener = new OnQueryReplayListener() {
@@ -199,9 +198,10 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
                 ArrayList<VideoMonitorBean> sList = new ArrayList<VideoMonitorBean>();
                 VideoMonitorBean video;
 
+                ToastUtils.showShort("queryListener  ----> Adapter size = " +  size);
 
                 for (int i = 0; i < size; i++) {
-                    video = new VideoMonitorBean(DataUtils.checkDataTime(beginTime,true),  DataUtils.checkDataTime(endTime, false)
+                    video = new VideoMonitorBean(DateUtils.checkDataTime(beginTime,true),  DateUtils.checkDataTime(endTime, false)
                             , recordList.get(i).getFileName(), cameraCode);
                     sList.add(video);
                 }

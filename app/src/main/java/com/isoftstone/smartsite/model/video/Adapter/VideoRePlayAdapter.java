@@ -106,8 +106,6 @@ public class VideoRePlayAdapter extends BaseAdapter {
             holder.mediaPreviewLayout2.setVisibility(View.INVISIBLE);
         }
 
-        ToastUtils.showShort("Adapter size = " +  mData.size());
-
         holder.beginTime = mData.get(position).getBeginData();
         holder.endTime = mData.get(position).getEndData();
         holder.resCode = mData.get(position).getResCode();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -214,7 +215,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         RoundMenuView.RoundMenu roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(Color.GRAY));
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(Color.GRAY));//ColorUtils.getColor(mContext, R.color.gray_9999);
-        roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);
+        roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,7 +228,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
+        roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,7 +241,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
+        roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,7 +254,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
-        roundMenu.icon= drawableToBitmap(mContext,R.drawable.star);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
+        roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
         roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,7 +265,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mRoundMenuView.addRoundMenu(roundMenu);
 
         mRoundMenuView.setCoreMenu(STROKR_COKOR, SELECT_SOLID_COLOR, STROKR_COKOR
-                , 1, 0.43, drawableToBitmap(mContext, R.drawable.slidicon)
+                , 1, 0.43, drawableToBitmap(mContext, R.drawable.videopoint)
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -323,13 +324,29 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
 
     public static Bitmap drawableToBitmap(Context context, int resId) {
         Drawable drawable = context.getResources().getDrawable(resId);
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+
+        return BitmapFactory.decodeResource(context.getResources(), resId);
+        /**Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
 
         Canvas canvas = new Canvas(bitmap);
         //canvas.setBitmap(bitmap);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         drawable.draw(canvas);
-        return bitmap;
+        return bitmap;*/
+
+        /**int w = drawable.getIntrinsicWidth();
+        int h = drawable.getIntrinsicHeight();
+        System.out.println("Drawable转Bitmap");
+        Bitmap.Config config =
+                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                        : Bitmap.Config.RGB_565;
+        Bitmap bitmap = Bitmap.createBitmap(w, h, config);
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, w, h);
+        drawable.draw(canvas);
+
+        return bitmap;*/
     }
 
     @Override

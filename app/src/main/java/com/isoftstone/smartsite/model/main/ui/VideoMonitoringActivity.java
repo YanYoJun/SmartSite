@@ -163,6 +163,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String endTime = formatter.format(now);
+        mBeginTimeET.setText(endTime);
         mEndTimeET.setText(endTime);
 
         mAlertViewExt.addExtView(mViewGrounp);
@@ -182,7 +183,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                 showDatePickerDialog(mEndTimeET);
                 break;
             case R.id.canlce_dialog_iv:
-                Toast.makeText(this, "canlce", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "canlce", Toast.LENGTH_SHORT).show();
                 mAlertViewExt.dismiss();
                 break;
             case R.id.ok_btn:

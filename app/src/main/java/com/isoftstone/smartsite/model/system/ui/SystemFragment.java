@@ -69,7 +69,10 @@ public class SystemFragment extends BaseFragment{
         aboutUsLinearLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(mContext, AboutUsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         } );
         logOffLinearLayout.setOnClickListener(new View.OnClickListener() {

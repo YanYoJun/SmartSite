@@ -126,7 +126,7 @@ public class ActionSheetDialog {
 
             TextView textView = new TextView(context);
             textView.setText(strItem);
-            textView.setTextSize(14);
+            textView.setTextSize(16);
             textView.setGravity(Gravity.CENTER);
 
             if (size == 1) {
@@ -161,7 +161,7 @@ public class ActionSheetDialog {
             }
 
             float scale = context.getResources().getDisplayMetrics().density;
-            int height = (int) (45 * scale + 0.5f);
+            int height = (int) (54 * scale + 0.5f);
             textView.setLayoutParams(new LayoutParams(
                     LayoutParams.MATCH_PARENT, height));
 
@@ -178,7 +178,6 @@ public class ActionSheetDialog {
     }
 
     public void show() {
-        LogUtils.i("zyf","show.................");
         setSheetItems();
         dialog.show();
     }
@@ -201,7 +200,7 @@ public class ActionSheetDialog {
     }
 
     public enum SheetItemColor {
-        Blue("#037BFF"), Red("#FD4A2E");
+        Blue("#3464DD"), Red("#FD4A2E");
 
         private String name;
 

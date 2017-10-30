@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.system.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
@@ -37,7 +39,6 @@ import java.util.Map;
  */
 public class IndividualCenterFragment extends BaseFragment implements UploadUtil.OnUploadProcessListener, View.OnClickListener{
     private boolean mHandledPress = false;
-    private LinearLayout mLinearLayout;//用户头像父节点LL
     private ImageView mImageView;//用户头像IV
     private Bitmap mHeadBitmap;//裁剪后得图片
     String picPath;//头像路径
@@ -47,13 +48,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private Button mOkBtn;
     private Button mCancleBtn;
     private Fragment mCurrentFrame;
-    private EditText mUserFullNameET;
-    private EditText mUserRoleET;
-    private EditText mUserSexET;
-    private EditText mUserAccountET;
-    private EditText mUserPhoneNumET;
-    private EditText mUserCompanyET;
-    private EditText mUserAutographET;
+    private TextView mUserFullNameET;
+    private TextView mUserRoleET;
+    private TextView mUserSexET;
+    private TextView mUserAccountET;
+    private TextView mUserPhoneNumET;
+    private TextView mUserCompanyET;
+    private TextView mUserAutographET;
 
     /* 请求识别码 选择图库*/
     private static final int IMAGE_REQUEST_CODE = 1;
@@ -66,10 +67,13 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private Context mContext;
+
     @Override
     public void onStart() {
         super.onStart();
         backHandlerInterface.setSelectedFragment(this);
+        mContext = getContext();
     }
 
     @Override
@@ -98,27 +102,26 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mImageView = (ImageView) rootView.findViewById(R.id.head_iv);
         mOkBtn = (Button) rootView.findViewById(R.id.ok);
         mCancleBtn = (Button) rootView.findViewById(R.id.cancle);
-        mUserFullNameET = (EditText) rootView.findViewById(R.id.user_full_name);
-        mUserRoleET = (EditText) rootView.findViewById(R.id.user_role);
-        mUserSexET = (EditText) rootView.findViewById(R.id.user_sex);
-        mUserAccountET = (EditText) rootView.findViewById(R.id.user_account);
-        mUserPhoneNumET = (EditText) rootView.findViewById(R.id.user_phoneNum);
-        mUserCompanyET = (EditText) rootView.findViewById(R.id.user_company);
-        mUserAutographET = (EditText) rootView.findViewById(R.id.user_autograph);
+        mUserFullNameET = (TextView) rootView.findViewById(R.id.user_full_name);
+        mUserRoleET = (TextView) rootView.findViewById(R.id.user_role);
+        mUserSexET = (TextView) rootView.findViewById(R.id.user_sex);
+        mUserAccountET = (TextView) rootView.findViewById(R.id.user_account);
+        mUserPhoneNumET = (TextView) rootView.findViewById(R.id.user_phoneNum);
+        mUserCompanyET = (TextView) rootView.findViewById(R.id.user_company);
+        mUserAutographET = (TextView) rootView.findViewById(R.id.user_autograph);
         //获取服务器数据显示..... zyf modifed.....
 
         mOkBtn.setOnClickListener(this);
         mCancleBtn.setOnClickListener(this);
 
-        mLinearLayout = (LinearLayout) rootView.findViewById(R.id.head_linearlayout);
-        mLinearLayout.setOnClickListener(new LinearLayout.OnClickListener(){
+        mImageView.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
                 new ActionSheetDialog(getContext())
                         .builder()
                         .setCancelable(true)
                         .setCanceledOnTouchOutside(true)
-                        .addSheetItem("相册",
+                        .addSheetItem(mContext.getText(R.string.album).toString(),
                                 ActionSheetDialog.SheetItemColor.Blue,
                                 new ActionSheetDialog.OnSheetItemClickListener() {
 
@@ -127,7 +130,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                                         choseHeadImageFromGallery();
                                     }
                                 })
-                        .addSheetItem("拍照",
+                        .addSheetItem(mContext.getText(R.string.camera).toString(),
                                 ActionSheetDialog.SheetItemColor.Blue,
                                 new ActionSheetDialog.OnSheetItemClickListener() {
 

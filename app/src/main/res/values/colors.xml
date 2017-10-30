@@ -15,7 +15,7 @@
     <color name="tab_text_normal">#212121</color>
     <color name="gray">#BBBBBB</color>
     <color name="actionsheet_gray">#8F8F8F</color>
-    <color name="actionsheet_blue">#037BFF</color>
+    <color name="actionsheet_blue">#3464DD</color>
     <color name="dark">#FF222222</color>
     <color name="light">#FFEEEEEE</color>
     <!-- 主要显示字体的颜色，几乎是纯黑-->
@@ -25,6 +25,7 @@
     <color name ="hit_text_color">#cccccc</color>
 
     <!-- main   start -->
+    <color name = "single_text_color">#666666</color>
     <color name="transparent">#7f000000</color>
     <color name="gray_f2f2">#f2f2f2</color>
     <color name="gray_9999">#9999</color>

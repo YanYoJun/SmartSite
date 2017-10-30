@@ -121,6 +121,8 @@
         <service android:name="com.uniview.airimos.service.KeepaliveService"/>
 
         <service android:name=".common.NewKeepAliveService"/>
+
+        <activity android:name=".model.system.ui.AboutUsActivity" android:launchMode="singleTask"></activity>
         <!--zhangyinfu end-->
 
         <!--zhangwei begin-->

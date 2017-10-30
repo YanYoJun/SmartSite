@@ -151,6 +151,7 @@
     <string name="about_us">关于我们</string>
     <string name="log_off">退出</string>
     <string name="set_user_photo">设置用户头像</string>
+    <string name="user_photo">头像</string>
     <string name="user_acoount">账户</string>
     <string name="user_pwd">密码</string>
     <string name="user_autograph">签名</string>
@@ -166,6 +167,8 @@
     <string name="des_visit_problem">回访问题描述：</string>
     <string name="opinion_feedback">意见反馈</string>
     <string name="settings">设置</string>
+    <string name="album">相册</string>
+    <string name="camera">拍照</string>
     <!--          system   end            -->
 
 

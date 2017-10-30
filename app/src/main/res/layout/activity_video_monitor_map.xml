@@ -8,35 +8,7 @@
     android:fitsSystemWindows="true"
     >
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorPrimary">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="视频监控地图"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:layout_centerInParent="true"
-                />
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="18dp"
-                android:src="@drawable/bigarrow"
-                android:scaleType="centerCrop"
-                android:layout_centerVertical="true"
-                android:background="@drawable/selector_pressed"
-                android:id="@+id/iv_back"
-                />
-        </RelativeLayout>
-
-    </android.support.v7.widget.Toolbar>
+   <include layout="@layout/layout_toorbar_no_icon"></include>
 
     <com.amap.api.maps.MapView
         android:layout_width="match_parent"

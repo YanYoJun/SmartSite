@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -47,8 +48,11 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     }
 
     private void initView(Bundle savedInstanceState){
-        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
-        iv_back.setOnClickListener(this);
+        TextView tv_title = (TextView) findViewById(R.id.toolbar_title);
+        tv_title.setText("视频监控地图");
+
+        findViewById(R.id.btn_back).setOnClickListener(this);
+
         mMapView = (MapView) findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
         initMapView();
@@ -138,7 +142,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.iv_back:
+            case R.id.btn_back:
                 this.finish();
                 break;
         }

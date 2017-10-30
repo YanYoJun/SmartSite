@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -79,17 +80,25 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     private void initView(Bundle savedInstanceState){
 
+        initToolbar();
+
         initChooseCameraPopWindow();
         initDeviceInfoPopWindow();
 
         aotiLatLon = new LatLng(30.479736,114.476322);
 
         mapContentView = (FrameLayout) rootView.findViewById(R.id.map_content);
-        ImageView iv_back = (ImageView) rootView.findViewById(R.id.iv_back);
-        ImageView iv_search = (ImageView) rootView.findViewById(R.id.iv_search);
-        iv_back.setOnClickListener(this);
-        iv_search.setOnClickListener(this);
 
+    }
+
+    private void initToolbar(){
+        TextView tv_title = (TextView) rootView.findViewById(R.id.toolbar_title);
+        tv_title.setText("地图");
+
+        rootView.findViewById(R.id.btn_back).setOnClickListener(this);
+        ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.btn_icon);
+        imageButton.setImageResource(R.drawable.search);
+        imageButton.setOnClickListener(this);
     }
 
     private void initChooseCameraPopWindow(){
@@ -294,12 +303,12 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             case R.id.device_cancel:
                 deviceInfoPopWindow.dismiss();
                 break;
-            case R.id.iv_back:
+            case R.id.btn_back:
                 FragmentTabHost tabHost = (FragmentTabHost) getActivity().findViewById(R.id.tab_host);
                 tabHost.setCurrentTab(0);
                 break;
-            case R.id.iv_search:
-                ToastUtils.showShort("search");
+            case R.id.btn_icon:
+                startActivity(new Intent(getActivity(),MapSearchActivity.class));
                 break;
         }
     }

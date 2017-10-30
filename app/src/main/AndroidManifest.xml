@@ -127,7 +127,8 @@
         <activity android:name=".model.map.ui.VideoMonitorMapActivity"
             android:screenOrientation="portrait"></activity>
 
-
+        <activity android:name=".model.map.ui.MapSearchActivity"
+            android:screenOrientation="portrait"></activity>
         <!--zhangwei end-->
     </application>
 

@@ -1,14 +1,16 @@
 package com.isoftstone.smartsite.model.tripartite.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.SimpleAdapter;
@@ -19,7 +21,6 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.PopWindowListAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,16 +36,28 @@ public class AddReportActivity extends BaseActivity {
     private final static int SPINNER_FLAG_STATUS = 1;
     private final static int SPINNER_FLAG_TYPES = 2;
 
-    private ImageButton mAddAttach = null;
-    private GridLayout mAttachTable = null;
     private List<Uri> attach = new ArrayList<>();
-    private GridView mAttachView = null;
     private SimpleAdapter mAttachAdapter = null;
     private ArrayList<Map<String, Object>> mData = null;
+    private Resources mRes = null;
+    private Drawable mWaittingAdd = null;
+    private Drawable mWattingChanged = null;
 
+    //the view in this activity
     private TextView mAddressSpinner = null;
     private TextView mStatusSpinner = null;
     private TextView mTypesSpinner = null;
+    private TextView mAddress = null;
+    private TextView mCompany = null;
+    private TextView mStatus = null;
+    private TextView mTypes = null;
+    private TextView mBuildCompany = null;
+    private TextView mConsCompany = null;
+    private TextView mSuperCompany = null;
+    private EditText mEditCompany = null;
+    private EditText mEditBuildCompany = null;
+    private EditText mEditConsCompany = null;
+    private EditText mEditSuperCompany = null;
 
 
     @Override
@@ -62,90 +75,184 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void init() {
+        mRes = getResources();
+        mWaittingAdd = mRes.getDrawable(R.drawable.addcolumn);
+        mWaittingAdd.setBounds(0, 0, mWaittingAdd.getIntrinsicWidth(), mWaittingAdd.getIntrinsicHeight());
+        mWattingChanged = mRes.getDrawable(R.drawable.editcolumn);
+        mWattingChanged.setBounds(0, 0, mWattingChanged.getIntrinsicWidth(), mWattingChanged.getIntrinsicHeight());
+
+        initView();
+        initListener();
         //init Spinnner
         initSpinner();
-        initGridView();
+        //initGridView();
     }
 
-    public void initGridView(){
-        mAttachView = (GridView) findViewById(R.id.grid_view);
+    public void initView() {
+        mAddressSpinner = (TextView) findViewById(R.id.spinner_report_address);
+        mStatusSpinner = (TextView) findViewById(R.id.spinner_report_status);
+        mTypesSpinner = (TextView) findViewById(R.id.spinner_report_types);
+        mAddress = (TextView) findViewById(R.id.lab_address);
+        mCompany = (TextView) findViewById(R.id.lab_company);
+        mStatus = (TextView) findViewById(R.id.lab_status);
+        mTypes = (TextView) findViewById(R.id.lab_types);
+        mBuildCompany = (TextView) findViewById(R.id.lab_build_company);
+        mConsCompany = (TextView) findViewById(R.id.lab_cons_company);
+        mSuperCompany = (TextView) findViewById(R.id.lab_super_company);
 
-        mData = new ArrayList<Map<String, Object>>();
-        Map<String, Object> data = new HashMap<>();
-        data.put("image", R.drawable.attachment);
-        mData.add(data);
-        mAttachAdapter = new SimpleAdapter(this, mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        mAttachView.setAdapter(mAttachAdapter);
+        mEditCompany = (EditText) findViewById(R.id.edit_company);
+        mEditBuildCompany = (EditText) findViewById(R.id.edit_build_company);
+        mEditConsCompany = (EditText) findViewById(R.id.edit_cons_company);
+        mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
+    }
 
-        mAttachView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void initListener() {
+        mEditCompany.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == mData.size() - 1) {
-                    //点击添加附件
-                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                    i.setType("image/*");
-                    startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mCompany.setCompoundDrawables(mWattingChanged, null, null, null);
+                } else {
+                    mCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mEditBuildCompany.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mBuildCompany.setCompoundDrawables(mWattingChanged, null, null, null);
+                } else {
+                    mBuildCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mEditConsCompany.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mConsCompany.setCompoundDrawables(mWattingChanged, null, null, null);
+                } else {
+                    mConsCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mEditSuperCompany.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mSuperCompany.setCompoundDrawables(mWattingChanged, null, null, null);
+                } else {
+                    mSuperCompany.setCompoundDrawables(mWaittingAdd, null, null, null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
 
-    private void initSpinner(){
+    private void initSpinner() {
         //address spinner
-        mAddressSpinner = (TextView)findViewById(R.id.spinner_report_address);
+
         ArrayList<String> strings = new ArrayList<String>();
         strings.add("未来科技城");
         strings.add("软件园");
         strings.add("花山新区");
-        initSpinner(mAddressSpinner,strings);
+        initSpinner(mAddressSpinner, strings, mAddress);
 
         //status spinner
-        mStatusSpinner = (TextView)findViewById(R.id.spinner_report_status);
+
         strings = new ArrayList<String>();
         strings.add("已处理");
         strings.add("已验收");
         strings.add("结束");
-        initSpinner(mStatusSpinner, strings);
+        initSpinner(mStatusSpinner, strings, mStatus);
 
         //tyes spinner
-        mStatusSpinner = (TextView) findViewById(R.id.spinner_report_types);
+
         strings = new ArrayList<String>();
         strings.add("工地报告");
         strings.add("啊啊报告");
         strings.add("验收报告");
-        initSpinner(mStatusSpinner, strings);
+        strings.add("验收报告2");
+        initSpinner(mTypesSpinner, strings, mTypes);
     }
 
     /**
      * 初始化Spinner使用
+     *
      * @param textView
      * @param strings
      */
-    private void initSpinner(final TextView textView,final ArrayList<String> strings){
-        PopWindowListAdapter adapter = new PopWindowListAdapter(this,strings);
-
-        final ListPopupWindow popupWindow = new ListPopupWindow(this);
-        popupWindow.setAdapter(adapter);
-        popupWindow.setAnchorView(textView);
-        popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        popupWindow.setModal(true);
-        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                textView.setText(strings.get(position));
-                textView.setTextColor(getResources().getColor(R.color.main_text_color));
-                popupWindow.dismiss();
-            }
-        });
-
+    private void initSpinner(final TextView textView, final ArrayList<String> strings, final TextView tagView) {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG, "initSpinner onclick");
+                PopWindowListAdapter adapter = new PopWindowListAdapter(AddReportActivity.this, strings);
+                final ListPopupWindow popupWindow = new ListPopupWindow(AddReportActivity.this);
+                popupWindow.setAdapter(adapter);
+                popupWindow.setAnchorView(textView);
+                popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+                popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+                popupWindow.setModal(false);
+                popupWindow.setAnimationStyle(0);
+                popupWindow.setPromptView(null);
+                popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        tagView.setCompoundDrawables(mWattingChanged, null, null, null);
+                        textView.setText(strings.get(position));
+                        textView.setTextColor(getResources().getColor(R.color.main_text_color));
+                        popupWindow.dismiss();
+                    }
+                });
+                popupWindow.clearListSelection();
                 popupWindow.show();
+                textView.requestLayout();
             }
         });
     }

@@ -170,6 +170,11 @@
     <string name="settings">设置</string>
     <string name="album">相册</string>
     <string name="camera">拍照</string>
+    <string name="feedback_hint_text">我们需要您的宝贵意见</string>
+    <string name="feedback_submit">提交</string>
+    <string name="settings_push_msg_switch">接收推送通知</string>
+    <string name="settings_go_score">去评分</string>
+    <string name="settings_cleanup_cache">清除缓存</string>
     <!--          system   end            -->
 
 

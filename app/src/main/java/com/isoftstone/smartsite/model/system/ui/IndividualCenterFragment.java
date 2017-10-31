@@ -36,6 +36,7 @@ import java.util.Map;
  * Created by zyf on 2017/10/13 20:00.
  * 个人中心页面
  * modified by zyf on 2017/10/21
+ * modified by zyf on 2017/11/1
  */
 public class IndividualCenterFragment extends BaseFragment implements UploadUtil.OnUploadProcessListener, View.OnClickListener{
     private boolean mHandledPress = false;
@@ -84,6 +85,9 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         init();
+
+        initToolbar();
+
         mCurrentFrame = IndividualCenterFragment.this;
         if (!(getActivity() instanceof BackHandlerInterface)) {
             throw new ClassCastException("Hosting activity must implement BackHandlerInterface");
@@ -365,7 +369,10 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.btn_back:
+                //back toolbar click
+            case R.id.btn_icon_right:
+                //toolbar right view click
             case R.id.ok:
                 //保存用戶數據 上傳到服务器..... zyf modifed.....
             case R.id.cancle:
@@ -419,5 +426,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             }
             mCurrentFrame = toFragment;
         }
+    }
+
+    private void initToolbar(){
+        TextView tv_title = (TextView) rootView.findViewById(R.id.toolbar_title);
+        tv_title.setText(R.string.individual_center);
+
+        rootView.findViewById(R.id.btn_back).setOnClickListener(this);
+        TextView right_title = (TextView)rootView.findViewById(R.id.btn_icon_right);
+        right_title.setText(R.string.ok);
+        right_title.setOnClickListener(this);
     }
 }

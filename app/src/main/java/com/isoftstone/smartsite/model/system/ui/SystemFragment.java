@@ -29,13 +29,16 @@ public class SystemFragment extends BaseFragment{
     private LinearLayout individualCenterLinearLayout;//个人中心Btn
     private LinearLayout aboutUsLinearLayout;//关于我们Btn
     private LinearLayout logOffLinearLayout;//退出Btn
+    private LinearLayout mOpinionFeedback;//意见反馈
+    private LinearLayout mSettings;//设置
+
     private PermissionsChecker mPermissionsChecker;
 
     private Fragment mCurrentFrame;
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_system;
+        return R.layout.fragment_system_new;
     }
 
     @Override
@@ -53,6 +56,8 @@ public class SystemFragment extends BaseFragment{
         individualCenterLinearLayout = (LinearLayout) rootView.findViewById(R.id.individual_center);
         aboutUsLinearLayout = (LinearLayout) rootView.findViewById(R.id.about_us);
         logOffLinearLayout = (LinearLayout) rootView.findViewById(R.id.log_off);
+        mOpinionFeedback = (LinearLayout) rootView.findViewById(R.id.opinion_feedback);
+        mSettings = (LinearLayout) rootView.findViewById(R.id.settings);
 
         registerLinearLayoutOnClickListener();
         mCurrentFrame = SystemFragment.this;
@@ -87,6 +92,26 @@ public class SystemFragment extends BaseFragment{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        mOpinionFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, OpinionFeedbackActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
     }

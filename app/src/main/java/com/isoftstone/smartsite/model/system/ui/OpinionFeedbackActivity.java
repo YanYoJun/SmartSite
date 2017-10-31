@@ -25,31 +25,31 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 
 /**
- * 关于我们界面
- * created by zhangyinfu 2017-10-31
+ * 意见反馈界面
+ * created by zhangyinfu 2017-11-1
  */
-public class AboutUsActivity extends Activity implements View.OnClickListener{
+public class OpinionFeedbackActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_us);
+        setContentView(R.layout.activity_opinion_feedback);
 
         initToolbar();
     }
 
     private void initToolbar(){
         TextView tv_title = (TextView) findViewById(R.id.toolbar_title);
-        tv_title.setText(R.string.about_us);
+        tv_title.setText(R.string.opinion_feedback);
 
-        findViewById(R.id.btn_back).setOnClickListener(AboutUsActivity.this);
+        findViewById(R.id.btn_back).setOnClickListener(OpinionFeedbackActivity.this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_back:
-                AboutUsActivity.this.finish();
+                OpinionFeedbackActivity.this.finish();
                 break;
             default:
                 break;

@@ -117,6 +117,10 @@
         <service android:name=".common.NewKeepAliveService"/>
 
         <activity android:name=".model.system.ui.AboutUsActivity" android:launchMode="singleTask"></activity>
+
+        <activity android:name=".model.system.ui.OpinionFeedbackActivity" android:launchMode="singleTask"></activity>
+
+        <activity android:name=".model.system.ui.SettingsActivity" android:launchMode="singleTask"></activity>
         <!--zhangyinfu end-->
 
         <!--zhangwei begin-->

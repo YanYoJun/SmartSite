@@ -7,6 +7,8 @@
     android:background="@color/app_background"
     android:orientation="vertical">
 
+    <include layout="@layout/layout_toorbar_no_icon"></include>
+
     <ImageView
         android:layout_marginTop="90dp"
         android:layout_width="wrap_content"

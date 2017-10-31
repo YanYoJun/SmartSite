@@ -55,10 +55,11 @@
 
         <TextView
             style="@style/add_report_lab"
+            android:id="@+id/lab_name"
             android:text="@string/inspect_report_check_people" />
 
         <EditText
-            android:id="@+id/edit_inspect_report_check_people"
+            android:id="@+id/edit_name"
             style="@style/add_report_edittext" />
     </RelativeLayout>
 
@@ -126,10 +127,11 @@
 
         <TextView
             style="@style/add_report_lab"
+            android:id="@+id/lab_report_name"
             android:text="@string/inpsect_report_name" />
 
         <EditText
-            android:id="@+id/edit_inpsect_report_namee"
+            android:id="@+id/edit_report_name"
             style="@style/add_report_edittext" />
     </RelativeLayout>
 
@@ -147,6 +149,7 @@
         android:paddingRight="16dp">
 
         <TextView
+            android:id="@+id/lab_report_msg"
             style="@style/add_report_lab"
             android:text="@string/inspect_report_message" />
     </RelativeLayout>
@@ -228,6 +231,7 @@
                 android:button="@null"
                 android:drawableLeft="@drawable/selector_radio"
                 android:drawablePadding="2dp"
+                android:checked="true"
                 android:paddingLeft="10dp"
                 android:text="@string/yes" />
 

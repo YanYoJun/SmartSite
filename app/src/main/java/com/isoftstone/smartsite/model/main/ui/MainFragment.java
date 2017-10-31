@@ -17,7 +17,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
-import com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 
 
 /**

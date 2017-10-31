@@ -1,6 +1,5 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;

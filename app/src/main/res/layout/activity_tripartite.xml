@@ -7,7 +7,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.isoftstone.smartsite.model.tripartite.ui.TripartiteActivity">
+    tools:context="com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity">
 
 
     <android.support.v7.widget.Toolbar

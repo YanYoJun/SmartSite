@@ -63,7 +63,7 @@
     <string name="check_report_title">验收报告</string>
     <string name="view">查看</string>
     <string name="reply">回复</string>
-    <string name="recheck">回访</string>
+    <string name="revisit">回访</string>
     <string name="check">验收</string>
     <string name="unread_msg_title">未读消息</string>
     <!--添加回访报告页-->

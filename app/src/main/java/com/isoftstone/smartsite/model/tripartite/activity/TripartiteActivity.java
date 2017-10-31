@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.activity;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.model.tripartite.fragment.CheckReportMainFragment;
+import com.isoftstone.smartsite.model.tripartite.fragment.InspectReportMainFragment;
 
 import java.util.ArrayList;
 
@@ -47,8 +49,8 @@ public class TripartiteActivity extends BaseActivity {
 
     private void init() {
         mViewPager = (ViewPager) findViewById(R.id.report_view_pager);
-        Fragment inspectFrag = new InspectReportFragment();
-        Fragment checkFrag = new CheckReportFragment();
+        Fragment inspectFrag = new InspectReportMainFragment();
+        Fragment checkFrag = new CheckReportMainFragment();
 
         mFragList.add(inspectFrag);
         mFragList.add(checkFrag);

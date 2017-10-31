@@ -91,7 +91,7 @@
             <Button
                 android:id="@+id/btn_inspect_recheck"
                 android:layout_width="wrap_content"
-                android:text="@string/recheck"
+                android:text="@string/revisit"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tab_text_normal"
                 android:textSize="17sp" />

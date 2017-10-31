@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.activity;
 
 import android.os.Bundle;
 

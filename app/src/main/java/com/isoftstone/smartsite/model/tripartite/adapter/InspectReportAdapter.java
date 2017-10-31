@@ -7,13 +7,11 @@ import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.ReplyReportActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.RevisitFragment;
-import com.isoftstone.smartsite.model.tripartite.ui.RevistReportActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.ReadReportActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.ReplyReportActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.RevistReportActivity;
 
 import java.util.List;
 import java.util.Map;

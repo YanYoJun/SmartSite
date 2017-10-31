@@ -1,8 +1,4 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
-
-/**
- * Created by yanyongjun on 2017/10/21.
- */
+package com.isoftstone.smartsite.model.tripartite.activity;
 
 import android.os.Bundle;
 
@@ -10,12 +6,13 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 
 /**
- * 验收报告验收页
+ * Created by yanyongjun on 2017/10/30.
  */
-public class CheckReportActivity extends BaseActivity{
+
+public class RevistReportActivity extends BaseActivity {
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_recheck_check_report;
+        return R.layout.activity_revist_report;
     }
 
     @Override

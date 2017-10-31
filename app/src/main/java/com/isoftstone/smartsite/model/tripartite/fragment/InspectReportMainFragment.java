@@ -1,18 +1,15 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
-import com.isoftstone.smartsite.model.tripartite.data.CheckReportData;
+import com.isoftstone.smartsite.model.tripartite.adapter.InspectReportAdapter;
+import com.isoftstone.smartsite.model.tripartite.data.InspectReportData;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 
 import java.util.ArrayList;
@@ -22,10 +19,10 @@ import java.util.Map;
 
 /**
  * Created by yanyongjun on 2017/10/16.
- * 巡查报告Fragment
+ * 巡查报告fragment
  */
 
-public class CheckReportFragment extends BaseFragment {
+public class InspectReportMainFragment extends BaseFragment {
     public static final String ITEM_TITLE = "lab_title";
     public static final String ITEM_NAME = "lab_name";
     public static final String ITEM_TIME = "lab_time";
@@ -35,9 +32,11 @@ public class CheckReportFragment extends BaseFragment {
     private Activity mActivity = null;
     private ListView mListView = null;
     private List<ReportData> mDatas = null;
+/*    private Button mAdd = null;*/
+
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_check_report;
+        return R.layout.fragment_inspect_report;
     }
 
     @Override
@@ -46,21 +45,16 @@ public class CheckReportFragment extends BaseFragment {
         init();
     }
 
-
     private void init() {
-        mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
-        SimpleAdapter adapter = new CheckReportAdapter(mActivity, getData(), R.layout.listview_check_report_item,
+        //初始化Listview
+        mListView = (ListView) mActivity.findViewById(R.id.listview);
+        SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.listview_inspect_report_item,
                 new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY},
                 new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company});
         mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO
-            }
-        });
         mListView.setDividerHeight(20);
     }
+
 
     /**
      * 加载listview的数据源
@@ -76,7 +70,6 @@ public class CheckReportFragment extends BaseFragment {
         String stats = res.getString(R.string.report_stats);
         String name = res.getString(R.string.report_name);
         for (ReportData data : datas) {
-            Log.e(TAG,"yanlog getData:"+data);
             Map<String, Object> map = new HashMap<String, Object>();
             map.put(ITEM_TITLE, data.getReportName());
             map.put(ITEM_NAME, data.getName());
@@ -101,16 +94,16 @@ public class CheckReportFragment extends BaseFragment {
         //TODO
         mDatas = new ArrayList<>();
 
-        ReportData data = new CheckReportData(1234, "东湖高新区验收报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_DEALING);
+        ReportData data = new InspectReportData(1234, "东湖高新区巡查报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_DEALING);
         mDatas.add(data);
 
-        data = new CheckReportData(1234, "东湖高新区验收报告", "李四", "2017-09-19", "江夏区未来科技城", ReportData.STATS_DEALING);
+        data = new InspectReportData(1234, "东湖高新区巡查报告", "李四", "2017-09-19", "江夏区未来科技城", ReportData.STATS_DEALING);
         mDatas.add(data);
 
-        data = new CheckReportData(1234, "未来科技城验收报告", "张三", "2017-09-19", "江夏区未来科技城", ReportData.STATS_VISITED);
+        data = new InspectReportData(1234, "未来科技城巡查报告", "张三", "2017-09-19", "江夏区未来科技城", ReportData.STATS_VISITED);
         mDatas.add(data);
 
-        data = new CheckReportData(1234, "东湖高新区巡查报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_VISITED);
+        data = new InspectReportData(1234, "东湖高新区巡查报告", "张三", "2017-09-19", "东湖高新区光谷六路", ReportData.STATS_VISITED);
         mDatas.add(data);
 
         return mDatas;

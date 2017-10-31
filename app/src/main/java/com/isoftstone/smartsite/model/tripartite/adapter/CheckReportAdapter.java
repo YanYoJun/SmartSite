@@ -6,13 +6,11 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.model.tripartite.ui.CheckReportActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity;
-import com.isoftstone.smartsite.model.tripartite.ui.ViewCheckReportActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.CheckReportActivity;
+import com.isoftstone.smartsite.model.tripartite.activity.ReadReportActivity;
 
 import java.util.List;
 import java.util.Map;

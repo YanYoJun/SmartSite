@@ -1,4 +1,4 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.Bundle;
 import android.view.View;
@@ -15,10 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 点击验收后，下面验收的编辑框
  * Created by yanyongjun on 2017/10/30.
  */
 
-public class RevisitFragment extends BaseFragment{
+public class CheckFragment extends BaseFragment {
     private GridView mAttachView = null;
     private SimpleAdapter mAttachAdapter = null;
     private ArrayList<Map<String, Object>> mData = null;
@@ -29,14 +30,13 @@ public class RevisitFragment extends BaseFragment{
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_revisit_report;
+        return R.layout.fragment_recheck_check_report;
     }
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initGridView();
     }
-
     public void initGridView(){
         mAttachView = (GridView) getView().findViewById(R.id.grid_view);
 

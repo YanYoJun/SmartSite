@@ -157,7 +157,7 @@
                 android:drawableLeft="@drawable/revisite"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                android:text="@string/recheck"
+                android:text="@string/revisit"
                 android:textColor="@color/mainColor"
                 android:textSize="12sp" />
         </LinearLayout>

@@ -7,7 +7,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.isoftstone.smartsite.model.tripartite.ui.ReadReportActivity">
+    tools:context="com.isoftstone.smartsite.model.tripartite.activity.ReadReportActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
@@ -55,18 +55,18 @@
 
             <fragment
                 android:id="@+id/frag_inspect_report_view"
-                android:name="com.isoftstone.smartsite.model.tripartite.ui.ReadReportFrag"
+                android:name="com.isoftstone.smartsite.model.tripartite.fragment.ReadReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></fragment>
 
             <fragment
                 android:id="@+id/frag_view_reply_inspect_report"
-                android:name="com.isoftstone.smartsite.model.tripartite.ui.ViewReplyReportFragment"
+                android:name="com.isoftstone.smartsite.model.tripartite.fragment.ViewReplyReportFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
             <fragment
                 android:id="@+id/frag_reply_inspect_report"
-                android:name="com.isoftstone.smartsite.model.tripartite.ui.RevisitFragment"
+                android:name="com.isoftstone.smartsite.model.tripartite.fragment.RevisitFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
 

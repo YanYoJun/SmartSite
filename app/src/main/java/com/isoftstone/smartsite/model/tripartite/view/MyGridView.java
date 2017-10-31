@@ -1,24 +1,23 @@
-package com.isoftstone.smartsite.model.tripartite.ui;
+package com.isoftstone.smartsite.model.tripartite.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
+import android.widget.GridView;
 
 /**
- * Created by yanyongjun on 2017/10/30.
+ * Created by HuHu on 2017/10/30.
  */
 
-public class MyListView extends ListView {
-
-    public MyListView(Context context) {
+public class MyGridView extends GridView {
+    public MyGridView(Context context) {
         super(context);
     }
 
-    public MyListView(Context context, AttributeSet attrs) {
+    public MyGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MyGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -30,6 +29,8 @@ public class MyListView extends ListView {
         //Integer.MAX_VALUE >> 2 此处表示是福布局能够给他提供的大小
         int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
                 MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, expandSpec);
+        int expandSpecwidth = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
+                MeasureSpec.AT_MOST);
+        super.onMeasure(expandSpecwidth, expandSpec);
     }
 }

@@ -123,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@null"
+                android:checked="true"
                 android:drawableLeft="@drawable/selector_radio"
                 android:drawablePadding="2dp"
                 android:paddingLeft="10dp"
@@ -155,10 +156,12 @@
         android:paddingRight="16dp">
 
         <TextView
+            android:id="@+id/lab_revisit_time"
             style="@style/add_report_lab"
-            android:text="@string/inspect_report_message" />
+            android:text="@string/report_revisit_time" />
 
         <TextView
+            android:id="@+id/edit_lab_revisit_time"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:drawablePadding="2dp"

@@ -10,8 +10,8 @@ public class ReportListBean {
     private String errorinfo = "";
     private int errorcode = 0;
     private String date = "";
-    private ArrayList<ReportBean> patrolRepoList = new ArrayList<ReportBean>();  //巡查报告
-    private ArrayList<ReportBean> checkRepoList = new ArrayList<ReportBean>();   //验收报告
+    private ArrayList<ReportBeanBak> patrolRepoList = new ArrayList<ReportBeanBak>();  //巡查报告
+    private ArrayList<ReportBeanBak> checkRepoList = new ArrayList<ReportBeanBak>();   //验收报告
 
     public String getErrorinfo() {
         return errorinfo;
@@ -37,19 +37,19 @@ public class ReportListBean {
         this.date = date;
     }
 
-    public ArrayList<ReportBean> getPatrolRepoList() {
+    public ArrayList<ReportBeanBak> getPatrolRepoList() {
         return patrolRepoList;
     }
 
-    public void setPatrolRepoList(ArrayList<ReportBean> patrolRepoList) {
+    public void setPatrolRepoList(ArrayList<ReportBeanBak> patrolRepoList) {
         this.patrolRepoList = patrolRepoList;
     }
 
-    public ArrayList<ReportBean> getCheckRepoList() {
+    public ArrayList<ReportBeanBak> getCheckRepoList() {
         return checkRepoList;
     }
 
-    public void setCheckRepoList(ArrayList<ReportBean> checkRepoList) {
+    public void setCheckRepoList(ArrayList<ReportBeanBak> checkRepoList) {
         this.checkRepoList = checkRepoList;
     }
 }

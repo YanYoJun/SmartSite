@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.http;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -58,5 +60,103 @@ public class UserLogin {
             e.printStackTrace();
         }
         return loginBean;
+    }
+
+
+    public static LoginBean.VideoParameter getVideoConfig(String strurl, OkHttpClient mClient){
+        LoginBean.VideoParameter videoParameter = null;
+        String funName = "getVideoConfig";
+        Request request = new Request.Builder()
+                .url(strurl)
+                .get()
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                videoParameter = gson.fromJson(responsebody,LoginBean.VideoParameter.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return videoParameter;
+    }
+
+
+    public static UserBean getLoginUser(String strurl, OkHttpClient mClient,UserBean userBean){
+        UserBean userBeanReturn = null;
+        String funName = "getLoginUser";
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(userBean);
+            RequestBody body = RequestBody.create(HttpPost.JSON, json);
+
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .post(body)
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                String loginUser = new JSONObject(responsebody).getString("loginUser");
+                userBeanReturn = gson.fromJson(loginUser,UserBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  userBeanReturn;
+    }
+
+    public static  void  userUpdate(String strurl, OkHttpClient mClient,UserBean userBean){
+
+        String funName = "userUpdate";
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(userBean);
+            RequestBody body = RequestBody.create(HttpPost.JSON, json);
+
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .post(body)
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static  void getMobileHomeData(String strurl, OkHttpClient mClient)
+    {
+        String funName = "getMobileHomeData";
+        try {
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .get()
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

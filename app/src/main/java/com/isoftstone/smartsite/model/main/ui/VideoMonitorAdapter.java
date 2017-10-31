@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +91,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
+        Paint paint = holder.resCodeTv.getPaint();
+        paint.setFakeBoldText(true);
         holder.resCodeTv.setText(mData.get(position).getResCode());
         holder.resNameTv.setText(mData.get(position).getResName());
         setCameraType(holder.resSubTypeTv, mData.get(position).getResSubType());

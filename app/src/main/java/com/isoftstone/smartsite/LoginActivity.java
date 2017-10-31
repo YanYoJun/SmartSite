@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite;
 
 import java.util.ArrayList;
-import java.util.logging.LogRecord;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -16,11 +15,8 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,10 +26,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.isoftstone.smartsite.common.KeepAliveService;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
+import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.http.UserBean;
 import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
@@ -269,22 +267,84 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			Log.i("test",size+" size ");
 			*/
 
+
 			/*
 			mHttpPost.onePMDevicesDataList("[1,2]","0","2017-10-01 00:00:00","2017-10-11 00:00:00");
 			 */
+
+
 			/*
 			int size = mHttpPost.getOneDevicesHistoryData("1").size();
-			Log.i("test",size+" size ");
+			Log.i("test",size+" getOneDevicesHistoryData size ");
 			*/
 
-			/*mHttpPost.onePMDevices24Data("2","2017-10-10");*/
+
+			/*
+			int size =  mHttpPost.onePMDevices24Data("2","2017-10-10 10:10:10").size();
+            Log.i("test",size+" size ");
+            */
+
 			/*
 			int size = mHttpPost.getDevices("","","","").size();
 			Log.i("test",size+" size ");
              */
 
-			int size = mHttpPost.getMessage("","","","2").size();
+
+			/*
+			mHttpPost.readMessage("7");
+			int size = mHttpPost.getMessage("","","","1").size();
 			Log.i("test",size+" size ");
+			*/
+
+            /*
+            String str = mHttpPost.getWeatherLive("47","2017-10").getDataTrend().get(1).getPm10();
+			Log.i("test","getWeatherLive  ---------"+str);
+			*/
+
+
+			/*PatrolBean bean = new PatrolBean();
+			bean.setAddress("武汉大软件元");
+			bean.setCompany("wuanhan  wxa");
+            mHttpPost.addPatrolReport(bean);*/
+
+
+            /*
+            String address = mHttpPost.getPatrolReport("76").getAddress();
+			Log.i("test","address  ---------"+address);
+			*/
+
+
+
+			/*ReportBean bean = new ReportBean();
+			bean.setName("我是一个");
+            bean.setContent("<p>一切正常-----------------</p>");
+			bean.setCreator("我是一个");
+			bean.setDate("2017-10-30 14:22:44");
+			PatrolBean patrol = new PatrolBean();
+			patrol.setId(76);
+			bean.setPatrol(patrol);
+			bean.setCategory(1);
+			bean.setPatrolUser("马化腾马化腾");
+			bean.setPatrolDateEnd("2017-10-30 14:23");
+			bean.setPatrolDateStart("2017-10-29 14:23");
+			mHttpPost.addPatrolVisit(bean);*/
+
+
+			//mHttpPost.getPatrolReportList(1);
+
+
+			/*
+			UserBean user_1 = new UserBean();
+			user_1.setId(1l);
+			user_1.setAccount("admin");
+			user_1.setPassword("bmeB4000");
+			user_1.setName("isoftstone");
+			mHttpPost.userUpdate(user_1);
+			String name = mHttpPost.getLoginUser(user_1).getName();
+			Log.i("test","name  ---------"+name);
+			*/
+
+			mHttpPost.getMobileHomeData();
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
@@ -343,13 +403,31 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	}
 
 	private void logginVideo(){
-		LoginParam params = new LoginParam();
-		params.setServer("111.47.21.51");
-		params.setPort(Integer.parseInt("52060"));
-		params.setUserName("loadmin");
-		params.setPassword("loadmin");
-		//调用登录接口
-		ServiceManager.login(params, LoginActivity.this);
+
+        if(mHttpPost.getVideoConfig()){
+            LoginParam params = new LoginParam();
+
+            params.setServer("111.47.21.51");
+            params.setPort(Integer.parseInt("52060"));
+            params.setUserName("loadmin");
+            params.setPassword("loadmin");
+
+			/*
+			params.setServer(mHttpPost.mLoginBean.getmVideoParameter().getIp());
+			params.setPort(Integer.parseInt(mHttpPost.mLoginBean.getmVideoParameter().getPort()));
+			params.setUserName(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
+			params.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginPass());
+			*/
+            //调用登录接口
+            ServiceManager.login(params, LoginActivity.this);
+        }else{
+            isLogin_2 = false;
+            mLoginResult = "登录失败：获取视屏参数失败";
+            mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+            Message message = new Message();
+            message.what = HANDLER_LOGIN_END;
+            mHandler.sendMessage(message);
+        }
 	}
 	/**
 	 * 登录结果返回

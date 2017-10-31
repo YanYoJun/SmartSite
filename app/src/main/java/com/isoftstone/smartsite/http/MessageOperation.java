@@ -25,7 +25,7 @@ public class MessageOperation {
     public static  ArrayList<MessageBean> getMessage(String strurl, OkHttpClient mClient, String title, String type, String status, String module){
         //获取消息列表  MESSAGE_LIST
         ArrayList<MessageBean> list = null;
-        String funName = "getDevicesList";
+        String funName = "getMessage";
         FormBody body = new FormBody.Builder()
                 .add("title", title)
                 .add("type", type)
@@ -54,5 +54,33 @@ public class MessageOperation {
             e.printStackTrace();
         }
         return  list;
+    }
+
+    public static  void readMessage(String strurl, OkHttpClient mClient, String id){
+        ArrayList<MessageBean> list = null;
+        String funName = "readMessage";
+        FormBody body = new FormBody.Builder()
+                .build();
+        strurl = strurl.replace("{id}",id);
+        Request request = new Request.Builder()
+                .url(strurl)
+                .patch(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                /*String content = null;
+                content = new JSONObject(responsebody).getString("content");
+                list = HttpPost.stringToList(content,MessageBean.class);
+                */
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,85 +1,56 @@
 package com.isoftstone.smartsite.http;
 
-import java.util.ArrayList;
-
 /**
- * Created by gone on 2017/10/15.
+ * Created by gone on 2017/10/31.
  */
 
 public class ReportBean {
-    private String errorinfo = "";
-    private int errorcode = 0;
-    private String date = "";
-    private String report_id = "";
-    private String report_name = "";
-    private String name = "";
-    private String time = "";
-    private String address = "";
-    private int stat = 0; //1：处理中；2：已回访
-    private ArrayList<String> image_list = new ArrayList<String>();
+    private int id;           //	主键
+    private int category; //1:回访,2:回复,3:验收
+    private String creator;//创建人，即报告人
+    private String date;	//date(yyyy-MM-dd HH:mm:ss)	创建时间
+    private String content;//	string	内容
+    private int status;//	状态，参考Patrol状态说明
+    private String name;//	巡查名称
+    private String reportImages;//	报告图片
+    private String reportFiles;	//	报告附件
+    private String patrolUser; //	巡查人
+    private String patrolDateStart;//	date(yyyy-MM-dd HH:mm)	巡查起始时间
+    private String patrolDateEnd;//	date(yyyy-MM-dd HH:mm)	巡查结束时间
+    private String patrolContent;	//string	巡查内容
 
-    public String getReport_id() {
-        return report_id;
+    private PatrolBean patrol;
+
+    public PatrolBean getPatrol() {
+        return patrol;
     }
 
-    public void setReport_id(String report_id) {
-        this.report_id = report_id;
+    public void setPatrol(PatrolBean patrol) {
+        this.patrol = patrol;
     }
 
-    public String getReport_name() {
-        return report_name;
+    public int getId() {
+        return id;
     }
 
-    public void setReport_name(String report_name) {
-        this.report_name = report_name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public int getCategory() {
+        return category;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategory(int category) {
+        this.category = category;
     }
 
-    public String getTime() {
-        return time;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public int getStat() {
-        return stat;
-    }
-
-    public void setStat(int stat) {
-        this.stat = stat;
-    }
-
-    public String getErrorinfo() {
-        return errorinfo;
-    }
-
-    public void setErrorinfo(String errorinfo) {
-        this.errorinfo = errorinfo;
-    }
-
-    public int getErrorcode() {
-        return errorcode;
-    }
-
-    public void setErrorcode(int errorcode) {
-        this.errorcode = errorcode;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getDate() {
@@ -90,11 +61,75 @@ public class ReportBean {
         this.date = date;
     }
 
-    public ArrayList<String> getImage_list() {
-        return image_list;
+    public String getContent() {
+        return content;
     }
 
-    public void setImage_list(ArrayList<String> image_list) {
-        this.image_list = image_list;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getReportImages() {
+        return reportImages;
+    }
+
+    public void setReportImages(String reportImages) {
+        this.reportImages = reportImages;
+    }
+
+    public String getReportFiles() {
+        return reportFiles;
+    }
+
+    public void setReportFiles(String reportFiles) {
+        this.reportFiles = reportFiles;
+    }
+
+    public String getPatrolUser() {
+        return patrolUser;
+    }
+
+    public void setPatrolUser(String patrolUser) {
+        this.patrolUser = patrolUser;
+    }
+
+    public String getPatrolDateStart() {
+        return patrolDateStart;
+    }
+
+    public void setPatrolDateStart(String patrolDateStart) {
+        this.patrolDateStart = patrolDateStart;
+    }
+
+    public String getPatrolDateEnd() {
+        return patrolDateEnd;
+    }
+
+    public void setPatrolDateEnd(String patrolDateEnd) {
+        this.patrolDateEnd = patrolDateEnd;
+    }
+
+    public String getPatrolContent() {
+        return patrolContent;
+    }
+
+    public void setPatrolContent(String patrolContent) {
+        this.patrolContent = patrolContent;
     }
 }

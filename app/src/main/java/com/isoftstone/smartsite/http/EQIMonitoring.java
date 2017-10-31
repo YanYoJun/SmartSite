@@ -118,9 +118,9 @@ public class EQIMonitoring {
         return list;
     }
 
-    public static  OnePMDevicesData onePMDevicesDataList(String strurl, OkHttpClient mClient,String deviceIdsStr,String dataType,String beginTime,String endTime){
+    public static  ArrayList<DataQueryVoBean> onePMDevicesDataList(String strurl, OkHttpClient mClient,String deviceIdsStr,String dataType,String beginTime,String endTime){
         //2.2	单设备PM数据列表
-        OnePMDevicesData onePMDevicesData = null;
+        ArrayList<DataQueryVoBean> list = null;
         String funName = "onePMDevicesDataList";
         FormBody body = new FormBody.Builder()
                 .add("deviceIdsStr", deviceIdsStr)
@@ -140,18 +140,20 @@ public class EQIMonitoring {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                Gson gson = new Gson();
-                onePMDevicesData = gson.fromJson(responsebody,OnePMDevicesData.class);
+                String content = new JSONObject(responsebody).getString("content");
+                list = HttpPost.stringToList(content,DataQueryVoBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return  onePMDevicesData;
+        return  list;
     }
 
-    public static ArrayList<OnePMDevicesData.PDDevicesData> getOneDevicesHistoryData(String strurl, OkHttpClient mClient,String id){
+    public static ArrayList<PMDevicesDataBean> getOneDevicesHistoryData(String strurl, OkHttpClient mClient,String id){
         //2.3	单设备PM历史数据
-        ArrayList<OnePMDevicesData.PDDevicesData> list = null;
+        ArrayList<PMDevicesDataBean> list = null;
         String funName = "getOneDevicesHistoryData";
         Request request = new Request.Builder()
                 .url(strurl+id)
@@ -165,7 +167,7 @@ public class EQIMonitoring {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                list = HttpPost.stringToList(responsebody,OnePMDevicesData.PDDevicesData.class);
+                list = HttpPost.stringToList(responsebody,PMDevicesDataBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -174,9 +176,9 @@ public class EQIMonitoring {
     }
 
 
-    public static  void onePMDevices24Data(String strurl, OkHttpClient mClient,String deviceId,String pushTime){
+    public static  ArrayList<DataQueryVoBean> onePMDevices24Data(String strurl, OkHttpClient mClient,String deviceId,String pushTime){
         //2.5	单设备某天24小时数据
-        OnePMDevicesData onePMDevicesData = null;
+        ArrayList<DataQueryVoBean> list = null;
         String funName = "onePMDevices24Data";
         FormBody body = new FormBody.Builder()
                 .add("deviceId", deviceId)
@@ -194,13 +196,12 @@ public class EQIMonitoring {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                Gson gson = new Gson();
-                //onePMDevicesData = gson.fromJson(responsebody,OnePMDevicesData.class);
+                list = HttpPost.stringToList(responsebody,DataQueryVoBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //return  onePMDevicesData;
+        return  list;
     }
 
 
@@ -234,5 +235,36 @@ public class EQIMonitoring {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static WeatherLiveBean getWeatherLive(String strurl, OkHttpClient mClient,String archId,String time){
+
+        WeatherLiveBean weatherLiveBean = null;
+        String funName = "getWeatherLive";
+        try {
+            //天气实况
+            JSONObject object = new JSONObject();
+            object.put("archId",archId);
+            object.put("time",time);
+            RequestBody body = RequestBody.create(HttpPost.JSON, object.toString());
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .post(body)
+                    .build();
+            Response response = null;
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                weatherLiveBean = gson.fromJson(responsebody,WeatherLiveBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  weatherLiveBean;
     }
 }

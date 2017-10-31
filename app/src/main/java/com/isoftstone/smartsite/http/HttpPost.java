@@ -1,40 +1,21 @@
 package com.isoftstone.smartsite.http;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static android.R.attr.name;
-import static android.R.attr.password;
-import static android.R.attr.port;
-import static android.R.attr.radioButtonStyle;
 
 /**
  * Created by guowei on 2017/10/14.
@@ -44,24 +25,39 @@ public class HttpPost {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient  mClient = null;
     public static String URL = "http://61.160.82.83:19090/ctess";
+
     private String LOGIN_URL = URL + "/login";                        //登录
-    private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";
+    private String  GET_LOGIN_USER = URL + "/user/getLoginUser";      //获取登录用户信息
+    private String   USER_UPDATE = URL + "/user/update";              //用户信息更改
+
+    private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";   //获取视屏服务器参数
+    private String MOBILE_HOME = URL + "/mobile/home";                //获取首页数据
+
     private String EQI_DATA_RANKING = URL + "/eqi/dataRanking";      //区域月度综合排名
     private String EQI_DATA_COMPARISON = URL + "/eqi/dataComparison";  //区域月度数据对比
     private String EQI_DAYS_PROPORTION = URL + "/eqi/daysProportion";  //优良天数占比
-    private String EQI_WEATHER_LIVE = URL + "/eqi/weatherLive";
+    private String EQI_WEATHER_LIVE = URL + "/eqi/weatherLive";        //获取实时天气情况
     private String EQI_LIST = URL + "/eqi/list";                       //单设备PM数据列表
-    private String EQI_BYDEVICE_HISTORY = URL + "/eqi/byDevice/history/";
-    private String EQI_BYDEVICE_DAYS = URL + "/eqi/byDevice/days";
-    private String ESS_DEVICE_LIST = URL + "/EssDevice/list";
-    private String MESSAGE_LIST = URL + "/message/list";
-    private String MESSAGE_ID_READ = URL + "/message/{id}/read";
-    private String USER_GET_LOGINUSER = URL + "/user/getLoginUser";
-    private String USER_UPDATE_USER = URL + "/user/updateUser";
+    private String EQI_BYDEVICE_HISTORY = URL + "/eqi/byDevice/history/";  //获取一台设备历史参数
+    private String EQI_BYDEVICE_DAYS = URL + "/eqi/byDevice/days";        //获取一台设备24小时数据
+
+
+    private String ESS_DEVICE_LIST = URL + "/EssDevice/list";           //获取设备数据
+
+
+    private String MESSAGE_LIST = URL + "/message/list";                //获取消息列表
+    private String MESSAGE_ID_READ = URL + "/message/{id}/read";        //消息读取
+
+    private String PATROL_LIST = URL + "/patrol/list";        //获取报告列表
+    private String ADD_PATROL_REPORT  = URL + "/patrol";      //新增巡查报告
+    private String GET_PATROL_REPORT = URL + "/patrol/";      //获取巡查报告
+    private String ADD_REPORT  = URL + "/report";            //新增巡查报告回复 回访  验收
+    private String IMAGE_UPLOAD  = URL + "/report/image/mobile";  //图片上传
 
 
 
-    private LoginBean mLoginBean = null;
+
+    public static  LoginBean mLoginBean = null;
     private static HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
     public HttpPost(){
         if (mClient == null){
@@ -81,199 +77,9 @@ public class HttpPost {
         return list ;
     }
 
-    public void test12(){
-        //更新用户信息
-        FormBody  body = new FormBody.Builder()
-                .add("id", "7")
-                .build();
-        Request request = new Request.Builder()
-                .url(USER_UPDATE_USER)
-                .patch(body)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            Log.i("text10","------------------------------------"+response.code());
-            if(response.isSuccessful()){
-
-                String responsebody = response.body().string();
-                Log.i("text","------------------------------------"+responsebody);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void test11(){
-        //获取用户信息
-        FormBody  body = new FormBody.Builder()
-                .add("id", "7")
-                .build();
-        Request request = new Request.Builder()
-                .url(USER_GET_LOGINUSER)
-                .patch(body)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            Log.i("text10","------------------------------------"+response.code());
-            if(response.isSuccessful()){
-
-                String responsebody = response.body().string();
-                Log.i("text","------------------------------------"+responsebody);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void test10(){
-        //阅读消息
-        FormBody  body = new FormBody.Builder()
-                .add("id", "256")
-                .build();
-        Request request = new Request.Builder()
-                .url(MESSAGE_ID_READ)
-                .patch(body)
-                .build();
-        Response response = null;
-        try {
-            Log.i("text10","------------------------------------"+request.url().toString());
-            response = mClient.newCall(request).execute();
-            Log.i("text10","------------------------------------"+response.code());
-            if(response.isSuccessful()){
-
-                String responsebody = response.body().string();
-                Log.i("text","------------------------------------"+responsebody);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void test4(){
-        try {
-            //天气实况
-            JSONObject object = new JSONObject();
-            //object.put("archId",47);
-            //object.put("time","2017-10");
-            Log.i("text","------------------------------------"+object.toString());
-            RequestBody body = RequestBody.create(JSON, object.toString());
-            Request request = new Request.Builder()
-                    .url(EQI_WEATHER_LIVE)
-                    .post(body)
-                    .build();
-
-
-            Response response = null;
-            response = mClient.newCall(request).execute();
-            Log.i("text","------------------------------------"+response.code());
-            if(response.isSuccessful()){
-                String responsebody = response.body().string();
-                Log.i("text","------------------------------------"+responsebody);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } /*catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-    }
-
-
-
-
-
-
-    public void getVideoConfig(){
-        Request request = new Request.Builder()
-                .url(GET_VIDEO_CONFIG)
-                .get()
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                mLoginBean = new LoginBean();
-                String responsebody = response.body().string();
-                Log.i("text","------------------------------------"+responsebody);
-                JSONObject json = new JSONObject(responsebody);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
     public HomeBean getHomeDate(){
         HomeBean homeBean = null;
-        /*RequestBody requestBody = new FormBody.Builder().add("username", mUserName).add("token", mToken).build();
-        Request request = new Request.Builder()
-                .url(URL)
-                .post(requestBody)
-                .build();
-        Response response = null;
-        try {
-            response = mClient.newCall(request).execute();
-            if(response.isSuccessful()){
-                String responsebody = response.body().toString();
-                JSONObject json = new JSONObject(responsebody);
-                String errorinfo = json.getString("errorinfo");
-                int errorcode = json.getInt("errorcode");
-                String date = json.getString("date");
-                String results = json.getString("results");
-                JSONObject resultJson = new JSONObject(results);
-                String city = resultJson.getString("city");
-                String weather = resultJson.getString("weather");
-                String weather_image = resultJson.getString("weather_image");
-                String wind = resultJson.getString("wind");
-                String wind_image = resultJson.getString("wind_image");
-                String temperature = resultJson.getString("temperature");
-                int message = resultJson.getInt("message");
-                int report = resultJson.getInt("report");
-                String video_device = resultJson.getString("video_device");
-                String environment_device = resultJson.getString("environment_device");
-                String message_list = resultJson.getString("message_list");
-                JSONArray messagelistJson = new JSONArray(message_list);
-                ArrayList<MessageListBean> list = new ArrayList<MessageListBean>();
-                for (int i = 0; i < messagelistJson.length(); i ++){
-                    JSONObject messageJsonObje = messagelistJson.getJSONObject(i);
-                    String title = messageJsonObje.getString("title");
-                    String detail = messageJsonObje.getString("detail");
-                    int state = messageJsonObje.getInt("state");
-                    String time = messageJsonObje.getString("time");
-                    MessageListBean messageListBean = new MessageListBean();
-                    messageListBean.setTime(title);
-                    messageListBean.setDetail(detail);
-                    messageListBean.setState(state);
-                    messageListBean.setTime(time);
-                    list.add(messageListBean);
-                }
-                homeBean = new HomeBean();
-                homeBean.setErrorinfo(errorinfo);
-                homeBean.setErrorcode(errorcode);
-                homeBean.setDate(date);
-                homeBean.setCity(city);
-                homeBean.setWeather(weather);
-                homeBean.setWeather_image(weather_image);
-                homeBean.setWind(wind);
-                homeBean.setWind_image(wind_image);
-                homeBean.setTemperature(temperature);
-                homeBean.setMessage(message);
-                homeBean.setReport(report);
-                homeBean.setVideo_device(video_device);
-                homeBean.setEnvironment_device(environment_device);
-                homeBean.setMessagelist(list);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+
         homeBean = new HomeBean();
         homeBean.setErrorinfo("");
         homeBean.setErrorcode(100);
@@ -373,9 +179,9 @@ public class HttpPost {
 
     public ReportListBean getReportList(){
         ReportListBean reportlist = null;
-        ArrayList<ReportBean> patrolList = new ArrayList<ReportBean>();
-        ArrayList<ReportBean> checkList = new ArrayList<ReportBean>();
-        ReportBean reportBean = new ReportBean();
+        ArrayList<ReportBeanBak> patrolList = new ArrayList<ReportBeanBak>();
+        ArrayList<ReportBeanBak> checkList = new ArrayList<ReportBeanBak>();
+        ReportBeanBak reportBean = new ReportBeanBak();
         reportBean.setReport_id("123456");
         reportBean.setReport_name("东湖高新巡查报告");
         reportBean.setName("zhangshan");
@@ -395,13 +201,13 @@ public class HttpPost {
         return reportlist;
     }
 
-    public ReportBean getPatrolRepo(String report_id){
-        ReportBean reportBean = null;
+    public ReportBeanBak getPatrolRepo(String report_id){
+        ReportBeanBak reportBean = null;
         ArrayList<String> list = new ArrayList<String>();
         list.add("http://www.baodu.com");
         list.add("http://www.baodu.com");
         list.add("http://www.baodu.com");
-        reportBean = new ReportBean();
+        reportBean = new ReportBeanBak();
         reportBean.setErrorinfo("");
         reportBean.setErrorcode(100);
         reportBean.setDate("2014-10-02 12:45:41");
@@ -470,7 +276,7 @@ public class HttpPost {
     /*
     2.2	单设备PM数据列表  "[1,2]","0","2017-10-01 00:00:00","2017-10-11 00:00:00"
     */
-    public  OnePMDevicesData onePMDevicesDataList(String deviceIdsStr,String dataType,String beginTime,String endTime) {
+    public  ArrayList<DataQueryVoBean> onePMDevicesDataList(String deviceIdsStr,String dataType,String beginTime,String endTime) {
           return EQIMonitoring.onePMDevicesDataList(EQI_LIST,mClient,deviceIdsStr,dataType,beginTime,endTime);
     }
 
@@ -478,17 +284,18 @@ public class HttpPost {
    /*
    2.3	单设备PM历史数据    测试数据 "1"
     */
-    public  ArrayList<OnePMDevicesData.PDDevicesData> getOneDevicesHistoryData(String id){
+    public  ArrayList<PMDevicesDataBean> getOneDevicesHistoryData(String id){
        return EQIMonitoring.getOneDevicesHistoryData(EQI_BYDEVICE_HISTORY,mClient,id);
     }
 
 
-    /*2.5	单设备某天24小时数据  测试数据
+    /*
+    2.5	单设备某天24小时数据  测试数据 "2","2017-10-10 10:10:10"
      */
 
-    /*public void onePMDevices24Data(String deviceIdsStr,String pushTime){
-        EQIMonitoring.onePMDevices24Data(EQI_BYDEVICE_DAYS,mClient,deviceIdsStr,pushTime);
-    }*/
+    public ArrayList<DataQueryVoBean> onePMDevices24Data(String deviceIdsStr,String pushTime){
+        return  EQIMonitoring.onePMDevices24Data(EQI_BYDEVICE_DAYS,mClient,deviceIdsStr,pushTime);
+    }
 
     /*
     //获取设备列表—文昊炅  测试 "","","",""
@@ -503,5 +310,94 @@ public class HttpPost {
     public ArrayList<MessageBean> getMessage(String title, String type, String status, String module) {
 
         return  MessageOperation.getMessage(MESSAGE_LIST,mClient,title,type,status,module);
+    }
+
+    /*
+    消息阅读已经完成
+     */
+    public void readMessage(String id){
+        MessageOperation.readMessage(MESSAGE_ID_READ,mClient,id);
+    }
+
+    /*
+     2.2	获取视频配置
+     */
+    public boolean getVideoConfig(){
+        boolean flag = false;
+        LoginBean.VideoParameter videoParameter = UserLogin.getVideoConfig(GET_VIDEO_CONFIG,mClient);
+        if(videoParameter != null){
+            mLoginBean.setmVideoParameter(videoParameter);
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /*
+    天气实况  测试数据"47","2017-10"
+     */
+    public WeatherLiveBean getWeatherLive(String archId,String time){
+        return  EQIMonitoring.getWeatherLive(EQI_WEATHER_LIVE,mClient,archId,time);
+    }
+
+
+    /*
+     获取巡查报告列表  测试数据 1
+     */
+    public ArrayList<PatrolBean>  getPatrolReportList(int status){
+        return  ReportOperation.getPatrolReportList(PATROL_LIST,mClient,status);
+    }
+
+    /*
+    新增巡查报告
+     */
+    public PatrolBean addPatrolReport(PatrolBean reportBean){
+        return ReportOperation.addPatrolReport(ADD_PATROL_REPORT,mClient,reportBean);
+    }
+
+
+    /*
+    获取一个巡查报告   测试"75"
+     */
+    public PatrolBean getPatrolReport(String id){
+        return  ReportOperation.getPatrolReport(GET_PATROL_REPORT,mClient,id);
+    }
+
+    /*
+    新增巡查回访
+     */
+    public  void addPatrolVisit(ReportBean reportBean){
+         ReportOperation.addPatrolVisit(ADD_REPORT,mClient,reportBean);
+    }
+
+    /*
+    新增巡查回复
+     */
+    public void addPatrolReply(ReportBean reportBean){
+        ReportOperation.addPatrolReply(ADD_REPORT,mClient,reportBean);
+    }
+
+    /*
+    新增巡查验收
+     */
+    public void addPatrolCheck(ReportBean reportBean){
+        ReportOperation.addPatrolCheck(ADD_REPORT,mClient,reportBean);
+    }
+
+    /*
+    获取用户信息
+    */
+    public UserBean getLoginUser(UserBean userBean){
+
+        return  UserLogin.getLoginUser(GET_LOGIN_USER,mClient,userBean);
+    }
+
+    public void userUpdate(UserBean userBean){
+        UserLogin.userUpdate(USER_UPDATE,mClient,userBean);
+    }
+
+
+    public  void getMobileHomeData(){
+        UserLogin.getMobileHomeData(MOBILE_HOME,mClient);
     }
 }

@@ -8,12 +8,17 @@ public class LoginBean {
     private boolean isLoginSuccess = false;
     private String mErrorInfo = "";
     private int mErrorCode = 0;   //1验证码超时   2验证码不正确  3用户不存在    4密码错误   5用户已锁定  6密码过期   7未知错误
-    private String mDate = "";
-    private String mToken = "";
-    private String mViodIp = "";
-    private String mPort = "";
     private String mName = "";    //用户登录姓名
     private String mPassword = "";  //用户登录密码
+    private VideoParameter mVideoParameter;
+
+    public VideoParameter getmVideoParameter() {
+        return mVideoParameter;
+    }
+
+    public void setmVideoParameter(VideoParameter mVideoParameter) {
+        this.mVideoParameter = mVideoParameter;
+    }
 
     public String getmErrorInfo() {
         return mErrorInfo;
@@ -40,38 +45,6 @@ public class LoginBean {
         }
     }
 
-    public String getmDate() {
-        return mDate;
-    }
-
-    public void setmDate(String mDate) {
-        this.mDate = mDate;
-    }
-
-    public String getmToken() {
-        return mToken;
-    }
-
-    public void setmToken(String mToken) {
-        this.mToken = mToken;
-    }
-
-    public String getmViodIp() {
-        return mViodIp;
-    }
-
-    public void setmViodIp(String mViodIp) {
-        this.mViodIp = mViodIp;
-    }
-
-    public String getmPort() {
-        return mPort;
-    }
-
-    public void setmPort(String mPort) {
-        this.mPort = mPort;
-    }
-
     public String getmName() {
         return mName;
     }
@@ -94,5 +67,44 @@ public class LoginBean {
 
     public void setLoginSuccess(boolean loginSuccess) {
         isLoginSuccess = loginSuccess;
+    }
+
+    public static  class VideoParameter{
+        private String port;
+        private String ip;
+        private String loginName;
+        private String loginPass;
+
+        public String getPort() {
+            return port;
+        }
+
+        public void setPort(String port) {
+            this.port = port;
+        }
+
+        public String getIp() {
+            return ip;
+        }
+
+        public void setIp(String ip) {
+            this.ip = ip;
+        }
+
+        public String getLoginName() {
+            return loginName;
+        }
+
+        public void setLoginName(String loginName) {
+            this.loginName = loginName;
+        }
+
+        public String getLoginPass() {
+            return loginPass;
+        }
+
+        public void setLoginPass(String loginPass) {
+            this.loginPass = loginPass;
+        }
     }
 }

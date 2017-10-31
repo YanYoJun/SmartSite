@@ -25,7 +25,6 @@ import java.util.ArrayList;
  */
 
 public class TripartiteActivity extends BaseActivity {
-    private ViewPager mViewPager = null;
     ArrayList<Fragment> mFragList = new ArrayList<Fragment>();
     private SparseArray<TextView> mSwitchLab = new SparseArray<>();
     private SparseArray<ImageView> mSwitchImg = new SparseArray<>();
@@ -35,6 +34,12 @@ public class TripartiteActivity extends BaseActivity {
 
     public static final String FRAGMENT_TYPE = "type";
     public static final String FRAGMENT_DATA = "data";
+
+    //View in this activity
+    private ViewPager mViewPager = null;
+    private View mDefaultBar = null; //the default bar at the title
+    private View mSearchBar = null; // the search bar show if click the search button in default bar
+
 
 
     @Override
@@ -47,8 +52,18 @@ public class TripartiteActivity extends BaseActivity {
         init();
     }
 
-    private void init() {
+    private void initView(){
         mViewPager = (ViewPager) findViewById(R.id.report_view_pager);
+        mDefaultBar = findViewById(R.id.toolbar_default);
+        mSearchBar = findViewById(R.id.toolbar_search);
+
+        //init the default view state
+        mDefaultBar.setVisibility(View.VISIBLE);
+        mSearchBar.setVisibility(View.GONE);
+    }
+
+    private void init() {
+        initView();
         Fragment inspectFrag = new InspectReportMainFragment();
         Fragment checkFrag = new CheckReportMainFragment();
 
@@ -160,5 +175,23 @@ public class TripartiteActivity extends BaseActivity {
     public void onAddReportBtnClick(View v){
         Intent intent = new Intent(this,AddReportActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * 点击搜索按钮
+     * @param v
+     */
+    public void onSearchBtnClick(View v){
+        mSearchBar.setVisibility(View.VISIBLE);
+        mDefaultBar.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * 当位于搜索状态时，点击toolbar上面的取消按钮
+     * @param v
+     */
+    public void onCancelSearchBtnClick(View v){
+        mSearchBar.setVisibility(View.GONE);
+        mDefaultBar.setVisibility(View.VISIBLE);
     }
 }

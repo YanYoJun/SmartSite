@@ -9,61 +9,68 @@
     android:orientation="vertical"
     tools:context="com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity">
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/toolbar_style"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_default"
+            style="@style/toolbar_style"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_back_press_bg"
-                android:onClick="onBackBtnClick"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:src="@drawable/bigarrow" />
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:onClick="onBackBtnClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:src="@drawable/bigarrow" />
 
-            <TextView
-                android:id="@+id/lab_title_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/frag_msg_synergy"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/lab_title_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/frag_msg_synergy"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
-            <ImageButton
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_back_press_bg"
-                android:paddingLeft="16dp"
-                android:paddingRight="12dp"
-                android:src="@drawable/search" />
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:onClick="onSearchBtnClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="12dp"
+                    android:src="@drawable/search" />
 
-            <ImageButton
-                android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toStartOf="@id/btn_search"
-                android:background="@drawable/btn_back_press_bg"
-                android:paddingLeft="12dp"
-                android:paddingRight="16dp"
-                android:onClick="onAddReportBtnClick"
-                android:src="@drawable/addreport" />
+                <ImageButton
+                    android:id="@+id/btn_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@id/btn_search"
+                    android:background="@drawable/btn_back_press_bg"
+                    android:onClick="onAddReportBtnClick"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="16dp"
+                    android:src="@drawable/addreport" />
 
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <include layout="@layout/layout_toolbar_search"></include>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

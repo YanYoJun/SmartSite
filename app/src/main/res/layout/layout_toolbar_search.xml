@@ -10,7 +10,7 @@
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
         style="@style/toolbar_style"
-        android:id="@+id/toolbar">
+        android:id="@+id/toolbar_search">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -69,6 +69,7 @@
                 android:background="@drawable/btn_back_press_bg"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:onClick="onCancelSearchBtnClick"
                 android:src="@drawable/bigarrow" />
 
 

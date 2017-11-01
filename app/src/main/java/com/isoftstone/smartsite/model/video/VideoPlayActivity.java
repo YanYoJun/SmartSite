@@ -134,7 +134,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                         //启动播放解码
                         mPlayer.AVStartPlay();
                         //修改監控界面大小為當前屏幕大小
-                        mPlayer.changeDisplaySize(mSurfaceViewWidth, mSurfaceViewHeight);
+                        //mPlayer.changeDisplaySize(mSurfaceViewWidth, mSurfaceViewHeight);
 
                         //收流线程启动
                         mRecvStreamThread = new RecvStreamThread(mPlayer, playSession);
@@ -173,11 +173,13 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                         mRecvStreamThread.interrupt();
                         mRecvStreamThread = null;
                     }
+                } else {
+                    Toast.makeText(VideoPlayActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+                }
 
-                    //停止Player播放解码
-                    if (null != mPlayer) {
-                        mPlayer.AVStopPlay();
-                    }
+                //不管服务器停止结果是否成功，我们都会停止Player播放解码
+                if (null != mPlayer) {
+                    mPlayer.AVStopPlay();
                 }
             }
         });
@@ -185,14 +187,11 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     }
 
     @Override
-    protected void onDestroy() {
-        //销毁Player
-        if (null != mPlayer) {
-            mPlayer.AVFinalize();
-            mPlayer = null;
+    protected void onResume() {
+        if (null != mPlayer && !mPlayer.AVIsPlaying()) {
+            startLive(mCameraCode);
         }
-
-        super.onDestroy();
+        super.onResume();
     }
 
     @Override
@@ -204,11 +203,14 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     }
 
     @Override
-    protected void onResume() {
-        if (null != mPlayer && !mPlayer.AVIsPlaying()) {
-            startLive(mCameraCode);
+    protected void onDestroy() {
+        //销毁Player
+        if (null != mPlayer) {
+            mPlayer.AVFinalize();
+            mPlayer = null;
         }
-        super.onResume();
+
+        super.onDestroy();
     }
 
     public void initRoundMenuView() {

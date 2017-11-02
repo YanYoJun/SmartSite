@@ -1,5 +1,9 @@
 package com.isoftstone.smartsite.http;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -8,6 +12,8 @@ import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +35,7 @@ public class HttpPost {
     private String LOGIN_URL = URL + "/login";                        //登录
     private String  GET_LOGIN_USER = URL + "/user/getLoginUser";      //获取登录用户信息
     private String   USER_UPDATE = URL + "/user/update";              //用户信息更改
+    private String   USER_UPLOAD = URL + "/user/upload";              //用户头像修改
 
     private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";   //获取视屏服务器参数
     private String MOBILE_HOME = URL + "/mobile/home";                //获取首页数据
@@ -385,6 +392,35 @@ public class HttpPost {
     }
 
     /*
+    报告上传图片
+     */
+    public  void reportImageUpload(String filepath,int id){
+        ReportOperation.reportImageUpload(IMAGE_UPLOAD,mClient,filepath,id);
+    }
+    /*
+    报告上传文件
+     */
+    public void reportFileUpload(String filepath,int id){
+        ReportOperation.reportFileUpload(IMAGE_UPLOAD,mClient,filepath,id);
+    }
+
+
+    //下载报告图片，需要传入id和服务器获取的到路径
+    public void downloadReportFile(int id,String filename){
+
+        String url = getFileUrl(filename);
+        String name = getFileName(filename);
+        String sdpath = Environment.getExternalStorageDirectory().getPath();
+        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/report/"+id;
+        File file = new File(storagePath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        if (file.exists())Log.i("Test","url  "+url+"  storagePath  "+storagePath+" name "+name+"   "+getReportPath(id,filename));
+        ReportOperation.downloadfile(url,storagePath,name);
+    }
+
+    /*
     获取用户信息
     */
     public UserBean getLoginUser(){
@@ -393,11 +429,30 @@ public class HttpPost {
         userBean.setPassword(mLoginBean.getmPassword());
         return  UserLogin.getLoginUser(GET_LOGIN_USER,mClient,userBean);
     }
-
+    //更改用户信息
     public void userUpdate(UserBean userBean){
         UserLogin.userUpdate(USER_UPDATE,mClient,userBean);
     }
 
+    //上传用户头像
+    public void userImageUpload(Bitmap bit,Bitmap.CompressFormat format){
+        UserLogin.userImageUpload(USER_UPLOAD,mClient,bit,format);
+    }
+    //下载用户图片  服务器获取的到路径
+    public void downloadUserImage(String filename){
+
+        String url = getFileUrl(filename);
+        String name = getFileName(filename);
+        String sdpath = Environment.getExternalStorageDirectory().getPath();
+        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/usericon";
+        File file = new File(storagePath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        if (file.exists())Log.i("Test","url  "+url+"  storagePath  "+storagePath+" name "+name+"   "+getImagePath(filename));
+        ReportOperation.downloadfile(url,storagePath,name);
+    }
     /*
     获取主界面数据
      */
@@ -405,12 +460,36 @@ public class HttpPost {
        return UserLogin.getMobileHomeData(MOBILE_HOME,mClient);
     }
 
-    public  void imageUpload(String filepath,int id){
-        ReportOperation.imageUpload(IMAGE_UPLOAD,mClient,filepath,id);
+
+
+    //获取下载文件、图片的URL
+    public  String  getFileUrl(String filename){
+        filename = filename.replaceAll("\\\\","/");
+        return URL + "/"+filename;
     }
 
-    public void download(String filepath){
+    //获取用户图片保存绝对路径
+    public String getImagePath(String imageName){
 
-        ReportOperation.download(URL,mClient,"");
+        String sdpath = Environment.getExternalStorageDirectory().getPath();
+        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/usericon/"+getFileName(imageName);
+        return  storagePath;
+    }
+
+    //获取用户图片保存绝对路径
+    public String getReportPath(int id,String imageName){
+
+        String sdpath = Environment.getExternalStorageDirectory().getPath();
+        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/report/"+id+"/"+getFileName(imageName); ;
+        return  storagePath;
+    }
+
+
+    private String  getFileName(String filename){
+        int index = filename.lastIndexOf("\\");
+        if(index > 0){
+            return  filename.substring(index+1);
+        }
+        return  filename;
     }
 }

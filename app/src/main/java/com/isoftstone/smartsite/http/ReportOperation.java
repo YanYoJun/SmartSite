@@ -1,9 +1,13 @@
 package com.isoftstone.smartsite.http;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.utils.LogUtils;
 
 import org.json.JSONException;
@@ -217,9 +221,9 @@ public class ReportOperation {
         }
     }
 
-    public static void imageUpload(String strurl, OkHttpClient mClient, String filepath, int id){
+    public static void reportImageUpload(String strurl, OkHttpClient mClient, String filepath, int id){
 
-        String funName = "imageUpload";
+        String funName = "reportImageUpload";
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), new File(filepath));
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -264,64 +268,63 @@ public class ReportOperation {
         }
     }
 
-    public static void download(String strurl, OkHttpClient mClient, String filepath){
-        String funName = "download";
-        Request request = new Request.Builder()
-                .url(strurl+"/"+filepath)
-                .get()
+    public static void reportFileUpload(String strurl, OkHttpClient mClient, String filepath, int id){
+
+        String funName = "reportFileUpload";
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), new File(filepath));
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file","test.png",fileBody)
+                .addFormDataPart("id", id+"")
                 .build();
-        mClient.newCall(request).enqueue(new Callback() {
 
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.i("h_bl", "onFailure");
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.i("h_bl", "onResponse");
-                InputStream is = null;
-                byte[] buf = new byte[2048];
-                int len = 0;
-                FileOutputStream fos = null;
-                String SDPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                try {
-                    is = response.body().byteStream();
-                    long total = response.body().contentLength();
-                    File file = new File(SDPath, "testadmin.png");
-                    if(file.exists()){
-                        file.delete();
-                    }
-                    file.createNewFile();
-                    fos = new FileOutputStream(file);
-                    long sum = 0;
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                        sum += len;
-                        int progress = (int) (sum * 1.0f / total * 100);
-                        Log.d("h_bl", "progress=" + progress);
-                    }
-                    fos.flush();
-                    Log.i("h_bl", "文件下载成功"+file.getCanonicalPath());
-                    Log.i("h_bl", "文件下载成功"+total);
-                } catch (Exception e) {
-                    Log.i("h_bl", "文件下载失败");
-                } finally {
-                    try {
-                        if (is != null)
-                            is.close();
-                    } catch (IOException e) {
-                    }
-                    try {
-                        if (fos != null)
-                            fos.close();
-                    } catch (IOException e) {
-                    }
-                }
+        ///                .addPart(
+//                        Headers.of("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\""),
+//                        RequestBody.create(MEDIA_TYPE_PNG, file))
+//                .addPart(
+//                        Headers.of("Content-Disposition", "form-data; name=\"imagetype\""),
+//                        RequestBody.create(null, imageType))
+//                .addPart(
+//                        Headers.of("Content-Disposition", "form-data; name=\"userphone\""),
+//                        RequestBody.create(null, userPhone))
+
+        /*RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), new File(filepath));
+
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addPart(Headers.of("Content-Disposition","form-data; name=\"id\""),RequestBody.create(null, ""+id))
+                .addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"test.png\""), fileBody)
+                .build();*/
+
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        try {
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG, funName + " response code " + response.code());
+            if (response.isSuccessful()) {
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG, funName + " responsebody  " + responsebody);
+
             }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
+    public static  void downloadfile(String downloadUrl,String storagePath,String imageName){
+        //创建下载任务,downloadUrl就是下载链接
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+        //指定下载路径和下载文件名
+        Log.i("text",storagePath);
+        request.setDestinationInExternalPublicDir(storagePath, imageName);
+        //获取下载管理器
+        DownloadManager downloadManager= (DownloadManager) App.getAppContext().getSystemService(Context.DOWNLOAD_SERVICE);
+         //将下载任务加入下载队列，否则不会进行下载
+        downloadManager.enqueue(request);
+    }
 
 }

@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http;
 
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -8,6 +10,8 @@ import com.isoftstone.smartsite.utils.LogUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.FormBody;
@@ -162,5 +166,35 @@ public class UserLogin {
             e.printStackTrace();
         }
         return  mobileHomeBean;
+    }
+
+
+    public static void  userImageUpload(String strurl, OkHttpClient mClient,Bitmap bit,Bitmap.CompressFormat format){
+        String funName = "userImageUpload";
+        try {
+            ByteArrayOutputStream bos=new ByteArrayOutputStream();
+            bit.compress(format, 40, bos);//参数100表示不压缩
+            byte[] bytes=bos.toByteArray();
+            String strBase64 =  Base64.encodeToString(bytes, Base64.DEFAULT);
+            JSONObject json = new JSONObject();
+            json.put("base64",strBase64);
+            RequestBody body = RequestBody.create(HttpPost.JSON, json.toString());
+
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .post(body)
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

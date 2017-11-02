@@ -355,7 +355,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			/*String name = mHttpPost.getLoginUser().getName();
 			Log.i("test","name  ---------"+name);
             */
-			//mHttpPost.download("upload\\20171101\\admin.png");
+
+			//mHttpPost.downloadUserImage("img\\logo.png");
+			//mHttpPost.downloadReportFile(1,"img\\logo.png");
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;

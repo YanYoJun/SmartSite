@@ -58,11 +58,58 @@
                     android:text="区域月度综合排名" />
             </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/rank_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:background="@color/white">
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="2017年10月"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="12dp"
+                        android:id="@+id/date"
+                        android:textColor="@mipmap/video_black"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/droparrow"
+                        android:layout_toRightOf="@id/date"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/droparrow"
+                        android:paddingLeft="8dp"
+                        android:id="@+id/rank"
+                        android:paddingRight="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="AQI"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toLeftOf="@id/rank"
+                        android:textColor="@mipmap/video_black"/>
 
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/gray_9999"></View>
+
+                
             </LinearLayout>
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart1"

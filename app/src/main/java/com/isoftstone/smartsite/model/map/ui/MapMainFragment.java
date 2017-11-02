@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTabHost;
@@ -39,12 +42,19 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
+import com.isoftstone.smartsite.model.video.VideoPlayActivity;
+import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +67,8 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private AMap mAMap;
     private MyLocationStyle myLocationStyle;
 
+    private static final int ADD_MARKER = 0x0001;
+
     private List<Marker> markers = new ArrayList<>();
     private PopupWindow chooseCameraPopWindow;
     private TextView tvDeviceName;
@@ -66,7 +78,22 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private Button btnDeviceCancel;
     private PopupWindow deviceInfoPopWindow;
     private FrameLayout mapContentView;
-    private LatLng aotiLatLon;
+    private HttpPost mHttpPost;
+    private ArrayList<DevicesBean> mDeviceList;
+    private LatLng aotiLatLon = new LatLng(30.47,114.51);
+
+    private DevicesBean currentEvBean,currentVideoBean;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == ADD_MARKER){
+                initMarker();
+            }
+        }
+    };
+
 
     @Override
     protected int getLayoutRes() {
@@ -85,9 +112,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         initChooseCameraPopWindow();
         initDeviceInfoPopWindow();
 
-        aotiLatLon = new LatLng(30.479736,114.476322);
+        initData();
 
         mapContentView = (FrameLayout) rootView.findViewById(R.id.map_content);
+
+    }
+
+    private void initData(){
+        mHttpPost = new HttpPost();
+
 
     }
 
@@ -111,8 +144,39 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         chooseCameraListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.showShort(((TextView)view).getText().toString());
-                getActivity().startActivity(new Intent(getActivity(),VideoMonitorMapActivity.class));
+                if(position == 1){
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("resCode", currentVideoBean.getDeviceCoding());
+                    bundle.putInt("resSubType", currentVideoBean.getDeviceType());
+                    intent.putExtras(bundle);
+                    intent.setClass(mContext, VideoPlayActivity.class);
+                    mContext.startActivity(intent);
+                } else if(position == 2){
+                    Date now = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String beginTime = formatter.format(now) + " 00:00:00";
+                    String endTime = formatter.format(now) + " 23:59:59";
+
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("resCode", currentVideoBean.getDeviceCoding());
+                    bundle.putInt("resSubType", currentVideoBean.getDeviceType());
+                    bundle.putString("resName", currentVideoBean.getDeviceName());
+                    bundle.putBoolean("isOnline", "0".equals(currentVideoBean.getDeviceStatus()));
+                    bundle.putString("beginTime", beginTime);
+                    bundle.putString("endTime", endTime);
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+                    intent.putExtras(bundle);
+                    intent.setClass(mContext, VideoRePlayListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);
+                } else if(position == 3){
+                    //打开系统相册浏览照片  
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 chooseCameraPopWindow.dismiss();
             }
         });
@@ -169,7 +233,17 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         settings.setZoomControlsEnabled(false);
 
         initLocation();
-
+        if(markers.size() != 0){
+            initMarker();
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mDeviceList = mHttpPost.getDevices("","","","");
+                    mHandler.sendEmptyMessage(ADD_MARKER);
+                }
+            }).start();
+        }
 
     }
 
@@ -196,43 +270,56 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(new CameraPosition(aotiLatLon,12f,0,0));
         mAMap.moveCamera(update);
-        initMarker();
 
     }
 
     private void initMarker(){
-        for (int i = 0 ;i < 5 ; i++){
-            MarkerOptions markerOption = new MarkerOptions();
-            markerOption.position(new LatLng(30.479736 + 0.0075  ,114.476322 + ((float)(i-2)/50)));
-            markerOption.visible(true);
+        if(mDeviceList == null || mDeviceList.size() == 0){
+            ToastUtils.showLong("没有获取到设备信息!");
+        }else {
+            for (int i = 0;i<mDeviceList.size();i++){
+                DevicesBean bean = mDeviceList.get(i);
+                MarkerOptions markerOption = new MarkerOptions();
+                double lat = Double.parseDouble(bean.getLatitude());
+                double lon = Double.parseDouble(bean.getLongitude());
+                markerOption.position(new LatLng(lat,lon));
+                markerOption.visible(true);
+                markerOption.draggable(false);//设置Marker可拖动
+                if(bean.getDeviceType() == 1){
+                    //0在线，1离线，2故障
+                    if("0".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.camera_normal)));
+                    }else if("1".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.camera_gray)));
+                    }else if("2".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.camera_red)));
+                    }
+                } else if(bean.getDeviceType() == 0){
+                    //0在线，1离线，2故障
+                    if("0".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_blue)));
+                    }else if("1".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_gray)));
+                    }else if("2".equals(bean.getDeviceStatus())){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_red)));
+                    }
+                }
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(true);//设置marker平贴地图效果
 
-            markerOption.draggable(false);//设置Marker可拖动
-            if(i == 0){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_gray)));
-            } else if(i == 1){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_normal)));
-            } else if(i == 2){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_red)));
-            } else if(i == 3){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.environment_orange)));
-            } else if(i == 4){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.environment_pink)));
+                Marker marker = mAMap.addMarker(markerOption);
+
+                marker.setObject(bean);
+                markers.add(marker);
             }
 
-            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-            markerOption.setFlat(true);//设置marker平贴地图效果
-
-            Marker marker = mAMap.addMarker(markerOption);
-
-            marker.setObject(""+i);
-            markers.add(marker);
         }
-
     }
 
 
@@ -272,22 +359,35 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(marker.getObject() != null){
-            if(marker.getObject().equals("3")){
-                tvDeviceName.setText("设备名称：130004 轻度污染");
-                tvDeviceName.setTextColor(Color.BLACK);
-                btnDeviceInfo.setClickable(true);
-                btnDeviceInfo.setTextColor(Color.BLACK);
-                deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
-            }else if(marker.getObject().equals("4")){
-                tvDeviceName.setText("设备名称：130004 污染严重");
-                tvDeviceName.setTextColor(Color.RED);
-                btnDeviceInfo.setClickable(false);
-                btnDeviceInfo.setTextColor(Color.GRAY);
-                deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
-            } else {
+        DevicesBean bean = (DevicesBean) marker.getObject();
+        if(bean != null){
+            if(bean.getDeviceType() == 1){
+                currentVideoBean = bean;
                 chooseCameraPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+            }else if(bean.getDeviceType() == 0){
+                currentEvBean = bean;
+                //0在线，1离线，2故障
+                if("0".equals(bean.getDeviceStatus())){
+                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备在线");
+                    tvDeviceName.setTextColor(Color.BLACK);
+                    btnDeviceInfo.setClickable(true);
+                    btnDeviceInfo.setTextColor(Color.BLACK);
+                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                } else if("1".equals(bean.getDeviceStatus())){
+                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备离线");
+                    tvDeviceName.setTextColor(Color.GRAY);
+                    btnDeviceInfo.setClickable(false);
+                    btnDeviceInfo.setTextColor(Color.GRAY);
+                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                } else if("2".equals(bean.getDeviceStatus())){
+                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备故障");
+                    tvDeviceName.setTextColor(Color.RED);
+                    btnDeviceInfo.setClickable(false);
+                    btnDeviceInfo.setTextColor(Color.GRAY);
+                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                }
             }
+
         }
 
         return true;
@@ -297,8 +397,11 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.device_info:
+                //实时数据
+                Intent intent = new Intent();
+                intent.setClass(mContext, PMDataInfoActivity.class);
+                mContext.startActivity(intent);
                 deviceInfoPopWindow.dismiss();
-                ToastUtils.showShort("详细数据");
                 break;
             case R.id.device_cancel:
                 deviceInfoPopWindow.dismiss();

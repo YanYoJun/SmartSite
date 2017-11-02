@@ -23,7 +23,12 @@ import com.amap.api.maps.model.MyLocationStyle;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.DeviceBean;
+import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.LogUtils;
+
+import java.util.ArrayList;
 
 
 /**
@@ -48,6 +53,21 @@ public class MapTestFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final HttpPost mHttpPost = new HttpPost();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<DevicesBean> list = mHttpPost.getDevices("","","","");
+                LogUtils.d(TAG,list);
+            }
+        }).start();
+
+
+
+
+
 
     }
 

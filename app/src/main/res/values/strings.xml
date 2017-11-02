@@ -164,6 +164,8 @@
     <string name="user_sex">性别</string>
     <string name="user_role">角色</string>
     <string name="user_full_name">姓名</string>
+    <string name="sex_male">男</string>
+    <string name="sex_female">女</string>
     <string name="ok">确认</string>
     <string name="cancle">放弃</string>
     <string name="save">保存</string>

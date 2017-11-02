@@ -32,7 +32,7 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="@color/white"
-            android:text="@string/user_name" />
+            android:text="" />
 
         <TextView
             android:id="@+id/user_autograph_tv"
@@ -43,7 +43,7 @@
             android:textSize="12sp"
             android:textColor="@color/white"
             android:alpha="0.5"
-            android:text="@string/user_autograph" />
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout

@@ -14,18 +14,16 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
-import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.UserBean;;
 import com.isoftstone.smartsite.utils.ToastUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,16 +44,18 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private PermissionsChecker mPermissionsChecker;
     private static final int REQUEST_CODE = 100; // 权限检查请求码
 
-    private Button mOkBtn;
-    private Button mCancleBtn;
     private Fragment mCurrentFrame;
-    private TextView mUserFullNameET;
-    private TextView mUserRoleET;
-    private TextView mUserSexET;
-    private TextView mUserAccountET;
-    private TextView mUserPhoneNumET;
-    private TextView mUserCompanyET;
-    private TextView mUserAutographET;
+    private TextView mUserNameView;
+    private TextView mUserRoleView;
+    private TextView mUserSexView;
+    private TextView mUserAccountView;
+    private TextView mUserPwdView;
+    private TextView mUserPhoneNumView;
+    private TextView mUserCompanyView;
+    private TextView mUserAutographView;
+    private Long mUserId;
+
+    private HttpPost mHttpPost = null;
 
     /* 请求识别码 选择图库*/
     private static final int IMAGE_REQUEST_CODE = 1;
@@ -63,6 +63,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private static final int CAMERA_REQUEST_CODE = 2;
     /* 请求识别码 裁剪*/
     private static final int RESULECODE = 3;
+
     // 所需的全部权限
     static final String[] PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -95,28 +96,35 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             // 强转为接口实例  
             backHandlerInterface = (BackHandlerInterface) getActivity();
         }
+
+        new Thread(){
+            @Override
+            public void run() {
+                UserBean userBean = mHttpPost.getLoginUser();
+                MyThread myThread = new MyThread(userBean);
+                mHandler.post(myThread);
+            }
+        }.start();
     }
 
     /**
      * 实例化
      */
     private void init() {
+        mHttpPost = new HttpPost();
         mPermissionsChecker = new PermissionsChecker(getActivity().getApplicationContext());
+
         picPath = Environment.getExternalStorageDirectory() + "/smartsite/";
         mImageView = (ImageView) rootView.findViewById(R.id.head_iv);
-        mOkBtn = (Button) rootView.findViewById(R.id.ok);
-        mCancleBtn = (Button) rootView.findViewById(R.id.cancle);
-        mUserFullNameET = (TextView) rootView.findViewById(R.id.user_full_name);
-        mUserRoleET = (TextView) rootView.findViewById(R.id.user_role);
-        mUserSexET = (TextView) rootView.findViewById(R.id.user_sex);
-        mUserAccountET = (TextView) rootView.findViewById(R.id.user_account);
-        mUserPhoneNumET = (TextView) rootView.findViewById(R.id.user_phoneNum);
-        mUserCompanyET = (TextView) rootView.findViewById(R.id.user_company);
-        mUserAutographET = (TextView) rootView.findViewById(R.id.user_autograph);
+        mUserNameView = (TextView) rootView.findViewById(R.id.user_full_name);
+        mUserRoleView = (TextView) rootView.findViewById(R.id.user_role);
+        mUserSexView = (TextView) rootView.findViewById(R.id.user_sex);
+        mUserAccountView = (TextView) rootView.findViewById(R.id.user_account);
+        mUserPwdView = (TextView) rootView.findViewById(R.id.user_pwd);
+        mUserPhoneNumView = (TextView) rootView.findViewById(R.id.user_phoneNum);
+        mUserCompanyView = (TextView) rootView.findViewById(R.id.user_company);
+        mUserAutographView = (TextView) rootView.findViewById(R.id.user_autograph);
         //获取服务器数据显示..... zyf modifed.....
-
-        mOkBtn.setOnClickListener(this);
-        mCancleBtn.setOnClickListener(this);
 
         mImageView.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
@@ -300,9 +308,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         }
     }
 
-
-
-
     /**
      * 去上传文件
      */
@@ -326,7 +331,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         msg.what = UPLOAD_FILE_DONE;
         msg.arg1 = responseCode;
         msg.obj = message;
-        handler.sendMessage(msg);
+        mHandler.sendMessage(msg);
     }
 
     @Override
@@ -334,7 +339,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         Message msg = Message.obtain();
         msg.what = UPLOAD_IN_PROCESS;
         msg.arg1 = uploadSize;
-        handler.sendMessage(msg);
+        mHandler.sendMessage(msg);
     }
 
     @Override
@@ -342,10 +347,10 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         Message msg = Message.obtain();
         msg.what = UPLOAD_INIT_PROCESS;
         msg.arg1 = fileSize;
-        handler.sendMessage(msg);
+        mHandler.sendMessage(msg);
     }
 
-    private static Handler handler = new Handler() {
+    private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -369,24 +374,17 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_back:
-                //back toolbar click
             case R.id.btn_icon_right:
                 //toolbar right view click
-            case R.id.ok:
                 //保存用戶數據 上傳到服务器..... zyf modifed.....
-            case R.id.cancle:
-                /**FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment systemFragment = new SystemFragment();
-                if(mCurrentFrame != systemFragment){
-                    if(!systemFragment.isAdded()) {
-                        fragmentTransaction.hide(mCurrentFrame).add(R.id.fl_system_content, systemFragment).commitAllowingStateLoss();
-                    } else{
-                        fragmentTransaction.hide(mCurrentFrame).show(systemFragment).commitAllowingStateLoss();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        updateUserInfo(getUpdateUserBean());
                     }
-                    mCurrentFrame = systemFragment;
-                }*/
+                }.start();
+            case R.id.btn_back:
+                //back toolbar click
                 Fragment systemFragment = new SystemFragment();
                 changeToAnotherFragment(mCurrentFrame, systemFragment);
             default:
@@ -405,7 +403,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     public boolean onFragmentBackPressed() {
         if (!mHandledPress) {
             mHandledPress = true;
-            ToastUtils.showShort("onFragmentBackPressed");
             Fragment systemFragment = new SystemFragment();
             changeToAnotherFragment(mCurrentFrame, systemFragment);
             return true;
@@ -433,8 +430,78 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         tv_title.setText(R.string.individual_center);
 
         rootView.findViewById(R.id.btn_back).setOnClickListener(this);
+
         TextView right_title = (TextView)rootView.findViewById(R.id.btn_icon_right);
         right_title.setText(R.string.ok);
         right_title.setOnClickListener(this);
+    }
+
+    private void initUserInfo(UserBean userBean) {
+        mUserId = userBean.getId();
+        mUserNameView.setText(userBean.getName());
+        mUserRoleView.setText(userBean.getEmployeeCode());
+        mUserSexView.setText((userBean.getSex() == 0) ? R.string.sex_male : R.string.sex_female);
+        mUserAccountView.setText(userBean.getAccount());
+        mUserPwdView.setText(userBean.getPassword());
+        mUserPhoneNumView.setText(userBean.getTelephone());
+        mUserCompanyView.setText(userBean.getDepartmentId());
+        mUserAutographView.setText(userBean.getDescription());
+        Log.i("zyf","getUserInfo--->" + userBean.toString());
+    }
+
+    private void updateUserInfo(UserBean userBean) {
+        Log.i("zyf","updateUserInfo--->" + userBean.toString());
+        mHttpPost.userUpdate(userBean);
+    }
+
+    private UserBean getUpdateUserBean() {
+        UserBean userBean = new UserBean();
+
+        userBean.setId(mUserId);
+        userBean.setAccount("admin");
+        userBean.setPassword("bmeB4000");
+        //userBean.setImageData("upload\\admin920.png");
+        //userBean.setFax("123");
+        //userBean.setEmail("123@qq.com");
+        //userBean.setCreateTime("2017-10-31T18:35:29.000+0800");
+        //userBean.setAccountType(1);
+
+        if (null !=  mUserNameView.getText()) {
+            userBean.setName(mUserNameView.getText().toString() + 2222);
+        }
+        if (null !=  mUserSexView.getText()) {
+            userBean.setSex(1);
+        }
+        //if (null != mUserAccountView.getText()) {
+        //    userBean.setAccount(mUserAccountView.getText().toString());
+        //}
+        //if (null !=  mUserPwdView.getText()) {
+            //userBean.setPassword(mUserPwdView.getText().toString());
+        //    userBean.setPassword("bmeB4000");
+        //}
+        if (null !=  mUserPhoneNumView.getText()) {
+            //userBean.setTelephone(mUserPhoneNumView.getText().toString());
+            userBean.setTelephone("13476181999");
+        }
+        //if (null !=  mUserCompanyView.getText()) {
+            //userBean.setDepartmentId(mUserCompanyView.getText().toString());
+        //    userBean.setDepartmentId("234");
+        //}
+        //if (null !=  mUserAutographView.getText()) {
+         //   userBean.setDescription(mUserAutographView.getText().toString());
+        //}
+        return userBean;
+    }
+
+    private class MyThread implements Runnable {
+        private MyThread (){}
+        private UserBean userBean;
+        private MyThread (UserBean userBean) {
+            this.userBean = userBean;
+        }
+        @Override
+        public void run() {
+            initUserInfo(userBean);
+        }
     }
 }

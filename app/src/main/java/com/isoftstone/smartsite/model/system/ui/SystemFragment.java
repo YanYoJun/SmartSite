@@ -4,17 +4,24 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.isoftstone.smartsite.LoginActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.UserUtils;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 
 /**
@@ -23,18 +30,22 @@ import com.isoftstone.smartsite.base.BaseFragment;
 
 public class SystemFragment extends BaseFragment{
 
-    private LinearLayout linearLayout;//用户头像父节点LL
-    private ImageView imageView;//用户头像IV
+    private LinearLayout mLinearLayout;//用户头像父节点LL
+    private ImageView mHeadImageView;//用户头像IV
+    private TextView mUserNameView;//用户名
+    private TextView mUserAutographView;//签名信息
     String picPath;//头像路径
-    private LinearLayout individualCenterLinearLayout;//个人中心Btn
-    private LinearLayout aboutUsLinearLayout;//关于我们Btn
-    private LinearLayout logOffLinearLayout;//退出Btn
-    private LinearLayout mOpinionFeedback;//意见反馈
-    private LinearLayout mSettings;//设置
-
-    private PermissionsChecker mPermissionsChecker;
+    private LinearLayout mIndividualCenterLayout;//个人中心Btn
+    private LinearLayout mAboutUsLayout;//关于我们Btn
+    private LinearLayout mLogOffLayout;//退出Btn
+    private LinearLayout mOpinionFeedbackLayout;//意见反馈
+    private LinearLayout mSettingsLayout;//设置
 
     private Fragment mCurrentFrame;
+    private HttpPost mHttpPost = null;
+
+    private static final  int HANDLER_GET_USER_INFO = 1;
+    private Handler mHandler = null;
 
     @Override
     protected int getLayoutRes() {
@@ -50,28 +61,43 @@ public class SystemFragment extends BaseFragment{
      * 实例化
      */
     private void init() {
-        mPermissionsChecker = new PermissionsChecker(getActivity().getApplicationContext());
+        mHttpPost = new HttpPost();
+        mHandler = new Handler();
+
         picPath = Environment.getExternalStorageDirectory() + "/smartsite/";
-        imageView = (ImageView) rootView.findViewById(R.id.head_iv);
-        individualCenterLinearLayout = (LinearLayout) rootView.findViewById(R.id.individual_center);
-        aboutUsLinearLayout = (LinearLayout) rootView.findViewById(R.id.about_us);
-        logOffLinearLayout = (LinearLayout) rootView.findViewById(R.id.log_off);
-        mOpinionFeedback = (LinearLayout) rootView.findViewById(R.id.opinion_feedback);
-        mSettings = (LinearLayout) rootView.findViewById(R.id.settings);
+        mHeadImageView = (ImageView) rootView.findViewById(R.id.head_iv);
+        mUserNameView = (TextView)  rootView.findViewById(R.id.user_name_tv);
+        mUserAutographView = (TextView)  rootView.findViewById(R.id.user_autograph_tv);
+        mIndividualCenterLayout = (LinearLayout) rootView.findViewById(R.id.individual_center);
+        mAboutUsLayout = (LinearLayout) rootView.findViewById(R.id.about_us);
+        mLogOffLayout = (LinearLayout) rootView.findViewById(R.id.log_off);
+        mOpinionFeedbackLayout = (LinearLayout) rootView.findViewById(R.id.opinion_feedback);
+        mSettingsLayout = (LinearLayout) rootView.findViewById(R.id.settings);
 
         registerLinearLayoutOnClickListener();
         mCurrentFrame = SystemFragment.this;
+
+        new Thread(){
+            @Override
+            public void run() {
+                UserBean userBean = mHttpPost.getLoginUser();
+                MyThread myThread = new MyThread(userBean);
+                mHandler.post(myThread);
+            }
+        }.start();
     }
 
     private void registerLinearLayoutOnClickListener() {
-        individualCenterLinearLayout.setOnClickListener(new View.OnClickListener() {
+
+        mIndividualCenterLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment individualCenterFrame = new IndividualCenterFragment();
                 changeToAnotherFragment(individualCenterFrame);
             }
         });
-        aboutUsLinearLayout.setOnClickListener(new View.OnClickListener(){
+
+        mAboutUsLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -80,7 +106,8 @@ public class SystemFragment extends BaseFragment{
                 startActivity(intent);
             }
         } );
-        logOffLinearLayout.setOnClickListener(new View.OnClickListener() {
+
+        mLogOffLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -95,7 +122,7 @@ public class SystemFragment extends BaseFragment{
             }
         });
 
-        mOpinionFeedback.setOnClickListener(new View.OnClickListener() {
+        mOpinionFeedbackLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -105,7 +132,7 @@ public class SystemFragment extends BaseFragment{
             }
         });
 
-        mSettings.setOnClickListener(new View.OnClickListener() {
+        mSettingsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -114,6 +141,7 @@ public class SystemFragment extends BaseFragment{
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -147,4 +175,28 @@ public class SystemFragment extends BaseFragment{
         }
     }
 
+    private void initUserInfo(UserBean userBean) {
+        //UserBean userBean = mHttpPost.getLoginUser();
+        //Log.i("zyf", userBean.toString());
+        String userName = userBean.getName();
+        mUserNameView.setText(userName);
+        String userAutograph = userBean.getDescription();
+        if (null == userAutograph || "null".equals(userAutograph)) {
+            mUserAutographView.setVisibility(View.INVISIBLE);
+        } else {
+            mUserAutographView.setText(userAutograph);
+        }
+    }
+
+    class MyThread implements Runnable {
+
+        private UserBean userBean;
+        private MyThread (UserBean userBean) {
+            this.userBean = userBean;
+        }
+        @Override
+        public void run() {
+            initUserInfo(userBean);
+        }
+    }
 }

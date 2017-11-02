@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerInParent="true"
-                    android:text="@string/user_photo"
+                    android:text="@string/user_full_name"
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 

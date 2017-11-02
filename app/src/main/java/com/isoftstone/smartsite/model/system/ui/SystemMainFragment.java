@@ -35,9 +35,6 @@ public class SystemMainFragment extends BaseFragment{
     protected void afterCreated(Bundle savedInstanceState) {
         Fragment systemFragment = new SystemFragment();
         getChildFragmentManager().beginTransaction().add(R.id.fl_system_content, systemFragment, TAG_SYSTEM_MAIN_FRAME).commitAllowingStateLoss();
-
-        //Fragment individualCenterFrame = new IndividualCenterFragment();
-        //getChildFragmentManager().beginTransaction().add(R.id.fl_Individual_center_content, individualCenterFrame, TAG_INDIVIDUAL_CNTER_FRAME).commit();
     }
 
 }

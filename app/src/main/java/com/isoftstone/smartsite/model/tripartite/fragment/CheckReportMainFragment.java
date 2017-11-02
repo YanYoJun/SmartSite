@@ -59,7 +59,6 @@ public class CheckReportMainFragment extends BaseFragment {
                 //TODO
             }
         });
-        mListView.setDividerHeight(20);
     }
 
     /**

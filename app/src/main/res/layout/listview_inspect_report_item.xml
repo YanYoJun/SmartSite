@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
+    android:paddingRight="16dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:background="@color/app_background"
     android:orientation="vertical">
 
     <RelativeLayout

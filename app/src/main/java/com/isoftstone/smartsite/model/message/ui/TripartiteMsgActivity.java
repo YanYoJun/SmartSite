@@ -47,8 +47,6 @@ public class TripartiteMsgActivity extends BaseActivity {
         SimpleAdapter adapter = new MsgListAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE,ITEM_TITLE,ITEM_DETAILS,  },
                 new int[]{R.id.lab_time, R.id.lab_title,R.id.lab_details},mDatas);
         mListView.setAdapter(adapter);
-
-        mListView.setDividerHeight(20);//TODO
     }
 
     /**

@@ -52,7 +52,6 @@ public class InspectReportMainFragment extends BaseFragment {
                 new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY},
                 new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company});
         mListView.setAdapter(adapter);
-        mListView.setDividerHeight(20);
     }
 
 

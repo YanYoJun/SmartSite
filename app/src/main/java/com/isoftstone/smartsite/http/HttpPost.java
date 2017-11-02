@@ -411,7 +411,7 @@ public class HttpPost {
         String url = getFileUrl(filename);
         String name = getFileName(filename);
         String sdpath = Environment.getExternalStorageDirectory().getPath();
-        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/report/"+id;
+        String storagePath = "/isoftstone/"+mLoginBean.getmName()+"/report/"+id;
         File file = new File(storagePath);
         if(!file.exists()){
             file.mkdirs();
@@ -444,7 +444,7 @@ public class HttpPost {
         String url = getFileUrl(filename);
         String name = getFileName(filename);
         String sdpath = Environment.getExternalStorageDirectory().getPath();
-        String storagePath = sdpath + "/isoftstone/"+mLoginBean.getmName()+"/usericon";
+        String storagePath = "/isoftstone/"+mLoginBean.getmName()+"/usericon";
         File file = new File(storagePath);
         if(!file.exists()){
             file.mkdirs();

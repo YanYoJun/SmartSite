@@ -173,7 +173,7 @@ public class UserLogin {
         String funName = "userImageUpload";
         try {
             ByteArrayOutputStream bos=new ByteArrayOutputStream();
-            bit.compress(format, 40, bos);//参数100表示不压缩
+            bit.compress(format, 100, bos);//参数100表示不压缩
             byte[] bytes=bos.toByteArray();
             String strBase64 =  Base64.encodeToString(bytes, Base64.DEFAULT);
             JSONObject json = new JSONObject();

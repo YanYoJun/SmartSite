@@ -8,6 +8,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -26,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
@@ -349,8 +353,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			user_1.setAccount("admin");
 			user_1.setPassword("bmeB4000");
 			user_1.setName("isoftstone");
-			*/
-			//mHttpPost.userUpdate(user_1);
+
+			mHttpPost.userUpdate(user_1);
+            */
 
 			/*String name = mHttpPost.getLoginUser().getName();
 			Log.i("test","name  ---------"+name);
@@ -358,6 +363,10 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 			//mHttpPost.downloadUserImage("img\\logo.png");
 			//mHttpPost.downloadReportFile(1,"img\\logo.png");
+
+			/*Bitmap bitmap = BitmapFactory.decodeFile("/storage/emulated/0/test.png");
+			mHttpPost.userImageUpload(bitmap,Bitmap.CompressFormat.PNG);
+            */
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;

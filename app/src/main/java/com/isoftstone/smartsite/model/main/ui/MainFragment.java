@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,9 +40,9 @@ public class MainFragment extends BaseFragment{
     private TextView mTemperatureTextView = null;
     private HttpPost mHttpPost = null;
     private HomeBean mHomeBean = null;
-    private Button mVideoMonitoring = null; //视频监控
-    private Button mAirMonitoring = null; //环境监测
-    private Button mThirdPartReport = null; //三方协同按钮
+    private View mVideoMonitoring = null; //视频监控
+    private View mAirMonitoring = null; //环境监测
+    private View mThirdPartReport = null; //三方协同按钮
     private LinearLayout mVideoMonitoringMsg = null;
     private LinearLayout mAirMonitoringMsg = null;
     private LinearLayout mUnCheckMsg = null;
@@ -91,21 +90,21 @@ public class MainFragment extends BaseFragment{
                 enterAirMonitoringMsg();
             }
         });
-        mVideoMonitoring = (Button)rootView.findViewById(R.id.button_1);
+        mVideoMonitoring = rootView.findViewById(R.id.button_1);
         mVideoMonitoring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterVideoMonitoring();
             }
         });
-        mAirMonitoring = (Button)rootView.findViewById(R.id.button_2);
+        mAirMonitoring = rootView.findViewById(R.id.button_2);
         mAirMonitoring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterAirMonitoring();
             }
         });
-        mThirdPartReport = (Button)rootView.findViewById(R.id.button_3);
+        mThirdPartReport = rootView.findViewById(R.id.button_3);
         mThirdPartReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

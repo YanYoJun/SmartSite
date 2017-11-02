@@ -124,8 +124,10 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     public void viewOnClickListener(VideoMonitorAdapter.ViewHolder viewHolder, boolean isFormOneType) {
         mViewHolder = viewHolder;
         if (isFormOneType) {
-            initAlertView();
-            alertShowExt();
+            //initAlertView();
+            //alertShowExt();
+
+            startRePlayListActivity();
         } else {
             //打开系统相册浏览照片  
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
@@ -275,29 +277,32 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                     return;
                 }
 
-                for (int i=0; i < recordList.size(); i++) {
-                    ToastUtils.showShort(recordList.get(i).getFileName());
-                }
-
-                mAlertViewExt.dismiss();
-
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("resCode", mViewHolder.resCodeTv.getText().toString());
-                bundle.putInt("resSubType", mViewHolder.resSubType);
-                bundle.putString("resName", mViewHolder.resNameTv.getText().toString());
-                bundle.putBoolean("isOnline", mViewHolder.isOnline);
-                bundle.putString("beginTime", beginTime);
-                bundle.putString("endTime", endTime);
-                //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
-                intent.putExtras(bundle);
-                intent.setClass(mContext, VideoRePlayListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                startRePlayListActivity();
             }
         };
 
         //先查询指定时间段内有的回放记录
         ServiceManager.queryReplay(p, queryListener);
+    }
+
+    private void  startRePlayListActivity () {
+        Date now = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String beginTime = formatter.format(now) + " 00:00:00";
+        String endTime = formatter.format(now) + " 23:59:59";
+
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("resCode", mViewHolder.resCodeTv.getText().toString());
+        bundle.putInt("resSubType", mViewHolder.resSubType);
+        bundle.putString("resName", mViewHolder.resNameTv.getText().toString());
+        bundle.putBoolean("isOnline", mViewHolder.isOnline);
+        bundle.putString("beginTime", beginTime);
+        bundle.putString("endTime", endTime);
+        //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+        intent.putExtras(bundle);
+        intent.setClass(mContext, VideoRePlayListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 }

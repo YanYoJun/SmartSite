@@ -387,8 +387,10 @@ public class HttpPost {
     /*
     获取用户信息
     */
-    public UserBean getLoginUser(UserBean userBean){
-
+    public UserBean getLoginUser(){
+        UserBean userBean = new UserBean();
+        userBean.setAccount(mLoginBean.getmName());
+        userBean.setPassword(mLoginBean.getmPassword());
         return  UserLogin.getLoginUser(GET_LOGIN_USER,mClient,userBean);
     }
 
@@ -396,8 +398,19 @@ public class HttpPost {
         UserLogin.userUpdate(USER_UPDATE,mClient,userBean);
     }
 
+    /*
+    获取主界面数据
+     */
+    public  MobileHomeBean getMobileHomeData(){
+       return UserLogin.getMobileHomeData(MOBILE_HOME,mClient);
+    }
 
-    public  void getMobileHomeData(){
-        UserLogin.getMobileHomeData(MOBILE_HOME,mClient);
+    public  void imageUpload(String filepath,int id){
+        ReportOperation.imageUpload(IMAGE_UPLOAD,mClient,filepath,id);
+    }
+
+    public void download(String filepath){
+
+        ReportOperation.download(URL,mClient,"");
     }
 }

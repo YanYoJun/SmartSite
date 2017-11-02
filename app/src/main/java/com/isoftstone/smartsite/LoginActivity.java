@@ -302,10 +302,12 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			*/
 
 
-			/*PatrolBean bean = new PatrolBean();
+			/*
+			PatrolBean bean = new PatrolBean();
 			bean.setAddress("武汉大软件元");
 			bean.setCompany("wuanhan  wxa");
-            mHttpPost.addPatrolReport(bean);*/
+            mHttpPost.addPatrolReport(bean);
+            */
 
 
             /*
@@ -321,30 +323,39 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			bean.setCreator("我是一个");
 			bean.setDate("2017-10-30 14:22:44");
 			PatrolBean patrol = new PatrolBean();
-			patrol.setId(76);
+			patrol.setId(27);
 			bean.setPatrol(patrol);
-			bean.setCategory(1);
+			bean.setCategory(2);
 			bean.setPatrolUser("马化腾马化腾");
 			bean.setPatrolDateEnd("2017-10-30 14:23");
 			bean.setPatrolDateStart("2017-10-29 14:23");
 			mHttpPost.addPatrolVisit(bean);*/
 
 
-			//mHttpPost.getPatrolReportList(1);
+			//mHttpPost.getPatrolReportList(3);
+
+
+
 
 
 			/*
-			UserBean user_1 = new UserBean();
+			mHttpPost.getMobileHomeData();
+			 */
+
+			//mHttpPost.imageUpload("/storage/emulated/0/test.png",39);
+
+            /*UserBean user_1 = new UserBean();
 			user_1.setId(1l);
 			user_1.setAccount("admin");
 			user_1.setPassword("bmeB4000");
 			user_1.setName("isoftstone");
-			mHttpPost.userUpdate(user_1);
-			String name = mHttpPost.getLoginUser(user_1).getName();
-			Log.i("test","name  ---------"+name);
 			*/
+			//mHttpPost.userUpdate(user_1);
 
-			mHttpPost.getMobileHomeData();
+			/*String name = mHttpPost.getLoginUser().getName();
+			Log.i("test","name  ---------"+name);
+            */
+			//mHttpPost.download("upload\\20171101\\admin.png");
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;

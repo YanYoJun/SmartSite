@@ -140,8 +140,9 @@ public class UserLogin {
         }
     }
 
-    public static  void getMobileHomeData(String strurl, OkHttpClient mClient)
+    public static  MobileHomeBean getMobileHomeData(String strurl, OkHttpClient mClient)
     {
+        MobileHomeBean mobileHomeBean = null;
         String funName = "getMobileHomeData";
         try {
             Request request = new Request.Builder()
@@ -154,9 +155,12 @@ public class UserLogin {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                mobileHomeBean = gson.fromJson(responsebody,MobileHomeBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return  mobileHomeBean;
     }
 }

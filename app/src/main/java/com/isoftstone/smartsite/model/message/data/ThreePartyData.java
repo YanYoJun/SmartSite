@@ -13,6 +13,10 @@ public class ThreePartyData extends MsgData implements Serializable {
     public final static int TYPE_RECEIVE_REPORT = 1;//接收到一份巡查报告
     public final static int TYPE_SEND_REPORT = 2; //发送一份报告
 
+    public ThreePartyData(String id, String time, String title, String details, int readStatus) {
+        super(id, time, title, details, readStatus);
+    }
+
     private String mName = "";
 
     public void setName(String name) {

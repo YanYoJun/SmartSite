@@ -121,13 +121,13 @@ public class MainFragment extends BaseFragment{
     }
 
     private void onItemClicked(){
-        ThreePartyData data = new ThreePartyData();
-        data.setType(ThreePartyData.TYPE_RECEIVE_REPORT);
-        data.setName("张珊");
-        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-        intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
-        intent.putExtra(MsgFragment.FRAGMENT_DATA, data);
-        getActivity().startActivity(intent);
+//        ThreePartyData data = new ThreePartyData();
+//        data.setType(ThreePartyData.TYPE_RECEIVE_REPORT);
+//        data.setName("张珊");
+//        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+//        intent.putExtra(MsgFragment.FRAGMENT_TYPE, MsgFragment.FRAGMENT_TYPE_SYNERGY);
+//        intent.putExtra(MsgFragment.FRAGMENT_DATA, data);
+//        getActivity().startActivity(intent);
     }
 
     private void enterUnChekMsg(){

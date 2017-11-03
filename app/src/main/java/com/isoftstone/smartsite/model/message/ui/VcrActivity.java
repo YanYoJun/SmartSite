@@ -1,21 +1,24 @@
 package com.isoftstone.smartsite.model.message.ui;
 
 import android.app.Activity;
-import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.model.message.adapter.MsgListAdapter;
 import com.isoftstone.smartsite.model.message.data.MsgData;
-import com.isoftstone.smartsite.model.message.data.VCRData;
+import com.isoftstone.smartsite.utils.MsgUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by yanyongjun on 2017/10/15.
@@ -29,7 +32,13 @@ public class VcrActivity extends BaseActivity {
 
     private Activity mActivity = null;
     private ListView mListView = null;
-    private List<MsgData> mDatas = null;
+    private ArrayList<MsgData> mDatas = new ArrayList<>();
+
+    private HttpPost mHttpPost = null;
+    private QueryMsgTask mTask = new QueryMsgTask();
+    private BaseAdapter mAdapter = null;
+
+    private static final boolean isDebug = true;
 
     @Override
     protected int getLayoutRes() {
@@ -44,126 +53,117 @@ public class VcrActivity extends BaseActivity {
 
     private void init() {
         mListView = (ListView) mActivity.findViewById(R.id.listview_frag_vcr);
-        SimpleAdapter adapter = new MsgListAdapter(mActivity, getData(), R.layout.listview_msg_item, new String[]{ITEM_DATE, ITEM_TITLE, ITEM_DETAILS,},
-                new int[]{R.id.lab_time, R.id.lab_title, R.id.lab_details},mDatas);
-        mListView.setAdapter(adapter);
+        mAdapter = new MsgListAdapter(mActivity, mDatas);
+        mListView.setAdapter(mAdapter);
+        mHttpPost = new HttpPost();
+
+        mTask.execute();
     }
 
-    /**
-     * 加载listview的数据源
-     *
-     * @return
-     */
-    private List<Map<String, Object>> getData() {
-        //TODO
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Resources res = mActivity.getResources();
-
-        List<MsgData> vcrDatas = readDataFromSDK();
-        String vcrError = res.getString(R.string.vcr_error);
-        String vcrNeedRepair = res.getString(R.string.vcr_need_repair);
-        for (MsgData temp : vcrDatas) {
-            VCRData data = (VCRData)temp;
-            Map<String, Object> map = new HashMap<String, Object>();
-            if (data.getType() == VCRData.TYPE_ERROR) {
-                map.put(ITEM_TITLE, "NXC-12检测到PM超标");
-                map.put(ITEM_DETAILS, String.format(vcrError, data.getId()));
-                map.put(ITEM_DATE, data.getStringDate());
-                list.add(map);
-            } else if (data.getType() == VCRData.TYPE_NEED_REPAIR) {
-                map.put(ITEM_TITLE, "NXC-12设备损坏");
-                map.put(ITEM_DETAILS, String.format(vcrNeedRepair, data.getId()));
-                map.put(ITEM_DATE, data.getStringDate());
-                list.add(map);
+    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", "1");
+            if (isDebug) {
+                insertDebugData(msgs);
             }
+            Collections.sort(msgs, new Comparator<MessageBean>() {
+                @Override
+                public int compare(MessageBean o1, MessageBean o2) {
+                    try {
+                        Date date1 = MsgData.format5.parse(o1.getUpdateTime());
+                        Date date2 = MsgData.format5.parse(o2.getUpdateTime());
+                        return date2.compareTo(date1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+            MsgUtils.toMsgData(mDatas, msgs);
+            return null;
         }
-        return list;
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e(TAG, "defernotifyDatasetChanged");
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
-    /**
-     * 目前是测试使用，后续需要从网络侧读取
-     *
-     * @return
-     */
-    private List<MsgData> readDataFromSDK() {
-        //TODO
-        mDatas = new ArrayList<>();
+    private void insertDebugData(ArrayList<MessageBean> datas) {
+        MessageBean data = new MessageBean();
+        data.setInfoId("1");
+        data.setUpdateTime("2017-10-3 13:35:00");
+        data.setTitle("这是测试消息1");
+        data.setContent("这是测试消息的内容");
+        data.setStatus(MsgData.STATUS_READ);
+        datas.add(data);
 
-        VCRData data = new VCRData();
-        data.setType(VCRData.TYPE_ERROR);
-        data.setId(13001);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("2");
+        data.setUpdateTime("2017-10-3 13:35:00");
+        data.setTitle("这是测试消息2");
+        data.setContent("这是测试消息的内容");
+        data.setStatus(MsgData.STATUS_READ);
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13002);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("3");
+        data.setUpdateTime("2016-10-3 13:35:00");
+        data.setTitle("这是测试消息3");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13003);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("4");
+        data.setUpdateTime("2017-11-3 13:35:00");
+        data.setTitle("这是测试消息4");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_ERROR);
-        data.setId(13004);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("5");
+        data.setUpdateTime("2017-11-2 13:35:00");
+        data.setTitle("这是测试消息5");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("6");
+        data.setUpdateTime("2005-10-3 13:35:00");
+        data.setTitle("这是测试消息6");
+        data.setContent("这是测试消息的内容");
+        data.setStatus(MsgData.STATUS_UNREAD);
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("7");
+        data.setUpdateTime("2017-10-2 11:35:00");
+        data.setTitle("这是测试消息7");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("8");
+        data.setUpdateTime("2015-9-3 13:35:00");
+        data.setTitle("这是测试消息8");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
+        data = new MessageBean();
+        data.setInfoId("9");
+        data.setUpdateTime("2014-10-3 13:35:00");
+        data.setTitle("这是测试消息9");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
 
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-
-        data = new VCRData();
-        data.setType(VCRData.TYPE_YEAR);
-        data.setId(13005);
-        mDatas.add(data);
-
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-
-        data = new VCRData();
-        data.setType(VCRData.TYPE_NEED_REPAIR);
-        data.setId(13005);
-        mDatas.add(data);
-
-
-        return mDatas;
+        data = new MessageBean();
+        data.setInfoId("10");
+        data.setUpdateTime("2014-10-1 13:35:00");
+        data.setTitle("这是测试消息10");
+        data.setContent("这是测试消息的内容");
+        datas.add(data);
     }
 }

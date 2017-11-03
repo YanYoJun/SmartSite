@@ -13,8 +13,7 @@ public class EnvironData extends MsgData implements Serializable {
     public final static int TYPE_PM_EXTENDS = 1; //PM超标
     public final static int TYPE_NEED_REPAIR = 2; //设备需要维护
 
-
-
-
+    public EnvironData(String id, String time, String title, String details, int readStatus) {
+        super(id, time, title, details, readStatus);
+    }
 }
-

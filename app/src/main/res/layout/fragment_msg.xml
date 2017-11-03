@@ -233,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:text="@string/frag_msg_vcr"
+                android:text="@string/frag_msg_synergy"
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp" />
 

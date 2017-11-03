@@ -41,7 +41,7 @@ public class ActionSheetDialog {
         display = windowManager.getDefaultDisplay();
     }
 
-    public ActionSheetDialog builder() {
+    public ActionSheetDialog builder(boolean isShowCanel) {
         View view = LayoutInflater.from(context).inflate(
                 R.layout.view_actionsheet, null);
 
@@ -58,6 +58,12 @@ public class ActionSheetDialog {
                 dialog.dismiss();
             }
         });
+
+        if (!isShowCanel) {
+            txt_cancel.setVisibility(View.GONE);
+        } else {
+            txt_cancel.setVisibility(View.VISIBLE);
+        }
 
         dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
         dialog.setContentView(view);

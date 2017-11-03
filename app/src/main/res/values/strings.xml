@@ -180,6 +180,11 @@
     <string name="settings_push_msg_switch">接收推送通知</string>
     <string name="settings_go_score">去评分</string>
     <string name="settings_cleanup_cache">清除缓存</string>
+    <string name="user_company_1">湖北易瑞有限公司</string>
+    <string name="user_company_2">武汉紫晖苑有限公司</string>
+    <string name="user_company_3">湖北中地有限公司</string>
+    <string name="settings_push_msg_switch_off">接收推送通知开关关闭中</string>
+    <string name="settings_push_msg_switch_on">接收推送通知开关开启中</string>
     <!--          system   end            -->
 
 

@@ -37,12 +37,24 @@
                 android:textSize="14sp" />
 
             <ImageView
-                android:id="@+id/settings_push_msg_switch"
+                android:id="@+id/settings_push_msg_switch_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
+                android:visibility="gone"
                 android:src="@drawable/switch_on"/>
+
+            <Switch
+                android:id="@+id/settings_push_msg_switch"
+                android:layout_width="54dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:textOff="@string/settings_push_msg_switch_off"
+                android:textOn="@string/settings_push_msg_switch_on"
+                android:track="@drawable/switch_track"/>
+
         </RelativeLayout>
     </RelativeLayout>
 

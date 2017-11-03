@@ -206,9 +206,36 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:text="男"
+                    android:visibility="gone"
                     android:textColor="@color/main_text_color"
                     android:textSize="14sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_button_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sex_male"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/sex_female"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                </RadioGroup>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -289,7 +316,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/user_pwd"
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
@@ -305,10 +332,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/password_visible_iv"
-                    app:srcCompat="@drawable/passwordhide" />
+                    app:srcCompat="@drawable/passwordhide"
+                    android:layout_toRightOf="@+id/user_pwd"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
                 <TextView
                     android:id="@+id/user_pwd"
@@ -351,7 +380,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/user_phoneNum"
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
@@ -401,25 +430,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/user_company"
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 
-
-                <ImageView
-                    android:id="@+id/droparrow_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/droparrow_layout"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/droparrow" />
+                    android:layout_centerInParent="true">
+
+                    <ImageView
+                        android:id="@+id/droparrow_iv"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/droparrow" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/user_company"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/droparrow_iv"
+                    android:layout_toLeftOf="@id/droparrow_layout"
                     android:layout_marginRight="6dp"
                     android:layout_centerInParent="true"
                     android:text="请选择"
@@ -455,7 +493,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/user_autograph"
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />

@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
@@ -53,7 +58,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private TextView mUserPhoneNumView;
     private TextView mUserCompanyView;
     private TextView mUserAutographView;
+    private RelativeLayout mUserCompanySelectLayout;
+    boolean isShowCancelOption = true;
     private Long mUserId;
+
+    private RadioGroup mRadioGroup;
+    private RadioButton mRadioButton1;
+    private RadioButton mRadioButton2;
+    private static final String SEX_MALE_CODE = "0";
+    private static final String SEX_FEMALE_CODE = "1";
 
     private HttpPost mHttpPost = null;
 
@@ -97,6 +110,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             backHandlerInterface = (BackHandlerInterface) getActivity();
         }
 
+        //获取服务器数据显示..... zyf modifed.....
         new Thread(){
             @Override
             public void run() {
@@ -124,13 +138,68 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserPhoneNumView = (TextView) rootView.findViewById(R.id.user_phoneNum);
         mUserCompanyView = (TextView) rootView.findViewById(R.id.user_company);
         mUserAutographView = (TextView) rootView.findViewById(R.id.user_autograph);
-        //获取服务器数据显示..... zyf modifed.....
+        mUserCompanySelectLayout = (RelativeLayout)  rootView.findViewById(R.id.droparrow_layout);
+        mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radio_group);
+        mRadioButton1 = (RadioButton) rootView.findViewById(R.id.radio_button_1);
+        mRadioButton2 = (RadioButton) rootView.findViewById(R.id.radio_button_2);
 
-        mImageView.setOnClickListener(new LinearLayout.OnClickListener(){
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (checkedId == mRadioButton1.getId()) {
+                    mUserSexView.setText(SEX_MALE_CODE);
+                } else {
+                    mUserSexView.setText(SEX_FEMALE_CODE);
+                }
+            }
+        });
+
+
+
+        mUserCompanySelectLayout.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
+                isShowCancelOption = false;
                 new ActionSheetDialog(getContext())
-                        .builder()
+                        .builder(isShowCancelOption)
+                        .setCancelable(true)
+                        .setCanceledOnTouchOutside(true)
+                        .addSheetItem(mContext.getText(R.string.user_company_1).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_1);
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.user_company_2).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_2);
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.user_company_3).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_3);
+                                    }
+                                }).show();
+            }
+        });
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isShowCancelOption = true;
+                new ActionSheetDialog(getContext())
+                        .builder(isShowCancelOption)
                         .setCancelable(true)
                         .setCanceledOnTouchOutside(true)
                         .addSheetItem(mContext.getText(R.string.album).toString(),
@@ -440,13 +509,21 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserId = userBean.getId();
         mUserNameView.setText(userBean.getName());
         mUserRoleView.setText(userBean.getEmployeeCode());
-        mUserSexView.setText((userBean.getSex() == 0) ? R.string.sex_male : R.string.sex_female);
+        mUserSexView.setText(userBean.getSex() + "");
         mUserAccountView.setText(userBean.getAccount());
         mUserPwdView.setText(userBean.getPassword());
         mUserPhoneNumView.setText(userBean.getTelephone());
         mUserCompanyView.setText(userBean.getDepartmentId());
         mUserAutographView.setText(userBean.getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
+
+        if (SEX_MALE_CODE.equals(mUserSexView.getText().toString())) {
+            mRadioButton1.setChecked(true);
+            mRadioButton2.setChecked(false);
+        } else if (SEX_FEMALE_CODE.equals(mUserSexView.getText().toString())) {
+            mRadioButton1.setChecked(false);
+            mRadioButton2.setChecked(true);
+        }
     }
 
     private void updateUserInfo(UserBean userBean) {
@@ -470,7 +547,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             userBean.setName(mUserNameView.getText().toString() + 2222);
         }
         if (null !=  mUserSexView.getText()) {
-            userBean.setSex(1);
+            userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
         }
         //if (null != mUserAccountView.getText()) {
         //    userBean.setAccount(mUserAccountView.getText().toString());
@@ -483,10 +560,10 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             //userBean.setTelephone(mUserPhoneNumView.getText().toString());
             userBean.setTelephone("13476181999");
         }
-        //if (null !=  mUserCompanyView.getText()) {
-            //userBean.setDepartmentId(mUserCompanyView.getText().toString());
-        //    userBean.setDepartmentId("234");
-        //}
+        if (null !=  mUserCompanyView.getText()) {
+           userBean.setDepartmentId(mUserCompanyView.getText().toString());
+           //userBean.setDepartmentId("234");
+        }
         //if (null !=  mUserAutographView.getText()) {
          //   userBean.setDescription(mUserAutographView.getText().toString());
         //}

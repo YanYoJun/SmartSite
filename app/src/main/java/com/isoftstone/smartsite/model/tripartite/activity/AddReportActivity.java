@@ -126,6 +126,7 @@ public class AddReportActivity extends BaseActivity {
         if (!TextUtils.isEmpty(type)) {
             mTypesEditor.setText(type);
             isSettedType = true;
+            mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
             mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
         }
     }
@@ -153,6 +154,7 @@ public class AddReportActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mTypesEditor.setText(list.get(position));
                         isSettedType = true;
+                        mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
                         mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
                         dialog.dismiss();
                     }

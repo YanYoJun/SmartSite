@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +46,12 @@ import java.util.List;
  */
 
 public class VideoMonitoringActivity extends Activity implements VideoMonitorAdapter.AdapterViewOnClickListener, View.OnClickListener{
-    private static final String TAG = "zyf_VideoMonitoring";
+    private static final String TAG = "VideoMonitoringActivity";
     private HttpPost mHttpPost = new HttpPost();
     private ListView mListView = null;
     private Context mContext;
     private VideoMonitorAdapter.ViewHolder mViewHolder;
+
 
     @Override
     protected void onStart() {
@@ -96,7 +98,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                     sList.add(video);
                 }
 
-                //Log.i(TAG, strBuf.toString());
+                Log.i(TAG, strBuf.toString());
                 VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
                 adapter.setData(sList);
                 mListView.setAdapter(adapter);
@@ -124,9 +126,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     public void viewOnClickListener(VideoMonitorAdapter.ViewHolder viewHolder, boolean isFormOneType) {
         mViewHolder = viewHolder;
         if (isFormOneType) {
-            //initAlertView();
-            //alertShowExt();
-
+            //进入历史摄像界面
             startRePlayListActivity();
         } else {
             //打开系统相册浏览照片  

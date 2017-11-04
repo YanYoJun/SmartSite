@@ -2,6 +2,8 @@ package com.isoftstone.smartsite.model.main.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -13,6 +15,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.MobileHomeBean;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
@@ -38,8 +41,11 @@ public class MainFragment extends BaseFragment{
     private TextView mCityTestView = null;
     private TextView mWeatherTextView = null;
     private TextView mTemperatureTextView = null;
-    private HttpPost mHttpPost = null;
-    private HomeBean mHomeBean = null;
+    private TextView lab_main_unread_num = null;  //未查看消息数目
+    private TextView lab_report_unread_num = null;  //未查看报告数目
+    private TextView lab_vcr_unread_num = null;//视屏监控设备数
+    private TextView lab_air_unread_num = null;//环境监控数目
+    private HttpPost mHttpPost = new HttpPost();
     private View mVideoMonitoring = null; //视频监控
     private View mAirMonitoring = null; //环境监测
     private View mThirdPartReport = null; //三方协同按钮
@@ -48,6 +54,12 @@ public class MainFragment extends BaseFragment{
     private LinearLayout mUnCheckMsg = null;
     private LinearLayout mUntreatedReport = null;
     private ListView mListView = null;
+
+    public static final  int HANDLER_GET_HOME_DATA_START = 1;
+    public static final  int HANDLER_GET_HOME_DATA_END = 2;
+    public static final  int HANDLER_GET_MESSAGE_START = 3;
+    public static final  int HANDLER_GET_MESSAGE_END = 4;
+
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_main;
@@ -56,11 +68,15 @@ public class MainFragment extends BaseFragment{
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
-        getHomeData();
+        mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_START);
     }
 
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
+        lab_main_unread_num = (TextView) rootView.findViewById(R.id.lab_main_unread_num);  //未查看消息数目
+        lab_report_unread_num = (TextView) rootView.findViewById(R.id.lab_report_unread_num);  //未查看报告数目
+        lab_vcr_unread_num = (TextView) rootView.findViewById(R.id.lab_vcr_unread_num);//视屏监控设备数
+        lab_air_unread_num = (TextView) rootView.findViewById(R.id.lab_air_unread_num);//环境监控数目
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
         mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
         mUnCheckMsg.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +136,69 @@ public class MainFragment extends BaseFragment{
         });
     }
 
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_GET_HOME_DATA_START:
+                {
+                    getMobileHomeData();
+                }
+                    break;
+                case HANDLER_GET_HOME_DATA_END:
+                {
+                    setMobileHomeDataToView();
+                }
+                    break;
+                case HANDLER_GET_MESSAGE_START:
+                    break;
+                case HANDLER_GET_MESSAGE_END:
+                    break;
+            }
+        }
+    };
+
+    private MobileHomeBean mMobileHomeBean = null;
+    private  void getMobileHomeData(){
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                mMobileHomeBean = mHttpPost.getMobileHomeData();
+                mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_END);
+            }
+        };
+        thread.start();
+    }
+
+    private void setMobileHomeDataToView(){
+        mCityTestView.setText("武汉");
+        if(mMobileHomeBean == null){
+            return;
+        }
+        int unreadMessage = mMobileHomeBean.getUnreadMessages();
+        if(unreadMessage > 0){
+            lab_main_unread_num.setText(unreadMessage+"");//未查看消息数目
+            lab_main_unread_num.setVisibility(View.VISIBLE);
+        }else {
+            lab_main_unread_num.setVisibility(View.INVISIBLE);
+        }
+        int unreadPatrols = mMobileHomeBean.getUntreatedPatrols();
+        if(unreadPatrols > 0){
+            lab_report_unread_num.setText(unreadPatrols+"");//未查看报告数目
+            lab_report_unread_num.setVisibility(View.VISIBLE);
+        }else {
+            lab_report_unread_num.setVisibility(View.INVISIBLE);
+        }
+        lab_vcr_unread_num.setText(mMobileHomeBean.getAllVses()+"");//视屏监控设备数
+        lab_air_unread_num.setText(mMobileHomeBean.getAllEmes()+"");//环境监控数目
+
+        InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
+        adapter.setData(mMobileHomeBean.getMessages());
+        mListView.setAdapter(adapter);
+    }
+
+
+
     private void onItemClicked(){
 //        ThreePartyData data = new ThreePartyData();
 //        data.setType(ThreePartyData.TYPE_RECEIVE_REPORT);
@@ -162,15 +241,6 @@ public class MainFragment extends BaseFragment{
         //进入环境监控
         Intent intent = new Intent(getActivity(),AirMonitoringActivity.class);
         getActivity().startActivity(intent);
-    }
-    private void getHomeData(){
-        mHttpPost = new HttpPost();
-        mHomeBean =  mHttpPost.getHomeDate();
-        mCityTestView.setText(mHomeBean.getCity());
-        //mTemperatureTextView.setText(mHomeBean.getTemperature());
-        InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
-        adapter.setData(mHomeBean.getMessagelist());
-        mListView.setAdapter(adapter);
     }
 
     @Override

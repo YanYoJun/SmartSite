@@ -5,9 +5,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -38,10 +45,19 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.EQIRankingBean;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.MonthlyComparisonBean;
+import com.isoftstone.smartsite.http.WeatherConditionBean;
+import com.isoftstone.smartsite.model.tripartite.view.MyListView;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gone on 2017/10/17.
@@ -49,11 +65,36 @@ import java.util.List;
  */
 
 public class AirMonitoringActivity extends Activity {
+    private HttpPost mHttpPost = new HttpPost();
+    private String getEqiDataRankingTime;    //
+    private String geteqiDataRankingarchid = "1";
+    private String getWeatherDaysArchId;  //查询优良天气传参数
+    private String getWeatherDaysTime;    //查询优良时间传参数
+    private String getComparisonarchid;
+    private String getComparisontime ;
+    private EQIRankingBean mEQIRankingBean = null;
+    private ArrayList<WeatherConditionBean> mWeatherList = null;
     private HorizontalBarChart mBarChart = null;
     private PieChart mPieChart = null;
     private LineChart mLineChart = null;
     private ImageView mImageView_back = null;
     private ImageView mImageView_devices = null;
+    private TextView mRankTime = null;
+    private TextView mYouliangTime = null;
+    private TextView mTongqiTime = null;
+    private Spinner mRankSpinner = null;
+    private Spinner mTongqiSpinner = null;
+    private Spinner mYouliangSpinner = null;
+
+    public static  final  int HANDLER_GET_RANKING_START = 1;
+    public static  final  int HANDLER_GET_RANKING_END = 2;
+    public static  final  int HANDLER_GET_DAYS_PROPORTION_START = 3;//
+    public static  final  int HANDLER_GET_DAYS_PROPORTION_END = 4;//
+    public static  final  int HANDLER_GET_COMPARISON_START = 5;
+    public static  final  int HANDLER_GET_COMPARISON_END = 6;
+    private static final String[] m={"PM2.5","CO2","PM10","AQI"};
+    private String address[];
+    private MonthlyComparisonBean mMonthlyComparisonBean = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,15 +102,68 @@ public class AirMonitoringActivity extends Activity {
         init();
         setOnCliceked();
         setHorizontalBarChart();
-        setPieChart();
         setLineChart();
+
+
+        mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
     }
     private void init(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        mRankTime = (TextView)findViewById(R.id.date);
+        mRankTime.setText(df.format(new Date()));
+        mRankSpinner = (Spinner)findViewById(R.id.name);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,m);
+        mRankSpinner.setAdapter(adapter);
+        mRankSpinner.setPadding(10,10,10,10);
+
+        mYouliangTime = (TextView)findViewById(R.id.youliang_datedate);
+        mYouliangTime.setText(df.format(new Date()));
+        mYouliangSpinner = (Spinner)findViewById(R.id.youliang_name);
+        mYouliangSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getWeatherDaysArchId = mEQIRankingBean.getArchs().get(position).getArchId();
+                mHandler.sendEmptyMessage(HANDLER_GET_DAYS_PROPORTION_START);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        mTongqiTime = (TextView)findViewById(R.id.tongqi_date);
+        mTongqiTime.setText(df.format(new Date()));
+        mTongqiSpinner = (Spinner)findViewById(R.id.tongqi_name);
+        mTongqiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getComparisonarchid = mEQIRankingBean.getArchs().get(position).getArchId();
+                mHandler.sendEmptyMessage(HANDLER_GET_COMPARISON_START);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         mImageView_back = (ImageView)findViewById(R.id.image_back);
         mImageView_devices = (ImageView)findViewById(R.id.image_devices);
         mBarChart = (HorizontalBarChart)findViewById(R.id.chart1);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
+
+        /*zhangwei  begin*/
+        MyListView lv = (MyListView) findViewById(R.id.lv);
+        lv.setAdapter(new AirMonitoringRankAdapter(this));
+
+        /*zhangwei  end*/
+
     }
     private void setOnCliceked(){
         mImageView_back.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +183,97 @@ public class AirMonitoringActivity extends Activity {
         });
     }
 
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_GET_RANKING_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getEqiDataRanking();
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case HANDLER_GET_RANKING_END:{
+                    setHorizontalBarChart();
+                    setSpinnerData();
+                }
+                break;
+                case HANDLER_GET_DAYS_PROPORTION_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getWeatherConditionDay();
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case HANDLER_GET_DAYS_PROPORTION_END:{
+                    setPieChart();
+                }
+                break;
+                case HANDLER_GET_COMPARISON_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getComparison();
+                            mHandler.sendEmptyMessage(HANDLER_GET_COMPARISON_END);
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case HANDLER_GET_COMPARISON_END:{
+                    setLineChart();
+                }
+            }
+        }
+    };
+
+    private  void getEqiDataRanking(){
+        getEqiDataRankingTime = mRankTime.getText().toString();
+        Log.i("test",getEqiDataRankingTime+" "+geteqiDataRankingarchid);
+        mEQIRankingBean = mHttpPost.eqiDataRanking(geteqiDataRankingarchid,getEqiDataRankingTime);
+        mHandler.sendEmptyMessage(HANDLER_GET_RANKING_END);
+    }
+    private  void getWeatherConditionDay(){
+        getWeatherDaysTime = mYouliangTime.getText().toString();
+        mWeatherList = mHttpPost.getWeatherConditionDay(getWeatherDaysArchId,getWeatherDaysTime);
+        mHandler.sendEmptyMessage(HANDLER_GET_DAYS_PROPORTION_END);
+    }
+
+    public void getComparison() {
+        getComparisontime = mTongqiTime.getText().toString();
+        mMonthlyComparisonBean = mHttpPost.carchMonthlyComparison(getComparisonarchid,getComparisontime,1+"");
+    }
+
+    private void setSpinnerData(){
+        if(mEQIRankingBean == null){
+            return;
+        }
+        address = new String[mEQIRankingBean.getArchs().size()];
+        for (int i = 0; i < mEQIRankingBean.getArchs().size() ;i ++){
+            address[i] = mEQIRankingBean.getArchs().get(i).getArchName();
+        }
+        ArrayAdapter adapter_youliang = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,address);
+        mYouliangSpinner.setAdapter(adapter_youliang);
+        mYouliangSpinner.setSelection(0);
+        ArrayAdapter adapter_tongqi = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,address);
+        mTongqiSpinner.setAdapter(adapter_tongqi);
+        mTongqiSpinner.setSelection(0);
+
+    }
 
     private void setHorizontalBarChart(){
+
+        if(mEQIRankingBean == null){
+            return;
+        }
+
         mBarChart.setDrawBarShadow(true);
 
         mBarChart.setDrawValueAboveBar(false);
@@ -204,6 +387,9 @@ public class AirMonitoringActivity extends Activity {
     }
 
     private void setPieChart(){
+        if(mWeatherList == null){
+            return;
+        }
         mPieChart.setUsePercentValues(true);
         mPieChart.getDescription().setEnabled(false);
         mPieChart.setExtraOffsets(10, 30, 10, 30);
@@ -235,7 +421,7 @@ public class AirMonitoringActivity extends Activity {
         // add a selection listener
         //mPieChart.setOnChartValueSelectedListener(this);
 
-        setPieChartData(4, 10);
+
 
         mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
@@ -262,36 +448,13 @@ public class AirMonitoringActivity extends Activity {
         mPieChart.setEnabled(false);
 
 
-    }
-
-    private void setPieChartData(int count, float range) {
-
-        float mult = range;
-
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        for (int i = 0; i < count ; i++) {
-
+        for (int i = 0; i < mWeatherList.size(); i ++) {
+            PieEntry entry = new PieEntry(mWeatherList.get(i).getValue());
+            entry.setLabel(mWeatherList.get(i).getName());
+            entry.setData(mWeatherList.get(i).getValue()+"天");
+            entries.add(entry);
         }
-
-        PieEntry entry_1 = new PieEntry(10);
-        entry_1.setLabel("优");
-        entry_1.setData("10天");
-        entries.add(entry_1);
-        PieEntry entry_2 = new PieEntry(20);
-        entry_2.setLabel("良");
-        entry_2.setData("20天");
-        entries.add(entry_2);
-        PieEntry entry_3 = new PieEntry(30);
-        entry_3.setLabel("轻度污染");
-        entry_3.setData("30天");
-        entries.add(entry_3);
-        PieEntry entry_4 = new PieEntry(40);
-        entry_4.setLabel("重度污染");
-        entry_4.setData("40天");
-        entries.add(entry_4);
 
         PieDataSet dataSet = new PieDataSet(entries, "");
 
@@ -305,10 +468,12 @@ public class AirMonitoringActivity extends Activity {
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
-        colors.add((Integer)getColor(R.color.huanjin_you));
-        colors.add((Integer)getColor(R.color.huanjin_liang));
-        colors.add((Integer)getColor(R.color.huanjin_qingdu));
-        colors.add((Integer)getColor(R.color.huanjin_zhongdu));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_you));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_liang));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_qingdu));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhong1du));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhongdu));
+        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_yanzhong));
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
@@ -339,6 +504,10 @@ public class AirMonitoringActivity extends Activity {
     }
 
     private void setLineChart(){
+
+        if(mMonthlyComparisonBean == null){
+            return;
+        }
         mLineChart.setDrawGridBackground(false);
 
         // no description text
@@ -357,31 +526,14 @@ public class AirMonitoringActivity extends Activity {
         mLineChart.setPinchZoom(true);
         mLineChart.setExtraOffsets(20,20,20,20);
 
-        // set an alternative background color
-        // mChart.setBackgroundColor(Color.GRAY);
 
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-        /*
-        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-        mv.setChartView(mChart); // For bounds control
-        mLineChart.setMarker(mv); // Set the marker to the chart
-        */
-
-        // x-axis limit line
-        LimitLine llXAxis = new LimitLine(10f, "Index 10");
-        llXAxis.setLineWidth(4f);
-        llXAxis.enableDashedLine(10f, 10f, 0f);
-        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        llXAxis.setTextSize(10f);
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
+        xAxis.setAxisMaximum(31);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
 
         //Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
@@ -393,7 +545,6 @@ public class AirMonitoringActivity extends Activity {
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         ll1.setTextSize(10f);
         //ll1.setTypeface(tf);
-
         LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
         ll2.setLineWidth(4f);
         ll2.enableDashedLine(10f, 10f, 0f);
@@ -406,7 +557,7 @@ public class AirMonitoringActivity extends Activity {
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         //leftAxis.addLimitLine(ll1);
         //leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(50f);
+        leftAxis.setAxisMaximum(100f);
         leftAxis.setAxisMinimum(0f);
         //leftAxis.setYOffset(20f);
         //leftAxis.setEnabled(false);
@@ -422,7 +573,6 @@ public class AirMonitoringActivity extends Activity {
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
 
         // add data
-        setLineChartData(15, 30);
 //        mChart.setVisibleXRange(20);
 //        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
 //        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
@@ -432,96 +582,93 @@ public class AirMonitoringActivity extends Activity {
 
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
-
-        // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        // // dont forget to refresh the drawing
-        // mChart.invalidate();
-    }
-
-    private void setLineChartData(int count, float range) {
-
-        ArrayList<Entry> values = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range) + 3;
-            Entry entry = new Entry(i,val);
-            values.add(entry);
-        }
-
-        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
-        set1.setDrawIcons(false);
-        // set the line to be drawn like this "- - - - - -"
-        set1.enableDashedLine(10f, 5f, 0f);
-        set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(9f);
-        set1.setDrawFilled(false);
-        set1.setFormLineWidth(1f);
-        set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-        set1.setFormSize(15.f);
-
-        if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-            //set1.setFillDrawable(drawable);
-        }
-        else {
-            set1.setFillColor(Color.BLACK);
-        }
-
-        ArrayList<Entry> values_2 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range) + 3;
-            Entry entry = new Entry(i,val);
-            values_2.add(entry);
-        }
-
-        LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
-        set2.setDrawIcons(false);
-        // set the line to be drawn like this "- - - - - -"
-        //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式
-        set2.setColor(Color.BLACK);
-        set2.setCircleColor(Color.RED);
-        set2.setDrawCircleHole(false);
-        set2.setFormLineWidth(1f);
-        set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-        set2.setFormSize(15.f);
-        set2.setLineWidth(1f);//设置线宽
-        set2.setCircleRadius(3f);//设置焦点圆心的大小
-        set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-        set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-        set2.setHighlightEnabled(true);//是否禁用点击高亮线
-        set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-        set2.setValueTextSize(9f);//设置显示值的文字大小
-        set2.setDrawFilled(false);//设置禁用范围背景填充
-
-        if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-            //set1.setFillDrawable(drawable);
-        }
-        else {
-            set2.setFillColor(Color.BLACK);
-        }
+        l.setEnabled(false);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set2); // add the datasets
-        dataSets.add(set1); // add the datasets
+        int beforeMonthSize = mMonthlyComparisonBean.getBeforeMonth().size();
+        if(beforeMonthSize > 0){
+            ArrayList<Entry> values = new ArrayList<Entry>();
 
+            for (int i = 0; i < beforeMonthSize; i++) {
+                String value = mMonthlyComparisonBean.getBeforeMonth().get(i).getAqi();
+                Entry entry = new Entry(i,Float.parseFloat(value));
+                values.add(entry);
+            }
+
+            LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+            set1.setDrawIcons(false);
+            // set the line to be drawn like this "- - - - - -"
+            set1.enableDashedLine(10f, 5f, 0f);
+            set1.enableDashedHighlightLine(10f, 5f, 0f);
+            set1.setColor(Color.BLACK);
+            set1.setCircleColor(Color.BLACK);
+            set1.setLineWidth(1f);
+            set1.setCircleRadius(3f);
+            set1.setDrawCircleHole(false);
+            set1.setValueTextSize(9f);
+            set1.setDrawFilled(false);
+            set1.setFormLineWidth(1f);
+            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+            set1.setFormSize(15.f);
+
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                //set1.setFillDrawable(drawable);
+            }
+            else {
+                set1.setFillColor(Color.BLACK);
+            }
+            dataSets.add(set1); // add the datasets
+        }
+
+
+        int pushtimeMonthSize = mMonthlyComparisonBean.getCurrentMonth().size();
+        if(pushtimeMonthSize > 0){
+            ArrayList<Entry> values_2 = new ArrayList<Entry>();
+
+            for (int i = 0; i < pushtimeMonthSize; i++) {
+                String value = mMonthlyComparisonBean.getCurrentMonth().get(i).getAqi();
+                Entry entry = new Entry(i,Float.parseFloat(value));
+                values_2.add(entry);
+            }
+
+            LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+            set2.setDrawIcons(false);
+            // set the line to be drawn like this "- - - - - -"
+            //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式
+            set2.setColor(Color.BLACK);
+            set2.setCircleColor(Color.RED);
+            set2.setDrawCircleHole(false);
+            set2.setFormLineWidth(1f);
+            set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+            set2.setFormSize(15.f);
+            set2.setLineWidth(1f);//设置线宽
+            set2.setCircleRadius(3f);//设置焦点圆心的大小
+            set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+            set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+            set2.setHighlightEnabled(true);//是否禁用点击高亮线
+            set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+            set2.setValueTextSize(9f);//设置显示值的文字大小
+            set2.setDrawFilled(false);//设置禁用范围背景填充
+
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                //set1.setFillDrawable(drawable);
+            }
+            else {
+                set2.setFillColor(Color.BLACK);
+            }
+
+            dataSets.add(set2); // add the datasets
+        }
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
-
         // set data
         mLineChart.setData(data);
 

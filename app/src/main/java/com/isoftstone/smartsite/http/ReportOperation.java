@@ -316,4 +316,33 @@ public class ReportOperation {
         downloadManager.enqueue(request);
     }
 
+
+    public static void  getDictionaryList(String strurl, OkHttpClient mClient,String lang,int category){
+        String funName = "getDictionaryList";
+        FormBody body = new FormBody.Builder()
+                .add("lang", lang)
+                .add("category",category+"")
+                .build();
+        Request request = new Request.Builder()
+                .url(strurl)
+                .post(body)
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                //String content = new JSONObject(responsebody).getString("content");
+                //list = HttpPost.stringToList(content,DataQueryVoBean.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } /*catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+    }
+
 }

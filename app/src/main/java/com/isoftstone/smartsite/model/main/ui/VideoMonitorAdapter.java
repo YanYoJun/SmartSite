@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -82,10 +84,10 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder.resSubTypeTv = (TextView)convertView.findViewById(R.id.textView_2);
             holder.resNameTv = (TextView)convertView.findViewById(R.id.textView_3);
             holder.isOnlineTv = (TextView)convertView.findViewById(R.id.textView_4);
-            holder.button_1 = (Button)convertView.findViewById(R.id.button_1);
-            holder.button_2 = (Button)convertView.findViewById(R.id.button_2);
-            holder.button_3 = (Button)convertView.findViewById(R.id.button_3);
-
+            holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
+            holder.button_2 = (LinearLayout)convertView.findViewById(R.id.button2);
+            holder.button_3 = (LinearLayout)convertView.findViewById(R.id.button3);
+            holder.gotoMap = (LinearLayout)convertView.findViewById(R.id.gotomap);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder)convertView.getTag();
@@ -100,10 +102,10 @@ public class VideoMonitorAdapter extends BaseAdapter {
         holder.resSubType = mData.get(position).getResSubType();
         holder.isOnline = mData.get(position).isOnline();
         if(holder.isOnline){
-            holder.isOnlineTv.setText("在线");
+            holder.isOnlineTv.setBackgroundResource(R.drawable.online);
             holder.button_1.setEnabled(true);
         }else {
-            holder.isOnlineTv.setText("离线");
+            holder.isOnlineTv.setBackgroundResource(R.drawable.offline);
             holder.button_1.setEnabled(false);
         }
         holder.isShared = mData.get(position).isShared();
@@ -186,6 +188,16 @@ public class VideoMonitorAdapter extends BaseAdapter {
             }
         });
 
+        holder.gotoMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到地图
+                Intent intent = new Intent();
+                intent.setClass(mContext,VideoMonitorMapActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
         return convertView;
     }
 
@@ -242,9 +254,11 @@ public class VideoMonitorAdapter extends BaseAdapter {
         public Boolean isOnline;
         public Boolean isShared;
 
-        public Button button_1;//视频监控Btn
-        public Button button_2;//环境监控
-        public Button button_3 ;//三方协同
+        public LinearLayout gotoMap ;
+
+        public LinearLayout button_1;//视频监控Btn
+        public LinearLayout button_2;//环境监控
+        public LinearLayout button_3 ;//三方协同
 
         public TextView getResCodeTv() {
             return resCodeTv;

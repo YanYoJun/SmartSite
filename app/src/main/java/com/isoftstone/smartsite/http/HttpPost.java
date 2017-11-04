@@ -8,10 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +61,7 @@ public class HttpPost {
     private String GET_PATROL_REPORT = URL + "/patrol/";      //获取巡查报告
     private String ADD_REPORT  = URL + "/report";            //新增巡查报告回复 回访  验收
     private String IMAGE_UPLOAD  = URL + "/report/image/mobile";  //图片上传
+    private String DICTIONARY_LIST = URL + "/dictionary/list";   //获取报告类型
 
 
 
@@ -80,146 +84,6 @@ public class HttpPost {
             list.add(gson.fromJson(elem, cls));
         }
         return list ;
-    }
-
-    public HomeBean getHomeDate(){
-        HomeBean homeBean = null;
-
-        homeBean = new HomeBean();
-        homeBean.setErrorinfo("");
-        homeBean.setErrorcode(100);
-        homeBean.setDate("2014-06-13 14:19:00");
-        homeBean.setCity("武汉");
-        homeBean.setWeather("晴天");
-        homeBean.setWeather_image("http://www.baidu.com");
-        homeBean.setWind("东风1级");
-        homeBean.setWind_image("http://www.baidu.com");
-        homeBean.setTemperature("26°C");
-        homeBean.setMessage(17);
-        homeBean.setReport(10);
-        homeBean.setVideo_device("3/4");
-        homeBean.setEnvironment_device("3/4");
-        ArrayList<MessageListBean> list = new ArrayList<MessageListBean>();
-        MessageListBean listBean_1 = new MessageListBean();
-        listBean_1.setTitle("EEBS设备坏了");
-        listBean_1.setDetail("视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修");
-        listBean_1.setState(1);
-        listBean_1.setTime("14:19");
-        list.add(listBean_1);
-        listBean_1 = new MessageListBean();
-        listBean_1.setTitle("E的设EBS备坏了");
-        listBean_1.setDetail("视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修视屏监控设备损坏请及时维修");
-        listBean_1.setState(2);
-        listBean_1.setTime("14:19");
-        list.add(listBean_1);
-        list.add(listBean_1);
-        list.add(listBean_1);
-        list.add(listBean_1);
-        list.add(listBean_1);
-        list.add(listBean_1);
-        list.add(listBean_1);
-        homeBean.setMessagelist(list);
-        return  homeBean;
-    }
-
-
-    public  PMDevicesListBean getPMDevicesList(String token,String username){
-        PMDevicesListBean pmdeviceslist = null;
-        ArrayList<PMDevicesBean> list = new ArrayList<PMDevicesBean>();
-        PMDevicesBean pmdevices_1 = new PMDevicesBean();
-        pmdevices_1.setName("NCX-05");
-        pmdevices_1.setTime("2017-09-29");
-        pmdevices_1.setAddress("东湖高新区");
-        pmdevices_1.setState(1);
-        pmdevices_1.setPM10("32");
-        pmdevices_1.setPM25("25");
-        pmdevices_1.setNO2("123");
-        pmdevices_1.setDevice_id("1332");
-        pmdevices_1.setLongitude(123.321);
-        pmdevices_1.setLatitude(178.321);
-        list.add(pmdevices_1);
-        PMDevicesBean pmdevices_2 = new PMDevicesBean();
-        pmdevices_2.setName("NCX-06");
-        pmdevices_2.setTime("2017-09-29");
-        pmdevices_2.setAddress("东湖高新区");
-        pmdevices_2.setState(1);
-        pmdevices_2.setPM10("32");
-        pmdevices_2.setPM25("25");
-        pmdevices_2.setNO2("123");
-        pmdevices_2.setDevice_id("1233");
-        pmdevices_2.setLongitude(123.381);
-        pmdevices_2.setLatitude(178.301);
-        list.add(pmdevices_2);
-        pmdeviceslist = new PMDevicesListBean();
-        pmdeviceslist.setErrorinfo("");
-        pmdeviceslist.setErrorcode(100);
-        pmdeviceslist.setDate("2014-10-02 14:03:00");
-        pmdeviceslist.setLsit(list);
-        return  pmdeviceslist;
-    }
-
-    public PMDevicesDataInfoBean getPMDevicesDataInfo(String device_id){
-        PMDevicesDataInfoBean pmdevicesDatainfo = null;
-        pmdevicesDatainfo = new PMDevicesDataInfoBean();
-        pmdevicesDatainfo.setErrorinfo("");
-        pmdevicesDatainfo.setErrorcode(100);
-        pmdevicesDatainfo.setDate("2014-10-12 15:22:57");
-        pmdevicesDatainfo.setName("NCX-05");
-        pmdevicesDatainfo.setTime("2017-09-29");
-        pmdevicesDatainfo.setAddress("东湖高新区");
-        pmdevicesDatainfo.setState(1);
-        pmdevicesDatainfo.setPM10("32");
-        pmdevicesDatainfo.setPM25("25");
-        pmdevicesDatainfo.setNO2("49");
-        pmdevicesDatainfo.setDevice_id("1332");
-        pmdevicesDatainfo.setO3("46");
-        pmdevicesDatainfo.setTemperature("0.426");
-        pmdevicesDatainfo.setWindSpeed("0.426");
-        pmdevicesDatainfo.setPressure("0.426");
-        pmdevicesDatainfo.setHumidity("0.426");
-        pmdevicesDatainfo.setPrecipitation("0.426");
-        return pmdevicesDatainfo;
-    }
-
-
-    public ReportListBean getReportList(){
-        ReportListBean reportlist = null;
-        ArrayList<ReportBeanBak> patrolList = new ArrayList<ReportBeanBak>();
-        ArrayList<ReportBeanBak> checkList = new ArrayList<ReportBeanBak>();
-        ReportBeanBak reportBean = new ReportBeanBak();
-        reportBean.setReport_id("123456");
-        reportBean.setReport_name("东湖高新巡查报告");
-        reportBean.setName("zhangshan");
-        reportBean.setTime("2017-09-20");
-        reportBean.setAddress("东湖高新区光谷六路");
-        reportBean.setStat(1);
-        patrolList.add(reportBean);
-        patrolList.add(reportBean);
-        checkList.add(reportBean);
-        checkList.add(reportBean);
-        reportlist = new ReportListBean();
-        reportlist.setErrorcode(100);
-        reportlist.setErrorinfo("");
-        reportlist.setDate("2014-10-02 12:45:41");
-        reportlist.setPatrolRepoList(patrolList);
-        reportlist.setCheckRepoList(checkList);
-        return reportlist;
-    }
-
-    public ReportBeanBak getPatrolRepo(String report_id){
-        ReportBeanBak reportBean = null;
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("http://www.baodu.com");
-        list.add("http://www.baodu.com");
-        list.add("http://www.baodu.com");
-        reportBean = new ReportBeanBak();
-        reportBean.setErrorinfo("");
-        reportBean.setErrorcode(100);
-        reportBean.setDate("2014-10-02 12:45:41");
-        reportBean.setAddress("光谷中心城1号工地光谷中心城1号工地");
-        reportBean.setName("zhangsan");
-        reportBean.setImage_list(list);
-        return reportBean;
     }
 
 
@@ -289,7 +153,7 @@ public class HttpPost {
    /*
    2.3	单设备PM历史数据    测试数据 "1"
     */
-    public  ArrayList<PMDevicesDataBean> getOneDevicesHistoryData(String id){
+    public  ArrayList<DataQueryVoBean> getOneDevicesHistoryData(String id){
        return EQIMonitoring.getOneDevicesHistoryData(EQI_BYDEVICE_HISTORY,mClient,id);
     }
 
@@ -489,5 +353,12 @@ public class HttpPost {
             return  filename.substring(index+1);
         }
         return  filename;
+    }
+
+    /*
+    获取巡查类型列表，此接口暂时不能调用
+     */
+    public  void getDictionaryList(String lang,int category){
+        ReportOperation.getDictionaryList(DICTIONARY_LIST,mClient,lang,category);
     }
 }

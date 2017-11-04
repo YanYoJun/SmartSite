@@ -151,9 +151,9 @@ public class EQIMonitoring {
         return  list;
     }
 
-    public static ArrayList<PMDevicesDataBean> getOneDevicesHistoryData(String strurl, OkHttpClient mClient,String id){
+    public static ArrayList<DataQueryVoBean> getOneDevicesHistoryData(String strurl, OkHttpClient mClient,String id){
         //2.3	单设备PM历史数据
-        ArrayList<PMDevicesDataBean> list = null;
+        ArrayList<DataQueryVoBean> list = null;
         String funName = "getOneDevicesHistoryData";
         Request request = new Request.Builder()
                 .url(strurl+id)
@@ -167,7 +167,7 @@ public class EQIMonitoring {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                list = HttpPost.stringToList(responsebody,PMDevicesDataBean.class);
+                list = HttpPost.stringToList(responsebody,DataQueryVoBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();

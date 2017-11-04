@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class MonthlyComparisonBean {
 
-    private ArrayList<AirQualityBean> pushTimeMonth = null;
+    private ArrayList<AirQualityBean> currentMonth = null;
     private ArrayList<AirQualityBean> beforeMonth = null;
 
-    public ArrayList<AirQualityBean> getPushTimeMonth() {
-        return pushTimeMonth;
+    public ArrayList<AirQualityBean> getCurrentMonth() {
+        return currentMonth;
     }
 
-    public void setPushTimeMonth(ArrayList<AirQualityBean> pushTimeMonth) {
-        this.pushTimeMonth = pushTimeMonth;
+    public void setCurrentMonth(ArrayList<AirQualityBean> currentMonth) {
+        this.currentMonth = currentMonth;
     }
 
     public ArrayList<AirQualityBean> getBeforeMonth() {

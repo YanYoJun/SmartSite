@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.MessageBean;
 import com.isoftstone.smartsite.http.MessageListBean;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class InstantMessageAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    private ArrayList<MessageListBean> mData = new ArrayList<MessageListBean>();
+    private ArrayList<MessageBean> mData = new ArrayList<MessageBean>();
     private Context mContext = null;
 
     public InstantMessageAdapter(Context context){
@@ -29,7 +30,7 @@ public class InstantMessageAdapter extends BaseAdapter {
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(ArrayList<MessageListBean> list){
+    public void setData(ArrayList<MessageBean> list){
         mData = list;
     }
 
@@ -67,14 +68,14 @@ public class InstantMessageAdapter extends BaseAdapter {
 
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.info.setText(mData.get(position).getDetail());
+        holder.info.setText(mData.get(position).getContent());
         holder.map.setText(mData.get(position).getTitle());
-        holder.time.setText(mData.get(position).getTime());
-        if(mData.get(position).getState() == 1){
+        holder.time.setText(mData.get(position).getUpdateTime());
+        //if(1 == 1){
             holder.type.setBackground(mContext.getDrawable(R.drawable.main_huanjing_icon));
-        }else{
-            holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
-        }
+        //}else{
+            //holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
+        //}
         return convertView;
     }
 

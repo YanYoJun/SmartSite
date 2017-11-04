@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.main.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PMDevicesDataBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 
 import java.util.ArrayList;
 
@@ -91,7 +93,9 @@ public class PMHistoryInfoActivity extends Activity {
         mGotoMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PMHistoryInfoActivity.this,"进入地图显示单个设备",2000).show();
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(),VideoMonitorMapActivity.class);
+                getApplicationContext().startActivity(intent);
             }
         });
     }

@@ -18,6 +18,7 @@ import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
+import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -83,8 +84,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder.PM25 = (TextView)convertView.findViewById(R.id.textView6);
             holder.SO2 = (TextView)convertView.findViewById(R.id.textView7);
             holder.NO2 = (TextView)convertView.findViewById(R.id.textView8);
-            holder.button_1 = (TextView)convertView.findViewById(R.id.button1);
-            holder.button_2 = (TextView)convertView.findViewById(R.id.button2);
+            holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
+            holder.button_2 = (LinearLayout)convertView.findViewById(R.id.button2);
             holder.gotomap = (LinearLayout) convertView.findViewById(R.id.gotomap);
             convertView.setTag(holder);
         }else {
@@ -146,7 +147,9 @@ public class PMDevicesListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //跳转到地图
-                Toast.makeText(mContext,"单个设备跳转到地图",2000).show();
+                Intent intent = new Intent();
+                intent.setClass(mContext,VideoMonitorMapActivity.class);
+                mContext.startActivity(intent);
             }
         });
         return convertView;
@@ -163,8 +166,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
         public TextView  SO2;//SO2
         public TextView  NO2;//NO2
 
-        public TextView button_1;//实时数据
-        public TextView button_2;//历史数据
+        public LinearLayout button_1;//实时数据
+        public LinearLayout button_2;//历史数据
 
         public LinearLayout gotomap ; //跳转到地图
     }

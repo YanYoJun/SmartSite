@@ -84,7 +84,7 @@ public class WeatherLiveBean {
          }
      }
 
-     public static class DataTrend{
+    public static class DataTrend{
          private String pushTimeHour;
          private String pm2_5;
          private String co2;

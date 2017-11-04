@@ -38,7 +38,7 @@ public class VcrActivity extends BaseActivity {
     private QueryMsgTask mTask = new QueryMsgTask();
     private BaseAdapter mAdapter = null;
 
-    private static final boolean isDebug = true;
+    private static final boolean isDebug = false;
 
     @Override
     protected int getLayoutRes() {
@@ -58,6 +58,7 @@ public class VcrActivity extends BaseActivity {
         mHttpPost = new HttpPost();
 
         mTask.execute();
+        new ReadMsgTask().execute();
     }
 
     private class QueryMsgTask extends AsyncTask<String, Integer, String> {
@@ -89,6 +90,16 @@ public class VcrActivity extends BaseActivity {
             super.onPostExecute(s);
             Log.e(TAG, "defernotifyDatasetChanged");
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class ReadMsgTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for (MsgData temp : mDatas) {
+                mHttpPost.readMessage(temp.getId());
+            }
+            return null;
         }
     }
 

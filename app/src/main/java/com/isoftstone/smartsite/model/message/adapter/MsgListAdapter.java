@@ -72,9 +72,9 @@ public class MsgListAdapter extends BaseAdapter {
                 time.setText(data.getDateString());
                 details.setText(data.getDetails());
                 if (data.getStatus() == MsgData.STATUS_READ) {
-                    unread.setVisibility(View.VISIBLE);
-                } else {
                     unread.setVisibility(View.GONE);
+                } else {
+                    unread.setVisibility(View.VISIBLE);
                 }
             }
         }

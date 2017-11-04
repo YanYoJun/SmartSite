@@ -15,10 +15,10 @@ public class MsgData implements Serializable {
     public final static int TYPE_YEAR = 3;
     public final static int TYPE_MSG = 4;
 
-    public final static int STATUS_UNREAD = 1;
-    public final static int STATUS_READ = 0;
+    public final static int STATUS_UNREAD = 0;
+    public final static int STATUS_READ = 1;
     public final static SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
-    public final static SimpleDateFormat format2 = new SimpleDateFormat("dd日MM月");
+    public final static SimpleDateFormat format2 = new SimpleDateFormat("MM月dd日");
     public final static SimpleDateFormat format3 = new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat format4 = new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat format5 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -61,6 +61,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private RelativeLayout mUserCompanySelectLayout;
     boolean isShowCancelOption = true;
     private Long mUserId;
+    private Bitmap mUploadHeadBitmap;
 
     private RadioGroup mRadioGroup;
     private RadioButton mRadioButton1;
@@ -252,10 +253,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                         mHeadBitmap = extras.getParcelable("data");
                         mImageView.setImageBitmap(mHeadBitmap);
                         if (mHeadBitmap != null) {
-                            /**
-                             * 上传服务器代码
-                             */
-//                        setPicToView(head);//保存在SD卡中
+                            setPicToView(mHeadBitmap);//保存在SD卡中
                         }
                     }
                     break;
@@ -309,7 +307,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     /**
      * 将裁剪得到的图片保存到本地
      */
-    private void setPicToView(Bitmap mBitmap) {
+    private void setPicToView(Bitmap bitmap) {
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return;
@@ -321,7 +319,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         String fileName = picPath + "head.jpg";//图片名字
         try {
             b = new FileOutputStream(fileName);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -331,7 +329,8 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                     b.flush();
                     b.close();
                 }
-                toUploadFile();
+                mUploadHeadBitmap = bitmap;
+                //toUploadHeadFile(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -340,12 +339,18 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
 
 
     //上传图片
-    private void toUploadFile() {
-        String fileKey = "icon";
+    private void toUploadHeadFile(final Bitmap bitmap) {
+        new Thread(){
+            @Override
+            public void run() {
+                mHttpPost.userImageUpload(bitmap,Bitmap.CompressFormat.JPEG);
+            }
+        }.start();
+        /**String fileKey = "icon";
         UploadUtil uploadUtil = UploadUtil.getInstance();
         uploadUtil.setOnUploadProcessListener(this);  //设置监听器监听上传状态
         Map<String, String> params = new HashMap<>();//请求参数
-        uploadUtil.uploadFile(picPath + "head.jpg", fileKey, "下载链接", params);
+        uploadUtil.uploadFile(picPath + "head.jpg", fileKey, "下载链接", params);*/
     }
 
     @Override
@@ -449,6 +454,9 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                 new Thread(){
                     @Override
                     public void run() {
+                        if (null != mUploadHeadBitmap) {
+                            toUploadHeadFile(mUploadHeadBitmap);
+                        }
                         updateUserInfo(getUpdateUserBean());
                     }
                 }.start();

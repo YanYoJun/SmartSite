@@ -20,6 +20,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
@@ -46,7 +47,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private Context mContext;
     private RecvStreamThread mRecvStreamThread = null;
     private RoundMenuView mRoundMenuView;
-    private ImageView mImageView;
+    private ImageView mCaptureView;
     private String mCameraCode;
     private static  final int SELECT_SOLID_COLOR = 0x00000000;
     private static  final int STROKR_COKOR = 0x00000000;
@@ -56,6 +57,10 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     //固定摄像机：1; 云台摄像机：2; 高清固定摄像机：3; 高清云台摄像机：4; 车载摄像机：5; 不可控标清摄像机：6; 不可控高清摄像机：7;
     private static final int CAMERA_TYPE_TOW = 2;
     private static final int CAMERA_TYPE_FOUR = 4;
+
+    private ImageView mBackView;
+    private ImageView mChangePositionView;
+    private boolean isNormalShow = true;//true 标识正常显示, false 标识反向显示
 
 
     @Override
@@ -84,8 +89,12 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mSurfaceViewWidth = dm.widthPixels;
         mSurfaceViewHeight = dm.heightPixels;
 
-        mImageView = (ImageView) findViewById(R.id.capture_view);
-        mImageView.setOnClickListener(this);
+        mCaptureView = (ImageView) findViewById(R.id.capture_view);
+        mCaptureView.setOnClickListener(this);
+        mBackView = (ImageView) findViewById(R.id.iv_back);
+        mBackView.setOnClickListener(this);
+        mChangePositionView = (ImageView) findViewById(R.id.iv_change_position);
+        mChangePositionView.setOnClickListener(this);
 
 
         /*获取Intent中的Bundle对象*/
@@ -367,6 +376,13 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 if (null != path) {
                     Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.iv_back:
+                VideoPlayActivity.this.finish();
+                break;
+            case R.id.iv_change_position:
+                isNormalShow = !isNormalShow;
+                //反向显示操作
                 break;
             default:
                 break;

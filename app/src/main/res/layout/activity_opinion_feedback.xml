@@ -23,8 +23,7 @@
             android:layout_height="180dp"
             android:gravity="top"
             android:background="@drawable/bg_edittext_default"
-            android:textColor="@color/hit_text_color"
-            android:hint="@string/feedback_hint_text"
+            android:maxLength="150"
             android:textSize="14dp"/>
 
         <TextView
@@ -34,12 +33,12 @@
             android:layout_marginRight="18dp"
             android:layout_alignParentRight="true"
             android:layout_below="@id/feedback_text"
-            android:textSize="14dp"
-            android:text="0/150"/>
+            android:textSize="14dp"/>
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/submit_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginLeft="16dp"

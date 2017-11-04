@@ -259,18 +259,18 @@
         android:background="@color/white"
         android:paddingLeft="16dp"
         android:id="@+id/relative_revisit_time"
-        android:paddingRight="16dp">
+        >
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
             android:src="@drawable/shape_listview_year_bg" />
 
         <TextView
             android:id="@+id/lab_revisit_time"
             style="@style/add_report_lab"
+            android:paddingRight="16dp"
             android:text="@string/report_revisit_time" />
 
         <TextView
@@ -278,6 +278,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:drawablePadding="2dp"
+            android:paddingRight="16dp"
             android:drawableRight="@drawable/data"
             android:gravity="right|center_vertical"
             android:text="@string/enter_time"

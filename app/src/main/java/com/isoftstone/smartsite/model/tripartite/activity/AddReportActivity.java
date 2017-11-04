@@ -125,6 +125,7 @@ public class AddReportActivity extends BaseActivity {
         String type = SPUtils.getString("add_report_type","");
         if (!TextUtils.isEmpty(type)) {
             mTypesEditor.setText(type);
+            isSettedType = true;
             mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
         }
     }
@@ -151,6 +152,7 @@ public class AddReportActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mTypesEditor.setText(list.get(position));
+                        isSettedType = true;
                         mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
                         dialog.dismiss();
                     }

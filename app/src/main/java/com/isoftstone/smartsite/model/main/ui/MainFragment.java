@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +55,10 @@ public class MainFragment extends BaseFragment{
     private LinearLayout mUnCheckMsg = null;
     private LinearLayout mUntreatedReport = null;
     private ListView mListView = null;
+    private ImageView  wuran_image = null;
+    private ImageView wuran_icon = null;
+    private TextView wuran_text = null;
+    private TextView wuran_number = null;
 
     public static final  int HANDLER_GET_HOME_DATA_START = 1;
     public static final  int HANDLER_GET_HOME_DATA_END = 2;
@@ -134,6 +139,18 @@ public class MainFragment extends BaseFragment{
                 onItemClicked();
             }
         });
+        wuran_image = (ImageView) rootView.findViewById(R.id.wuran_image);
+        wuran_icon = (ImageView) rootView.findViewById(R.id.wuran_icon);
+        wuran_text = (TextView) rootView.findViewById(R.id.wuran_text);
+        wuran_number = (TextView) rootView.findViewById(R.id.wuran_number);
+        setWuran();
+    }
+
+    private void setWuran(){
+        wuran_image.setBackgroundResource(R.drawable.wuran_qingdu_jingdu);
+        wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+        wuran_text.setText("轻度污染");
+        wuran_number.setText(""+165);
     }
 
     private Handler mHandler = new Handler(){

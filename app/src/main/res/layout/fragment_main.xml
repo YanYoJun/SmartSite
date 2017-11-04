@@ -57,12 +57,20 @@
                 android:text="26"
                 android:textColor="#ffffff"
                 android:textSize="60dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/text_temperature"
+                android:layout_marginTop="50dp"
+                android:text="o"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
 
             <ImageView
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="32dp"
                 android:layout_toRightOf="@id/text_temperature"
                 android:background="#ffffff" />
 
@@ -70,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="24dp"
+                android:layout_marginLeft="44dp"
                 android:layout_toRightOf="@id/text_temperature"
                 android:orientation="vertical">
 
@@ -123,14 +131,15 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="22dp"
-                android:background="#17000000"
+                android:background="@drawable/wuran_bg"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="4dp"
                     android:layout_margin="8dp"
-                    android:background="#654123" />
+                    android:background="#654123"
+                    android:id="@+id/wuran_image"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -138,7 +147,8 @@
                     android:layout_marginLeft="8dp"
                     android:text="轻度污染"
                     android:textColor="#ffffff"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:id="@+id/wuran_text"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -151,13 +161,15 @@
                         android:layout_height="wrap_content"
                         android:text="168"
                         android:textColor="#ffffff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:id="@+id/wuran_number"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:src="@drawable/main_aqi" />
+                        android:src="@drawable/main_aqi"
+                        android:id="@+id/wuran_icon"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

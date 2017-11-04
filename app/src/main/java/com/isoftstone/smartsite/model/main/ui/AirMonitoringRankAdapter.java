@@ -11,6 +11,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.EQIRankingBean;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by zw on 2017/11/4.
@@ -20,15 +25,24 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
 
     private Context mContext;
     private int backgroundColor;
+    private ArrayList<EQIRankingBean.AQI> mList;
+    int max;
 
     public AirMonitoringRankAdapter(Context context){
         this.mContext = context;
         backgroundColor = Color.parseColor("#FE5A5A");
     }
 
+    public void setList(ArrayList<EQIRankingBean.AQI> list){
+        mList = list;
+        Collections.sort(mList, new SortByValue());
+        if(mList.size() > 0){
+            max = doubleToInt(new Double(mList.get(0).getData()));
+        }
+    }
     @Override
     public int getCount() {
-        return 10;
+        return mList.size();
     }
 
     @Override
@@ -69,10 +83,10 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
             holder.tv_rank.setBackground(drawable);
             holder.tv_rank.setText(position + "");
         }
-
-        holder.tv_address.setText("光谷" + position + "路");
-        holder.tv_aqi.setText(""+ (100 - position * 5));
-        holder.pb.setProgress(100 - position * 5);
+        holder.pb.setMax(max);
+        holder.tv_address.setText(mList.get(position).getArchName());
+        holder.tv_aqi.setText(mList.get(position).getData());
+        holder.pb.setProgress(doubleToInt(new Double(mList.get(position).getData())));
 
         return convertView;
     }
@@ -90,5 +104,22 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
             this.pb = (ProgressBar) convertView.findViewById(R.id.pb);
             convertView.setTag(this);
         }
+    }
+
+    public class  SortByValue  implements Comparator {
+
+        public int compare(Object o1, Object o2) {
+            EQIRankingBean.AQI s1 = (EQIRankingBean.AQI) o1;
+            EQIRankingBean.AQI s2 = (EQIRankingBean.AQI) o2;
+            double double_1 = new Double(s1.getData())*100;
+            double double_2 =  new Double(s2.getData())*100;
+            return doubleToInt(double_2) - doubleToInt(double_1);
+        }
+    }
+
+    private int doubleToInt(double d){
+        String s1 = String.valueOf(d);
+        String s2 = s1.substring(0, s1.indexOf("."));
+        return  Integer.parseInt(s2);
     }
 }

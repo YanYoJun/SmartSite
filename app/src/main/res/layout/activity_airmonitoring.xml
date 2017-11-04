@@ -4,33 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/app_background">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:background="@color/mainColor"
-        android:gravity="center_vertical">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bigarrow"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/image_back"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textSize="16dp"
-            android:text="环境监控"
-            android:textColor="@color/white"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/environmentlist"
-            android:layout_marginRight="16dp"
-            android:id="@+id/image_devices"/>
-    </LinearLayout>
+
+    <include layout="@layout/layout_toolbar_one_icon"/>
+
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -115,12 +91,6 @@
                     android:divider="@null"
                     android:id="@+id/lv"></com.isoftstone.smartsite.model.tripartite.view.MyListView>
             </LinearLayout>
-
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/chart1"
-                android:layout_width="fill_parent"
-                android:layout_height="220dp"
-                android:background="@android:color/white"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

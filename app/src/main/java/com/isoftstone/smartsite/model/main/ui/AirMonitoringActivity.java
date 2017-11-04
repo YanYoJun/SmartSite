@@ -74,7 +74,6 @@ public class AirMonitoringActivity extends Activity {
     private String getComparisontime ;
     private EQIRankingBean mEQIRankingBean = null;
     private ArrayList<WeatherConditionBean> mWeatherList = null;
-    private HorizontalBarChart mBarChart = null;
     private PieChart mPieChart = null;
     private LineChart mLineChart = null;
     private ImageView mImageView_back = null;
@@ -95,16 +94,14 @@ public class AirMonitoringActivity extends Activity {
     private static final String[] m={"PM2.5","CO2","PM10","AQI"};
     private String address[];
     private MonthlyComparisonBean mMonthlyComparisonBean = null;
+    private MyListView myListView = null;
+    private TextView toolbar_title = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_airmonitoring);
         init();
         setOnCliceked();
-        setHorizontalBarChart();
-        setLineChart();
-
-
         mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
     }
     private void init(){
@@ -115,6 +112,17 @@ public class AirMonitoringActivity extends Activity {
         ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,m);
         mRankSpinner.setAdapter(adapter);
         mRankSpinner.setPadding(10,10,10,10);
+        mRankSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setHorizontalBarChart();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         mYouliangTime = (TextView)findViewById(R.id.youliang_datedate);
         mYouliangTime.setText(df.format(new Date()));
@@ -152,21 +160,17 @@ public class AirMonitoringActivity extends Activity {
         });
 
 
-        mImageView_back = (ImageView)findViewById(R.id.image_back);
-        mImageView_devices = (ImageView)findViewById(R.id.image_devices);
-        mBarChart = (HorizontalBarChart)findViewById(R.id.chart1);
+        mImageView_back = (ImageView)findViewById(R.id.btn_back);
+        mImageView_devices = (ImageView)findViewById(R.id.btn_icon);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
-
-        /*zhangwei  begin*/
-        MyListView lv = (MyListView) findViewById(R.id.lv);
-        lv.setAdapter(new AirMonitoringRankAdapter(this));
-
-        /*zhangwei  end*/
-
+        myListView = (MyListView) findViewById(R.id.lv);
+        mImageView_devices.setImageResource(R.drawable.environmentlist);
+        toolbar_title = (TextView) findViewById(R.id.toolbar_title);
+        toolbar_title.setText("环境监控");
     }
     private void setOnCliceked(){
-        mImageView_back.setOnClickListener(new View.OnClickListener() {
+       mImageView_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -269,121 +273,26 @@ public class AirMonitoringActivity extends Activity {
     }
 
     private void setHorizontalBarChart(){
-
         if(mEQIRankingBean == null){
             return;
         }
-
-        mBarChart.setDrawBarShadow(true);
-
-        mBarChart.setDrawValueAboveBar(false);
-
-        mBarChart.getDescription().setEnabled(false);
-
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        mBarChart.setMaxVisibleValueCount(60);
-
-        // scaling can now only be done on x- and y-axis separately
-        mBarChart.setPinchZoom(false);
-
-        // draw shadows for each bar that show the maximum value
-        // mChart.setDrawBarShadow(true);
-
-        mBarChart.setDrawGridBackground(false);
-        mBarChart.setExtraBottomOffset(10);
-        mBarChart.setExtraLeftOffset(10);
-        mBarChart.setExtraTopOffset(10);
-        mBarChart.setExtraRightOffset(20);
-
-        final String lable[]={"1","2","3","4","5"};
-        XAxis xl = mBarChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xl.setTypeface(mTfLight);
-        xl.setDrawAxisLine(false);
-        xl.setDrawGridLines(false);
-        xl.setGranularity(5f);
-        xl.setLabelCount(lable.length);
-        xl.setDrawLabels(true);
-        //xl.setXOffset(30);
-        xl.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return lable[(int)value/10];
-            }
-        });
-
-        YAxis yl = mBarChart.getAxisLeft();
-        //yl.setTypeface(mTfLight);
-        yl.setDrawAxisLine(false);
-        yl.setDrawTopYLabelEntry(false);
-        yl.setEnabled(false);   //设置上边不划线
-        yl.setDrawGridLines(false);
-        yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        //yl.setInverted(true);
-
-        YAxis yr = mBarChart.getAxisRight();
-        //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(false);
-        yr.setDrawGridLines(false);
-        yr.setAxisMinimum(0f);
-        yr.setEnabled(false);
-        //yr.setInverted(true);
-
-        setHorizontalBarChartData(5, 5);
-        mBarChart.setFitBars(true);
-        mBarChart.animateY(2500);
-        mBarChart.setClickable(false);
-        mBarChart.setFocusable(false);
-
-        Legend l = mBarChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setFormSize(8f);
-        l.setXEntrySpace(4f);
-        l.setEnabled(false);  //设置不显示
-    }
-
-    private void setHorizontalBarChartData(int count, float range) {
-
-        float barWidth = 2f;  //线条粗细
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        BarEntry entry_1 = new BarEntry(0,10);
-        BarEntry entry_2 = new BarEntry(10,8);
-        BarEntry entry_3 = new BarEntry(20,6);
-        BarEntry entry_4 = new BarEntry(30,5);
-        BarEntry entry_5 = new BarEntry(40,2);
-        yVals1.add(entry_1);
-        yVals1.add(entry_2);
-        yVals1.add(entry_3);
-        yVals1.add(entry_4);
-        yVals1.add(entry_5);
-        BarDataSet set1;
-
-        if (mBarChart.getData() != null &&
-                mBarChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet)mBarChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals1);
-            mBarChart.getData().notifyDataChanged();
-            mBarChart.notifyDataSetChanged();
-        } else {
-            set1 = new BarDataSet(yVals1, "DataSet 1");
-
-            set1.setDrawIcons(false);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-            dataSets.add(set1);
-
-            BarData data = new BarData(dataSets);
-            data.setValueTextSize(10f);
-            //data.setValueTypeface(mTfLight);
-            data.setBarWidth(barWidth);
-            data.setValueFormatter(new CustomerPercentFormatter(yVals1));
-            mBarChart.setData(data);
+        int index = mRankSpinner.getSelectedItemPosition();
+        AirMonitoringRankAdapter adapter = new AirMonitoringRankAdapter(this);
+        switch (index){
+            case  0:
+                adapter.setList(mEQIRankingBean.getPM2_5());
+                break;
+            case  1:
+                adapter.setList(mEQIRankingBean.getCO2());
+                break;
+            case  2:
+                adapter.setList(mEQIRankingBean.getPM10());
+                break;
+            case  3:
+                adapter.setList(mEQIRankingBean.getAQI());
+                break;
         }
+        myListView.setAdapter(adapter);
     }
 
     private void setPieChart(){

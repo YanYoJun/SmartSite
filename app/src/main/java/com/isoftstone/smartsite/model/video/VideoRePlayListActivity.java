@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.video;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
+import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.Adapter.VideoRePlayAdapter;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
@@ -51,10 +53,12 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     private TextView mEndTimeTv;
     private RelativeLayout mEndTimeLayout;
     private TextView mQueryText;
+    private RelativeLayout gotomap;
 
     private String mResCode = null;
     private String mBeginTime = null;
     private String mEngTime = null;
+
 
     @Override
     protected void onStart() {
@@ -105,6 +109,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mResTypeTv = (TextView) findViewById(R.id.res_type_tv);
         mResNameTv = (TextView) findViewById(R.id.res_name_tv);
         mIsOnlineIv = (ImageView) findViewById(R.id.is_online_tv);
+        gotomap = (RelativeLayout) findViewById(R.id.gotomap);
 
         mBeginTimeTv = (TextView) findViewById(R.id.begin_time_txt);
         mEndTimeTv = (TextView) findViewById(R.id.end_time_txt);
@@ -114,6 +119,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mBeginTimeLayout.setOnClickListener(this);
         mEndTimeLayout.setOnClickListener(this);
         mQueryText.setOnClickListener(this);
+        gotomap.setOnClickListener(this);
     }
 
     /**
@@ -158,6 +164,11 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
                     return;
                 };
                 queryReplayVideo(mResCode, beginTime + " 00:00:00", endTime + " 23:59:59");
+                break;
+            case R.id.gotomap:
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(),VideoMonitorMapActivity.class);
+                getApplicationContext().startActivity(intent);
                 break;
             default:
                 break;

@@ -113,7 +113,8 @@
         android:layout_height="54dp"
         android:background="@color/white"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:id="@+id/gotomap">
 
         <TextView
             android:id="@+id/res_name_tv"

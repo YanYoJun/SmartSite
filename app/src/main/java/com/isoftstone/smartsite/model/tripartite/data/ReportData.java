@@ -1,83 +1,64 @@
 package com.isoftstone.smartsite.model.tripartite.data;
 
+import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.model.message.data.MsgData;
+
+import java.util.Date;
+
 /**
  * Created by yanyongjun on 2017/10/16.
  */
 
-public abstract class ReportData {
-    public static final int STATS_DEALING = 1;//处理中
-    public static final int STATS_VISITED = 2;//已回访
+public class ReportData extends PatrolBean {
+    public final static int STATUS_DEFAULT = 1;
+    public final static int STATUS_WAITTING_CHECK = 2;
+    public final static int STATUS_WAITTING_REVISIT = 3;
+    public final static int STATUS_REJECT = 4;
+    public final static int STATUS_CHECKED = 5;
+    private Date mDate = null;
 
-    public static final int REPORT_TYPE_INSPECT = 1;//巡查报告
-    public static final int REPORT_TYPE_CHECK = 2;//验收报告
-    private int mId;
-    private String mReportName;
-    private String mName;
-    private String mTime;
-    private String mAddress;
-    private int mStats;//1:处理中，2：已回访
+//    private int id;	//	主键
+//    private String creator;//	创建人
+//    private  int status;//	状态
+//    private String date;//	date(yyyy-MM-dd HH:mm:ss)	创建时间
+//    private String  address; //巡查地点
+//    private String company; //巡查单位
+//    private String developmentCompany;//	建设单位
+//    private String constructionCompany;//	施工单位
+//    private String supervisionCompany;//		监理单位
+//    private boolean isVisit;  //	是否回访
+//    private String visitDate;  //	date(yyyy-MM-dd HH:mm:ss)	回访时间
 
-    protected ReportData(int id, String reportName, String name, String time, String address,int stats) {
-        mId = id;
-        mReportName = reportName;
-        mName = name;
-        mTime = time;
-        mAddress = address;
-        mStats = stats;
+    public ReportData(PatrolBean data) {
+        setId(data.getId());
+        setCreator(data.getCreator());
+        setStatus(data.getStatus());
+        setDate(data.getDate());
+        setAddress(data.getAddress());
+        setCompany(data.getCompany());
+        setDevelopmentCompany(data.getDevelopmentCompany());
+        setConstructionCompany(data.getConstructionCompany());
+        setSupervisionCompany(data.getSupervisionCompany());
+        setVisit(data.isVisit());
+        setVisitDate(data.getVisitDate());
     }
 
-    public void setId(int id) {
-        this.mId = id;
+    public Date getFormatDate() {
+        if (mDate != null) {
+            return mDate;
+        }
+        try {
+            mDate = MsgData.format5.parse(getDate());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mDate;
     }
 
-    public int getId() {
-        return mId;
+    @Override
+    public String toString() {
+        return getId() + ":" + getCreator() + ":" + getStatus() + ":" + getDate() + ":" + getAddress() + ":" +
+                getCompany() + ":" + getDevelopmentCompany() + ":" + getConstructionCompany() + ":" +
+                getSupervisionCompany() + ":" + isVisit() + ":" + getVisitDate();
     }
-
-    public void setReportName(String reportName) {
-        mReportName = reportName;
-    }
-
-    public String getReportName() {
-        return mReportName;
-    }
-
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setAddress(String address) {
-        mAddress = address;
-    }
-
-    public String getAddress() {
-        return mAddress;
-    }
-
-    public void setTime(String time) {
-        mTime = time;
-    }
-
-    public String getTime() {
-        return mTime;
-    }
-
-    public void setStats(int stats) {
-        mStats = stats;
-    }
-
-    public int getStats() {
-        return mStats;
-    }
-
-    /**
-     * 获取报告类型
-     *
-     * @return
-     */
-    public abstract int getReportType();
 }

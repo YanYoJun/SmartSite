@@ -3,10 +3,12 @@ package com.isoftstone.smartsite.model.tripartite.activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,10 +16,17 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.model.message.data.MsgData;
+import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.model.tripartite.fragment.CheckReportMainFragment;
 import com.isoftstone.smartsite.model.tripartite.fragment.InspectReportMainFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by yanyongjun on 2017/10/16.
@@ -39,7 +48,13 @@ public class TripartiteActivity extends BaseActivity {
     private ViewPager mViewPager = null;
     private View mDefaultBar = null; //the default bar at the title
     private View mSearchBar = null; // the search bar show if click the search button in default bar
+    private HttpPost mHttpPost = null;
 
+
+    private ArrayList<ReportData> mDatas = new ArrayList<>();
+
+    public static final int[] STATUS_IMG = new int[]{R.drawable.pending, R.drawable.pending,
+            R.drawable.waitvisiting, R.drawable.sendback, R.drawable.pass};
 
 
     @Override
@@ -52,7 +67,7 @@ public class TripartiteActivity extends BaseActivity {
         init();
     }
 
-    private void initView(){
+    private void initView() {
         mViewPager = (ViewPager) findViewById(R.id.report_view_pager);
         mDefaultBar = findViewById(R.id.toolbar_default);
         mSearchBar = findViewById(R.id.toolbar_search);
@@ -63,6 +78,7 @@ public class TripartiteActivity extends BaseActivity {
     }
 
     private void init() {
+        mHttpPost = new HttpPost();
         initView();
         Fragment inspectFrag = new InspectReportMainFragment();
         Fragment checkFrag = new CheckReportMainFragment();
@@ -123,20 +139,70 @@ public class TripartiteActivity extends BaseActivity {
 
         mSwitchLab.put(0, v1);
         mSwitchLab.put(1, v2);
-        ImageView img1 = (ImageView)findViewById(R.id.img_inspect);
-        mSwitchImg.put(0,img1);
-        ImageView img2 = (ImageView)findViewById(R.id.img_check);
-        mSwitchImg.put(1,img2);
+        ImageView img1 = (ImageView) findViewById(R.id.img_inspect);
+        mSwitchImg.put(0, img1);
+        ImageView img2 = (ImageView) findViewById(R.id.img_check);
+        mSwitchImg.put(1, img2);
 
         chooseFrag(0);
         initTitleOnClickListener(0);
         mViewPager.setCurrentItem(0);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new QueryMsgTask().execute();
+    }
+
+    public ArrayList<ReportData> getDatas() {
+        return mDatas;
+    }
+
+    private class QueryMsgTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            ArrayList<PatrolBean> msgs = mHttpPost.getPatrolReportList("");
+
+            Collections.sort(msgs, new Comparator<PatrolBean>() {
+                @Override
+                public int compare(PatrolBean o1, PatrolBean o2) {
+                    try {
+                        Date date1 = MsgData.format5.parse(o1.getDate());
+                        Date date2 = MsgData.format5.parse(o2.getDate());
+                        return date2.compareTo(date1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+            mDatas.clear();
+            for (PatrolBean temp : msgs) {
+                ReportData reportData = new ReportData(temp);
+                Log.e(TAG, "reportData:" + reportData);
+                mDatas.add(reportData);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            for (Fragment temp : mFragList) {
+                if (temp instanceof CheckReportMainFragment) {
+                    ((CheckReportMainFragment) temp).onDataSetChanged();
+                } else if (temp instanceof InspectReportMainFragment) {
+                    ((InspectReportMainFragment) temp).onDataSetChanged();
+                }
+            }
+        }
+    }
+
+
     private void chooseFrag(int position) {
         Resources res = getResources();
         Drawable drawable = res.getDrawable(R.drawable.shape_threeparty_lab);
-        drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         for (int i = 0; i < mSwitchLab.size(); i++) {
             TextView v = mSwitchLab.get(i);
             if (i == position) {
@@ -149,8 +215,8 @@ public class TripartiteActivity extends BaseActivity {
         }
     }
 
-    private void initTitleOnClickListener(int position){
-        switch (position){
+    private void initTitleOnClickListener(int position) {
+        switch (position) {
             case FRAGMENT_TYPE_INSPECT_REPORT:
                 break;
             case FRAGMENT_TYPE_CHECK_REPORT:
@@ -162,35 +228,39 @@ public class TripartiteActivity extends BaseActivity {
 
     /**
      * 点击返回键之后的操作
+     *
      * @param v
      */
-    public void onBackBtnClick(View v){
+    public void onBackBtnClick(View v) {
         finish();
     }
 
     /**
      * 点击新增报告界面按钮
+     *
      * @param v
      */
-    public void onAddReportBtnClick(View v){
-        Intent intent = new Intent(this,AddReportActivity.class);
+    public void onAddReportBtnClick(View v) {
+        Intent intent = new Intent(this, AddReportActivity.class);
         startActivity(intent);
     }
 
     /**
      * 点击搜索按钮
+     *
      * @param v
      */
-    public void onSearchBtnClick(View v){
+    public void onSearchBtnClick(View v) {
         mSearchBar.setVisibility(View.VISIBLE);
         mDefaultBar.setVisibility(View.INVISIBLE);
     }
 
     /**
      * 当位于搜索状态时，点击toolbar上面的取消按钮
+     *
      * @param v
      */
-    public void onCancelSearchBtnClick(View v){
+    public void onCancelSearchBtnClick(View v) {
         mSearchBar.setVisibility(View.GONE);
         mDefaultBar.setVisibility(View.VISIBLE);
     }

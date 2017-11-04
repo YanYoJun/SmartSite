@@ -1,21 +1,19 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
-import android.app.Activity;
-import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.InspectReportAdapter;
-import com.isoftstone.smartsite.model.tripartite.data.InspectReportData;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yanyongjun on 2017/10/16.
@@ -29,9 +27,12 @@ public class InspectReportMainFragment extends BaseFragment {
     public static final String ITEM_COMPANY = "lab_company";
     public static final String ITEM_STATS = "lab_status";
 
-    private Activity mActivity = null;
+    private TripartiteActivity mActivity = null;
     private ListView mListView = null;
-    private List<ReportData> mDatas = null;
+    private ArrayList<ReportData> mDatas = new ArrayList<>();
+    private BaseAdapter mAdapter = null;
+    private HttpPost mHttpPost = null;
+    private String mAccountName = "";
 /*    private Button mAdd = null;*/
 
     @Override
@@ -41,25 +42,55 @@ public class InspectReportMainFragment extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        mActivity = getActivity();
+        mActivity = (TripartiteActivity) getActivity();
+        mHttpPost = new HttpPost();
         init();
+    }
+
+    public void onDataSetChanged() {
+        Log.e(TAG, "onDataSetChanged");
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    mDatas.clear();
+                    if (mAccountName == null || mAccountName.equals("")) {
+                        mAccountName = mHttpPost.mLoginBean.getmName();
+                    }
+                    ArrayList<ReportData> sourceData = mActivity.getDatas();
+                    for (ReportData temp : sourceData) {
+                        if (mAccountName.equals(temp.getCreator())) {
+                            mDatas.add(temp);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mAdapter.notifyDataSetChanged();
+            }
+        }.execute();
     }
 
     private void init() {
         //初始化Listview
         mListView = (ListView) mActivity.findViewById(R.id.listview);
-        SimpleAdapter adapter = new InspectReportAdapter(mActivity, getData(), R.layout.listview_inspect_report_item,
-                new String[]{ITEM_TITLE, ITEM_NAME, ITEM_TIME, ITEM_COMPANY},
-                new int[]{R.id.lab_title, R.id.lab_name, R.id.lab_time, R.id.lab_company});
-        mListView.setAdapter(adapter);
+        mAdapter = new InspectReportAdapter(mActivity, mDatas);
+        mListView.setAdapter(mAdapter);
     }
 
 
-    /**
+  /*  *//**
      * 加载listview的数据源
      *
      * @return
-     */
+     *//*
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Resources res = mActivity.getResources();
@@ -84,11 +115,11 @@ public class InspectReportMainFragment extends BaseFragment {
         return list;
     }
 
-    /**
+    *//**
      * 目前是测试使用，后续需要从网络侧读取
      *
      * @return
-     */
+     *//*
     private List<ReportData> readDataFromSDK() {
         //TODO
         mDatas = new ArrayList<>();
@@ -106,5 +137,5 @@ public class InspectReportMainFragment extends BaseFragment {
         mDatas.add(data);
 
         return mDatas;
-    }
+    }*/
 }

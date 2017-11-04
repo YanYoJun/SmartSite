@@ -8,12 +8,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.common.App;
 import com.isoftstone.smartsite.utils.NetworkUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -351,7 +349,7 @@ public class HttpPost {
     /*
      获取巡查报告列表  测试数据 1
      */
-    public ArrayList<PatrolBean>  getPatrolReportList(int status){
+    public ArrayList<PatrolBean>  getPatrolReportList(String status){
         return  ReportOperation.getPatrolReportList(PATROL_LIST,mClient,status);
     }
 

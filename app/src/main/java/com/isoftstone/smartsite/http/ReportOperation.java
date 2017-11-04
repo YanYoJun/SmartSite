@@ -3,7 +3,6 @@ package com.isoftstone.smartsite.http;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -14,25 +13,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static android.R.attr.path;
 
 /**
  * Created by gone on 2017/10/30.
@@ -41,7 +31,7 @@ import static android.R.attr.path;
 public class ReportOperation {
     private static  String TAG = "ReportOperation";
 
-    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, int status){
+    public static ArrayList<PatrolBean> getPatrolReportList(String strurl, OkHttpClient mClient, String status){
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
@@ -70,7 +60,6 @@ public class ReportOperation {
         }
         return list;
     }
-
 
     public static  PatrolBean addPatrolReport(String strurl, OkHttpClient mClient, PatrolBean reportBean){
 

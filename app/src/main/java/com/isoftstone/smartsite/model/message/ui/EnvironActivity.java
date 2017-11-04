@@ -56,9 +56,6 @@ public class EnvironActivity extends BaseActivity {
         mAdapter = new MsgListAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
         mHttpPost = new HttpPost();
-
-        mTask.execute();
-        new ReadMsgTask().execute();
     }
 
     private class QueryMsgTask extends AsyncTask<String, Integer, String> {
@@ -93,11 +90,21 @@ public class EnvironActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTask.execute();
+        new ReadMsgTask().execute();
+    }
+
     private class ReadMsgTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             for (MsgData temp : mDatas) {
-                mHttpPost.readMessage(temp.getId());
+                if(temp.getStatus() == MsgData.STATUS_UNREAD) {
+                    mHttpPost.readMessage(temp.getId());
+                }
             }
             return null;
         }

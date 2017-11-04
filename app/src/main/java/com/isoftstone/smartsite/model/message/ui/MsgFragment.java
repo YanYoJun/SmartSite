@@ -90,7 +90,11 @@ public class MsgFragment extends BaseFragment {
         });
 
         mHttpPost = new HttpPost();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         new QueryMsgTask(1).execute();
         new QueryMsgTask(2).execute();
         new QueryMsgTask(3).execute();

@@ -56,6 +56,11 @@ public class VcrActivity extends BaseActivity {
         mAdapter = new MsgListAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
         mHttpPost = new HttpPost();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         mTask.execute();
         new ReadMsgTask().execute();
@@ -97,7 +102,9 @@ public class VcrActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             for (MsgData temp : mDatas) {
-                mHttpPost.readMessage(temp.getId());
+                if(temp.getStatus() == MsgData.STATUS_UNREAD) {
+                    mHttpPost.readMessage(temp.getId());
+                }
             }
             return null;
         }

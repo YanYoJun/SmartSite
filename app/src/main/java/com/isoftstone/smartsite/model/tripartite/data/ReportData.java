@@ -55,6 +55,16 @@ public class ReportData extends PatrolBean {
         return mDate;
     }
 
+    /**
+     * 判断这个是否是巡查者
+     * @param accountName
+     * @return
+     */
+    public boolean isExaminer(String accountName){
+        //TODO
+        return true;
+    }
+
     @Override
     public String toString() {
         return getId() + ":" + getCreator() + ":" + getStatus() + ":" + getDate() + ":" + getAddress() + ":" +

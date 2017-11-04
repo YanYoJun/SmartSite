@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,39 +24,145 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
+import com.google.gson.internal.bind.DateTypeAdapter;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by gone on 2017/10/21.
  */
 
 public class PMDataInfoActivity extends Activity {
+    private HttpPost mHttpPsot = new HttpPost();
     private LineChart mLineChart = null;
     private TextView mDevicesName = null;
     private TextView mMap = null;
     private ImageView mImageView_back = null;
     private ImageView mImageView_devices = null;
     private LinearLayout mGotoMap = null;
+    public static  final  int HANDLER_GET_DATA_START = 1;
+    public static  final  int HANDLER_GET_DATA_END = 2;
+    public static  final  int HANDLER_GET_24DATA_START = 3;
+    public static  final  int HANDLER_GET_24DATA_END = 4;
+    private String devicesId ;
+    private String address ;
+    private ArrayList<DataQueryVoBean> list = null;
+    private ArrayList<DataQueryVoBean> list_24 = null;
+    private TextView text_pm10 ;
+    private TextView text_pm25 ;
+    private TextView text_so2 ;
+    private TextView text_no2 ;
+    private TextView text_o3 ;
+    private TextView text_co ;
+
+    private TextView text_indoortemp ;
+    private TextView text_windspeed ;
+    private TextView text_winddirection ;
+    private TextView text_airpressure ;
+    private TextView text_temp ;
+    private TextView text_humidity ;
+    private TextView text_precipitation ;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmdatainfo);
+        devicesId = getIntent().getStringExtra("id");
+        address = getIntent().getStringExtra("address");
         init();
         setOnCliceked();
-        setData();
-        setLineChart();
+        //setData();
+        //setLineChart();
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+        mHandler.sendEmptyMessage(HANDLER_GET_24DATA_START);
     }
 
     private void init(){
         mImageView_back = (ImageView)findViewById(R.id.image_back);
         mImageView_devices = (ImageView)findViewById(R.id.image_devices);
         mLineChart = (LineChart)findViewById(R.id.chart3);
+
         mDevicesName = (TextView)findViewById(R.id.textView1);
         mMap = (TextView)findViewById(R.id.textView4);
+
+        text_pm10 = (TextView)findViewById(R.id.text_pm10);
+        text_pm25 = (TextView)findViewById(R.id.text_pm25);
+        text_so2 = (TextView)findViewById(R.id.text_so2);
+        text_no2 = (TextView)findViewById(R.id.text_no2);
+        text_o3 = (TextView)findViewById(R.id.text_o3);
+        text_co = (TextView)findViewById(R.id.text_co);
+
+        text_indoortemp = (TextView)findViewById(R.id.text_indoortemp);
+        text_windspeed = (TextView)findViewById(R.id.text_windspeed);
+        text_winddirection = (TextView)findViewById(R.id.text_winddirection);
+        text_airpressure = (TextView)findViewById(R.id.text_airpressure);
+        text_temp = (TextView)findViewById(R.id.text_temp);
+        text_humidity = (TextView)findViewById(R.id.text_humidity);
+        text_precipitation = (TextView)findViewById(R.id.text_precipitation);
+
+
+
         mGotoMap = (LinearLayout)findViewById(R.id.gotomap);
+    }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_GET_DATA_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getDataInfo();
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case  HANDLER_GET_DATA_END:{
+                    setData();
+                }
+                break;
+                case HANDLER_GET_24DATA_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            get24DataInfo();
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case  HANDLER_GET_24DATA_END:{
+                    setLineChart();
+                }
+                break;
+            }
+        }
+    };
+
+    private void getDataInfo(){
+        list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","0","","");
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
+    }
+
+    private void get24DataInfo(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        Calendar calendar = Calendar.getInstance();
+        String startTime = df.format(calendar.getTime());
+        calendar.add(Calendar.DATE, -1);
+        String endTime = df.format(calendar.getTime());
+        list_24 =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","2",startTime,endTime);
+        //list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,startTime);
+        mHandler.sendEmptyMessage(HANDLER_GET_24DATA_END);
     }
 
     private void setOnCliceked(){
@@ -81,11 +189,39 @@ public class PMDataInfoActivity extends Activity {
     }
 
     private void setData(){
-        mDevicesName.setText("dv5823");
-        mMap.setText("高新大道53825号");
+        if(address != null){
+            mMap.setText(address);
+        }
+        if(list == null || list.size() <= 0){
+            return;
+        }
+        DataQueryVoBean dataQueryVoBean = list.get(0);
+        if(dataQueryVoBean == null){
+            return;
+        }
+        mDevicesName.setText(dataQueryVoBean.getDeviceName());
+        text_pm10.setText("PM10:"+dataQueryVoBean.getPm10()+"");
+        text_pm25.setText("PM2.5:"+dataQueryVoBean.getPm2_5()+"");
+        text_so2.setText("O2:"); ;
+        text_no2.setText("no2:"); ;
+        text_o3.setText("O3:"); ;
+        text_co.setText("CO2:"+ dataQueryVoBean.getCo2()); ;
+
+        DecimalFormat df = new DecimalFormat("#.0");
+        text_indoortemp.setText("室内:");
+        text_windspeed.setText("风速:"+String.format("%.2f",(dataQueryVoBean.getWindSpeed())));
+        text_winddirection.setText("风向:"+dataQueryVoBean.getWindDirection());
+        text_airpressure.setText("气压:"+String.format("%.1f",(dataQueryVoBean.getAtmosphericPressure())));
+        text_temp.setText("温度:"+String.format("%.1f",(dataQueryVoBean.getAirTemperature())));
+        text_humidity.setText("气压:"+String.format("%.1f",(dataQueryVoBean.getAirHumidity())));
+        text_precipitation.setText("雨量:"+String.format("%.2f",(dataQueryVoBean.getRainfall())));
+
     }
 
     private void setLineChart(){
+        if(list_24 == null || list_24.size() <= 0){
+            return;
+        }
         mLineChart.setDrawGridBackground(false);
 
         // no description text
@@ -127,6 +263,7 @@ public class PMDataInfoActivity extends Activity {
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAxisMaximum(24);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -153,7 +290,7 @@ public class PMDataInfoActivity extends Activity {
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         //leftAxis.addLimitLine(ll1);
         //leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(50f);
+        leftAxis.setAxisMaximum(100f);
         leftAxis.setAxisMinimum(0f);
         //leftAxis.setYOffset(20f);
         //leftAxis.setEnabled(false);
@@ -168,11 +305,6 @@ public class PMDataInfoActivity extends Activity {
         //mChart.getViewPortHandler().setMaximumScaleY(2f);
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
 
-        // add data
-        setLineChartData(15, 30);
-//        mChart.setVisibleXRange(20);
-//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
-//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
 
         mLineChart.animateX(2500);
         //mChart.invalidate();
@@ -187,31 +319,18 @@ public class PMDataInfoActivity extends Activity {
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         // // dont forget to refresh the drawing
         // mChart.invalidate();
-    }
-
-    private void setLineChartData(int count, float range) {
 
         ArrayList<Entry> values = new ArrayList<Entry>();
 
+        int count = list_24.size();
         for (int i = 0; i < count; i++) {
 
-            float val = (float) (Math.random() * range) + 3;
-            Entry entry = new Entry(i,val);
+            Double value = list_24.get(i).getPm2_5();
+            Entry entry = new Entry(i,Float.parseFloat(value.toString()));
             values.add(entry);
         }
 
-
-
-        ArrayList<Entry> values_2 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range) + 3;
-            Entry entry = new Entry(i,val);
-            values_2.add(entry);
-        }
-
-        LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+        LineDataSet set2 = new LineDataSet(values, "DataSet 2");
         set2.setDrawIcons(false);
         // set the line to be drawn like this "- - - - - -"
         //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式

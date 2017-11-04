@@ -6,7 +6,7 @@ package com.isoftstone.smartsite.http;
 
 public class DataQueryVoBean {
     private Integer Id;
-    private Integer 	deviceId;//设备Id
+    private Integer deviceId;//设备Id
     private String deviceName;//	 	设备名称
     private String deviceCoding;//		设备编码
     private String installTime;//	Date	安装时间

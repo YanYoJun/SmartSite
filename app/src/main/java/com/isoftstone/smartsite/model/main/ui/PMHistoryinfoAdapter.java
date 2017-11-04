@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
+import com.isoftstone.smartsite.http.PMDevicesDataBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 
@@ -27,7 +29,7 @@ public class PMHistoryinfoAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    private ArrayList<PMDevicesDataInfoBean> mData = new ArrayList<PMDevicesDataInfoBean>();
+    private ArrayList<DataQueryVoBean> mData = new ArrayList<DataQueryVoBean>();
     private Context mContext = null;
 
     public PMHistoryinfoAdapter(Context context){
@@ -35,7 +37,7 @@ public class PMHistoryinfoAdapter extends BaseAdapter {
         mContext = context;
     }
 
-    public void setData(ArrayList<PMDevicesDataInfoBean> list){
+    public void setData(ArrayList<DataQueryVoBean> list){
         mData = list;
     }
 
@@ -73,11 +75,11 @@ public class PMHistoryinfoAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.time.setText("安装时间 "+mData.get(position).getTime());
-        holder.PM10.setText("PM10 "+mData.get(position).getPM10());
-        holder.PM25.setText("PM2.5 "+mData.get(position).getPM25());
-        holder.SO2.setText("SO2 "+mData.get(position).getO3());
-        holder.NO2.setText("NO2 "+mData.get(position).getNO2());
+        holder.time.setText("更新时间 "+mData.get(position).getPushTime());
+        holder.PM10.setText("PM10 "+String.format("%.1f",(mData.get(position).getPm10())));
+        holder.PM25.setText("PM2.5 "+String.format("%.1f",(mData.get(position).getPm2_5())));
+        holder.SO2.setText("CO2 "+String.format("%.1f",(mData.get(position).getCo2())));
+        holder.NO2.setText("NO2 ");
         return convertView;
     }
 

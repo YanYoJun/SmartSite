@@ -58,8 +58,12 @@
     <color name="huanjin_liang">#599fff</color>
     <!--环境监控  轻度-->
     <color name="huanjin_qingdu">#ffcc00</color>
+    <!--环境监控  中度-->
+    <color name="huanjin_zhong1du">#ff6600</color>
     <!--环境监控  重度-->
     <color name="huanjin_zhongdu">#ff0000</color>
+    <!--环境监控  严重污染-->
+    <color name="huanjin_yanzhong">#000000</color>
     <!-- main   end -->
     <!-- map   start -->
     <color name="devices_press">#88ffffff</color>

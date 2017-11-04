@@ -3,11 +3,15 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 
 import java.util.ArrayList;
@@ -21,6 +25,10 @@ public class PMDevicesListActivity extends Activity{
     private ListView mListView = null;
     private ImageView mImageView_back = null;
     private ImageView mImageView_devices = null;
+    public static  final  int HANDLER_GET_DATA_START = 1;
+    public static  final  int HANDLER_GET_DATA_END = 2;
+    private HttpPost mHttpPost = new HttpPost();
+    private ArrayList<DevicesBean> mList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +36,7 @@ public class PMDevicesListActivity extends Activity{
 
         init();
         setOnCliceked();
-        setData();
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
     }
 
     private void init(){
@@ -53,24 +61,36 @@ public class PMDevicesListActivity extends Activity{
         });
     }
 
-    private void setData(){
-        PMDevicesDataInfoBean info = new PMDevicesDataInfoBean();
-        info.setName("DEV_123123");
-        info.setState(1);
-        info.setTime("2017-5-12");
-        info.setAddress("东湖技术开发区");
-        info.setPM10("25");
-        info.setPM25("25");
-        info.setO3("555");
-        info.setNO2("25");
-        ArrayList list = new ArrayList();
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_GET_DATA_START:{
+                     Thread thread = new Thread(){
+                         @Override
+                         public void run() {
+                             getDevices();
+                         }
+                     };
+                     thread.start();
+                }
+                break;
+                case  HANDLER_GET_DATA_END:{
+                    setmListViewData();
+                }
+                break;
+            }
+        }
+    };
+
+    private  void getDevices(){
+        mList = mHttpPost.getDevices("0","","","");
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
+    }
+
+    private void setmListViewData(){
         PMDevicesListAdapter adapter = new PMDevicesListAdapter(getBaseContext());
-        adapter.setData(list);
+        adapter.setData(mList);
         mListView.setAdapter(adapter);
     }
 }

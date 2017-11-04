@@ -198,7 +198,6 @@
                         android:layout_toRightOf="@id/img_main_unread_num"
                         android:background="@drawable/shape_corner_msg_num"
                         android:gravity="center"
-                        android:text="12"
                         android:textColor="#ffffff"
                         android:textSize="9dp" />
                 </RelativeLayout>
@@ -244,7 +243,6 @@
                         android:layout_toRightOf="@id/img_report_unread_report"
                         android:background="@drawable/shape_corner_msg_num"
                         android:gravity="center"
-                        android:text="12"
                         android:textColor="#ffffff"
                         android:textSize="9dp" />
                 </RelativeLayout>
@@ -290,7 +288,6 @@
                         android:layout_toRightOf="@id/img_vcr"
                         android:background="@drawable/shape_corner_msg_num"
                         android:gravity="center"
-                        android:text="12"
                         android:textColor="#ffffff"
                         android:textSize="9dp" />
                 </RelativeLayout>
@@ -335,7 +332,6 @@
                         android:layout_toRightOf="@id/img_air_unread_num"
                         android:background="@drawable/shape_corner_msg_num"
                         android:gravity="center"
-                        android:text="12"
                         android:textColor="#ffffff"
                         android:textSize="9dp" />
                 </RelativeLayout>

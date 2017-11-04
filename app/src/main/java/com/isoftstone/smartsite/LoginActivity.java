@@ -368,6 +368,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			mHttpPost.userImageUpload(bitmap,Bitmap.CompressFormat.PNG);
             */
 
+			//mHttpPost.getDictionaryList("zh",2);
+
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
 				 try {

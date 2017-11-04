@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +27,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.PMDevicesDataBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 
@@ -41,13 +46,21 @@ public class PMHistoryInfoActivity extends Activity {
     private TextView mDevicesName = null;
     private TextView mMap = null;
     private LinearLayout mGotoMap = null;
+    public static  final  int HANDLER_GET_DATA_START = 1;
+    public static  final  int HANDLER_GET_DATA_END = 2;
+    private HttpPost mHttpPost = new HttpPost();
+    ArrayList<DataQueryVoBean> list = null;
+    private String devicesId ;
+    private String address;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmhistoryinfo);
+        devicesId = getIntent().getStringExtra("id");
+        address = getIntent().getStringExtra("address");
         init();
         setOnCliceked();
-        setData();
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
     }
 
     private void init(){
@@ -56,6 +69,7 @@ public class PMHistoryInfoActivity extends Activity {
         mListView = (ListView)findViewById(R.id.listview);
         mDevicesName = (TextView)findViewById(R.id.textView1);
         mMap = (TextView)findViewById(R.id.textView4);
+        mMap.setText(address);
         mGotoMap = (LinearLayout)findViewById(R.id.gotomap);
     }
 
@@ -82,26 +96,41 @@ public class PMHistoryInfoActivity extends Activity {
         });
     }
 
-    private void setData(){
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HANDLER_GET_DATA_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getDevices();
+                        }
+                    };
+                    thread.start();
+                }
+                break;
+                case  HANDLER_GET_DATA_END:{
+                    setmListViewData();
+                }
+                break;
+            }
+        }
+    };
 
-        mDevicesName.setText("dv5823");
-        mMap.setText("高新大道53825号");
+    private void getDevices(){
+        list = mHttpPost.getOneDevicesHistoryData(devicesId);
+        mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
+    }
+    private void setmListViewData(){
 
-        PMDevicesDataInfoBean info = new PMDevicesDataInfoBean();
-        info.setTime("2017-5-12");
-        info.setPM10("25");
-        info.setPM25("25");
-        info.setO3("555");
-        info.setNO2("25");
-        ArrayList list = new ArrayList();
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        list.add(info);
-        PMHistoryinfoAdapter adapter = new PMHistoryinfoAdapter(getBaseContext());
-        adapter.setData(list);
-        mListView.setAdapter(adapter);
+        if(list != null && list.size() > 0){
+            mDevicesName.setText(list.get(0).getDeviceName());
+            PMHistoryinfoAdapter adapter = new PMHistoryinfoAdapter(getBaseContext());
+            adapter.setData(list);
+            mListView.setAdapter(adapter);
+        }
+
     }
 
 }

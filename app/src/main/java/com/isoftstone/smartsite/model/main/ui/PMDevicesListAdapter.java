@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
@@ -36,7 +37,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    private ArrayList<PMDevicesDataInfoBean> mData = new ArrayList<PMDevicesDataInfoBean>();
+    private ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
     private Context mContext = null;
     private final String IMAGE_TYPE = "image/*";
 
@@ -45,7 +46,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
         mContext = context;
     }
 
-    public void setData(ArrayList<PMDevicesDataInfoBean> list){
+    public void setData(ArrayList<DevicesBean> list){
         mData = list;
     }
 
@@ -89,21 +90,21 @@ public class PMDevicesListAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
-
-        holder.resName.setText(mData.get(position).getName());
+        final  DevicesBean devices = mData.get(position);
+        holder.resName.setText(devices.getDeviceName());
         TextPaint paint = holder.resName.getPaint();
         paint.setFakeBoldText(true);
-        if(mData.get(position).getState() == 1){
+        if(devices.getDeviceStatus().equals("1")){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.online));
         }else{
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
         }
-        holder.installTime.setText("安装时间 "+mData.get(position).getTime());
-        holder.address.setText("地址 "+mData.get(position).getAddress());
-        holder.PM10.setText("PM10 "+mData.get(position).getPM10());
-        holder.PM25.setText("PM2.5 "+mData.get(position).getPM25());
-        holder.SO2.setText("SO2 "+mData.get(position).getO3());
-        holder.NO2.setText("NO2 "+mData.get(position).getNO2());
+        holder.installTime.setText("安装时间: "+devices.getInstallTime());
+        holder.address.setText("地址: "+devices.getArch().getName());
+        //holder.PM10.setText("PM10 "+devices);
+        //holder.PM25.setText("PM2.5 "+devices.getPM25());
+        //holder.SO2.setText("SO2 "+devices.getO3());
+        //holder.NO2.setText("NO2 "+devices.getNO2());
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
@@ -113,10 +114,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 if(null != viewHolder) {
                     //实时数据
                     Intent intent = new Intent();
-                    //Bundle bundle = new Bundle();
-                    //bundle.putString("resCode", viewHolder.resCode.getText().toString());
-                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
-                    //intent.putExtras(bundle);
+                    intent.putExtra("id",devices.getDeviceId());
+                    intent.putExtra("address",devices.getArch().getName());
                     intent.setClass(mContext, PMDataInfoActivity.class);
                     mContext.startActivity(intent);
                 } else {
@@ -134,6 +133,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     //历史数据
                     Intent intent = new Intent();
                     intent.setClass(mContext, PMHistoryInfoActivity.class);
+                    intent.putExtra("id",devices.getDeviceId());
+                    intent.putExtra("address",devices.getArch().getName());
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -148,7 +149,6 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 Toast.makeText(mContext,"单个设备跳转到地图",2000).show();
             }
         });
-
         return convertView;
     }
 

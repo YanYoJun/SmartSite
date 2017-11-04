@@ -81,25 +81,9 @@
                     style="@style/add_report_lab"
                     android:text="@string/inspect_report_address" />
 
-                <ImageView
-                    android:id="@+id/img_address_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp"
-                    android:src="@drawable/droparrow" />
-
-                <com.isoftstone.smartsite.model.tripartite.view.SelectTextView
-                    android:id="@+id/spinner_report_address"
-                    style="@style/add_report_spinner"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@id/img_address_down"
-                    android:background="@null"
-                    android:gravity="right|center_vertical"
-                    android:onClick="onSpinnerReportAddressClicked"
-                    android:text="请选择"
-                    android:textColor="@color/des_text_color" />
+                <EditText
+                    android:id="@+id/edit_report_address"
+                    style="@style/add_report_edittext" />
 
             </RelativeLayout>
 
@@ -132,39 +116,39 @@
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/shape_listview_year_bg" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:background="@color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="54dp"-->
+                <!--android:background="@color/white"-->
+                <!--android:paddingLeft="16dp"-->
+                <!--android:paddingRight="16dp">-->
 
-                <TextView
-                    android:id="@+id/lab_status"
-                    style="@style/add_report_lab"
-                    android:text="@string/inspect_report_status" />
+                <!--<TextView-->
+                    <!--android:id="@+id/lab_status"-->
+                    <!--style="@style/add_report_lab"-->
+                    <!--android:text="@string/inspect_report_status" />-->
 
-                <ImageView
-                    android:id="@+id/img_status_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp"
-                    android:src="@drawable/droparrow" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/img_status_down"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="2dp"-->
+                    <!--android:src="@drawable/droparrow" />-->
 
-                <com.isoftstone.smartsite.model.tripartite.view.SelectTextView
-                    android:id="@+id/spinner_report_status"
-                    style="@style/add_report_spinner"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@id/img_status_down"
-                    android:background="@null"
-                    android:gravity="right|center_vertical"
-                    android:onClick="onSpinnerReportAddressClicked"
-                    android:text="请选择"
-                    android:textColor="@color/des_text_color" />
+                <!--<TextView-->
+                    <!--android:id="@+id/spinner_report_status"-->
+                    <!--style="@style/add_report_spinner"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_toLeftOf="@id/img_status_down"-->
+                    <!--android:background="@null"-->
+                    <!--android:gravity="right|center_vertical"-->
+                    <!--android:onClick="onSpinnerReportAddressClicked"-->
+                    <!--android:text="请选择"-->
+                    <!--android:textColor="@color/des_text_color" />-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
             <ImageView
                 android:layout_width="match_parent"
@@ -193,8 +177,8 @@
                     android:layout_marginLeft="2dp"
                     android:src="@drawable/droparrow" />
 
-                <com.isoftstone.smartsite.model.tripartite.view.SelectTextView
-                    android:id="@+id/spinner_report_types"
+                <TextView
+                    android:id="@+id/lab_report_types"
                     style="@style/add_report_spinner"
                     android:layout_height="match_parent"
                     android:layout_toLeftOf="@id/img_types_down"

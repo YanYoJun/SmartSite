@@ -1,28 +1,31 @@
 package com.isoftstone.smartsite.model.tripartite.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
-import android.widget.SimpleAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
-import com.isoftstone.smartsite.model.tripartite.adapter.PopWindowListAdapter;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;
+import com.isoftstone.smartsite.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yanyongjun on 2017/10/18.
@@ -32,32 +35,29 @@ import java.util.Map;
 public class AddReportActivity extends BaseActivity {
     private final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
 
-    private final static int SPINNER_FLAG_ADDRESS = 0;
-    private final static int SPINNER_FLAG_STATUS = 1;
-    private final static int SPINNER_FLAG_TYPES = 2;
-
     private List<Uri> attach = new ArrayList<>();
-    private SimpleAdapter mAttachAdapter = null;
-    private ArrayList<Map<String, Object>> mData = null;
     private Resources mRes = null;
     private Drawable mWaittingAdd = null;
     private Drawable mWattingChanged = null;
+    private HttpPost mHttpPost = null;
+    private ArrayList<String> mQueryTypes = new ArrayList<>();
+
 
     //the view in this activity
-    private TextView mAddressSpinner = null;
-    private TextView mStatusSpinner = null;
-    private TextView mTypesSpinner = null;
-    private TextView mAddress = null;
-    private TextView mCompany = null;
-    private TextView mStatus = null;
-    private TextView mTypes = null;
-    private TextView mBuildCompany = null;
-    private TextView mConsCompany = null;
-    private TextView mSuperCompany = null;
-    private EditText mEditCompany = null;
-    private EditText mEditBuildCompany = null;
-    private EditText mEditConsCompany = null;
-    private EditText mEditSuperCompany = null;
+    public EditText mEditAddress = null;
+    public TextView mTypesEditor = null;
+    public TextView mAddress = null;
+    public TextView mCompany = null;
+    public TextView mTypes = null;
+    public TextView mBuildCompany = null;
+    public TextView mConsCompany = null;
+    public TextView mSuperCompany = null;
+
+    public EditText mEditCompany = null;
+    public EditText mEditBuildCompany = null;
+    public EditText mEditConsCompany = null;
+    public EditText mEditSuperCompany = null;
+    public boolean isSettedType = false;
 
 
     @Override
@@ -70,11 +70,10 @@ public class AddReportActivity extends BaseActivity {
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         init();
-
-
     }
 
     public void init() {
+        mHttpPost = new HttpPost();
         mRes = getResources();
         mWaittingAdd = mRes.getDrawable(R.drawable.addcolumn);
         mWaittingAdd.setBounds(0, 0, mWaittingAdd.getIntrinsicWidth(), mWaittingAdd.getIntrinsicHeight());
@@ -83,18 +82,15 @@ public class AddReportActivity extends BaseActivity {
 
         initView();
         initListener();
-        //init Spinnner
-        initSpinner();
-        //initGridView();
+        restoreData();
+        new QueryReportTypeTask().execute();
     }
 
     public void initView() {
-        mAddressSpinner = (TextView) findViewById(R.id.spinner_report_address);
-        mStatusSpinner = (TextView) findViewById(R.id.spinner_report_status);
-        mTypesSpinner = (TextView) findViewById(R.id.spinner_report_types);
+        mEditAddress = (EditText) findViewById(R.id.edit_report_address);
+        mTypesEditor = (TextView) findViewById(R.id.lab_report_types);
         mAddress = (TextView) findViewById(R.id.lab_address);
         mCompany = (TextView) findViewById(R.id.lab_company);
-        mStatus = (TextView) findViewById(R.id.lab_status);
         mTypes = (TextView) findViewById(R.id.lab_types);
         mBuildCompany = (TextView) findViewById(R.id.lab_build_company);
         mConsCompany = (TextView) findViewById(R.id.lab_cons_company);
@@ -104,9 +100,86 @@ public class AddReportActivity extends BaseActivity {
         mEditBuildCompany = (EditText) findViewById(R.id.edit_build_company);
         mEditConsCompany = (EditText) findViewById(R.id.edit_cons_company);
         mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
+        mTypesEditor.setTextColor(getResources().getColor(R.color.des_text_color));
+    }
+
+    public void saveData() {
+        SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
+        SPUtils.saveString("add_report_company", mEditCompany.getText().toString());
+        SPUtils.saveString("add_report_build_company", mEditBuildCompany.getText().toString());
+        SPUtils.saveString("add_report_cons_company", mEditConsCompany.getText().toString());
+        SPUtils.saveString("add_report_super_company", mEditSuperCompany.getText().toString());
+
+        if (isSettedType) {
+            SPUtils.saveString("add_report_type", mTypesEditor.getText().toString());
+        }
+    }
+
+    public void restoreData() {
+        mEditAddress.setText(SPUtils.getString("add_report_company", ""));
+        mEditCompany.setText(SPUtils.getString("add_report_address", ""));
+        mEditBuildCompany.setText(SPUtils.getString("add_report_build_company", ""));
+        mEditConsCompany.setText(SPUtils.getString("add_report_cons_company", ""));
+        mEditSuperCompany.setText(SPUtils.getString("add_report_super_company", ""));
+
+        String type = SPUtils.getString("add_report_type","");
+        if (!TextUtils.isEmpty(type)) {
+            mTypesEditor.setText(type);
+            mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
+        }
     }
 
     public void initListener() {
+        mTypesEditor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddReportActivity.this);
+                View dialogLayout = LayoutInflater.from(AddReportActivity.this).inflate(R.layout.dialog_add_report, null);
+                ListView listView = (ListView) dialogLayout.findViewById(R.id.listview_dialog_add_report);
+
+                //TODO
+                final ArrayList<String> list = new ArrayList<>();
+                list.add("工地报告");
+                list.add("巡查报告");
+                DialogListViewAdapter adapter = new DialogListViewAdapter(AddReportActivity.this, list);
+                listView.setAdapter(adapter);
+
+                builder.setView(dialogLayout);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mTypesEditor.setText(list.get(position));
+                        mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
+                        dialog.dismiss();
+                    }
+                });
+
+            }
+        });
+
+        mEditAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mAddress.setCompoundDrawables(mWattingChanged, null, null, null);
+                } else {
+                    mAddress.setCompoundDrawables(mWaittingAdd, null, null, null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mEditCompany.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -192,70 +265,6 @@ public class AddReportActivity extends BaseActivity {
         });
     }
 
-    private void initSpinner() {
-        //address spinner
-
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.add("未来科技城");
-        strings.add("软件园");
-        strings.add("花山新区");
-        initSpinner(mAddressSpinner, strings, mAddress);
-
-        //status spinner
-
-        strings = new ArrayList<String>();
-        strings.add("已处理");
-        strings.add("已验收");
-        strings.add("结束");
-        initSpinner(mStatusSpinner, strings, mStatus);
-
-        //tyes spinner
-
-        strings = new ArrayList<String>();
-        strings.add("工地报告");
-        strings.add("啊啊报告");
-        strings.add("验收报告");
-        strings.add("验收报告2");
-        initSpinner(mTypesSpinner, strings, mTypes);
-    }
-
-    /**
-     * 初始化Spinner使用
-     *
-     * @param textView
-     * @param strings
-     */
-    private void initSpinner(final TextView textView, final ArrayList<String> strings, final TextView tagView) {
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "initSpinner onclick");
-                PopWindowListAdapter adapter = new PopWindowListAdapter(AddReportActivity.this, strings);
-                final ListPopupWindow popupWindow = new ListPopupWindow(AddReportActivity.this);
-                popupWindow.setAdapter(adapter);
-                popupWindow.setAnchorView(textView);
-                popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setModal(false);
-                popupWindow.setAnimationStyle(0);
-                popupWindow.setPromptView(null);
-                popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        tagView.setCompoundDrawables(mWattingChanged, null, null, null);
-                        textView.setText(strings.get(position));
-                        textView.setTextColor(getResources().getColor(R.color.main_text_color));
-                        popupWindow.dismiss();
-                    }
-                });
-                popupWindow.clearListSelection();
-                popupWindow.show();
-                textView.requestLayout();
-            }
-        });
-    }
 
     /**
      * 点击保存按钮
@@ -263,6 +272,8 @@ public class AddReportActivity extends BaseActivity {
      * @param v
      */
     public void onBtnSaveClick(View v) {
+        saveData();
+        finish();
         //TODO
     }
 
@@ -291,12 +302,13 @@ public class AddReportActivity extends BaseActivity {
 
     }
 
-/*    public void onSpinnerReportAddressClicked(View v){
-        final TextView textView = (TextView)v;
 
+    private class QueryReportTypeTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+//            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
+            return null;
+        }
+    }
 
-
-
-        popupWindow.show();
-    }*/
 }

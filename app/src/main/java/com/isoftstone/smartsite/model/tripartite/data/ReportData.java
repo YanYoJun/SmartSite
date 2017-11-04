@@ -43,6 +43,10 @@ public class ReportData extends PatrolBean {
         setVisitDate(data.getVisitDate());
     }
 
+    public ReportData(){
+
+    }
+
     public Date getFormatDate() {
         if (mDate != null) {
             return mDate;

@@ -5,23 +5,34 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ITime;
+import com.isoftstone.smartsite.model.tripartite.data.ReportData;
+import com.isoftstone.smartsite.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * 回访下面的白嫩及矿
@@ -31,14 +42,13 @@ public class RevisitFragment extends BaseFragment {
     private GridView mAttachView = null;
     private SimpleAdapter mAttachAdapter = null;
     private ArrayList<Map<String, Object>> mData = null;
+    private AddReportActivity mAddReportActivity = null;
 
     private Resources mRes = null;
     private Drawable mWaittingAdd = null;
     private Drawable mWattingChanged = null;
+    private HttpPost mHttpPost = null;
 
-    private TextView mAddressSpinner = null;
-    private TextView mStatusSpinner = null;
-    private TextView mTypesSpinner = null;
     private TextView mName = null;
     private TextView mReportName = null;
     private TextView mReportMsg = null;
@@ -46,11 +56,15 @@ public class RevisitFragment extends BaseFragment {
     private TextView mEndTime = null;
     private TextView mRevisitTime = null;
     private TextView mLabTime = null;
+    private TextView mReportPeopleName = null;
 
     private EditText mEditName = null;
     private EditText mEditReportName = null;
     private EditText mEditReportMsg = null;
     private TextView mEditRevisitTime = null;
+    private Button mSubButton = null;
+    private RadioButton mRadioYes = null;
+    private RadioButton mRadioNo = null;
 
     private ITime mBeginDate = null;
     private ITime mEndDate = null;
@@ -77,12 +91,18 @@ public class RevisitFragment extends BaseFragment {
         mWattingChanged.setBounds(0, 0, mWattingChanged.getIntrinsicWidth(), mWattingChanged.getIntrinsicHeight());
 
         mCal = Calendar.getInstance();
+        mHttpPost = new HttpPost();
+        if (getActivity() instanceof AddReportActivity) {
+            mAddReportActivity = (AddReportActivity) getActivity();
+        }
         initView();
         initListener();
         initGridView();
     }
 
     private void initView() {
+        mReportPeopleName = (TextView) getView().findViewById(R.id.lab_report_people_name);
+        mReportPeopleName.setText(mHttpPost.mLoginBean.getmName());
         mName = (TextView) getView().findViewById(R.id.lab_name);
         mReportName = (TextView) getView().findViewById(R.id.lab_report_name);
         mReportMsg = (TextView) getView().findViewById(R.id.lab_report_msg);
@@ -95,13 +115,81 @@ public class RevisitFragment extends BaseFragment {
         mEditReportName = (EditText) getView().findViewById(R.id.edit_report_name);
         mEditReportMsg = (EditText) getView().findViewById(R.id.edit_report_msg);
         mEditRevisitTime = (TextView) getView().findViewById(R.id.lab_edit_revisit_time);
+        mSubButton = (Button) getView().findViewById(R.id.btn_add_report_submit);
+        mRadioNo = (RadioButton) getView().findViewById(R.id.radio_no);
+        mRadioYes = (RadioButton) getView().findViewById(R.id.radio_yes);
+    }
+
+    private String parseTime(String time) {
+        try {
+            Date date = DateUtils.format1.parse(time);
+            String result = DateUtils.format2.format(date);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void initListener() {
+        mSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReportData reportData = new ReportData();
+                if (mAddReportActivity != null) {
+//                    private String company; //巡查单位
+//                    private String developmentCompany;//	建设单位
+//                    private String constructionCompany;//	施工单位
+//                    private String supervisionCompany;//		监理单位
+                    String address = mAddReportActivity.mEditAddress.getText().toString();
+                    String company = mAddReportActivity.mEditCompany.getText().toString();
+                    String type = mAddReportActivity.mTypes.getText().toString();
+                    String developmentCompany = mAddReportActivity.mBuildCompany.getText().toString();
+                    String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
+                    String supervisionCompany = mAddReportActivity.mSuperCompany.getText().toString();
+                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
+                            || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
+                        Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    reportData.setAddress(address);
+                    reportData.setCompany(company);
+                    reportData.setDevelopmentCompany(developmentCompany);
+                    reportData.setConstructionCompany(constructionCompany);
+                    reportData.setSupervisionCompany(supervisionCompany);
+                    //TODO type?
+                }
+                String checkPeopleName = mEditName.getText().toString();
+                String beginTime = mBeginTime.getText().toString();
+                String endTime = mEndTime.getText().toString();
+                String reportName = mEditReportName.getText().toString();
+                String reportMsg = mEditReportMsg.getText().toString();
+                boolean visit = mRadioYes.isChecked();
+                String visitTime = mRevisitTime.getText().toString();
+
+                if (TextUtils.isEmpty(checkPeopleName) || TextUtils.isEmpty(reportMsg) || TextUtils.isEmpty(reportName) ||
+                        parseTime(beginTime) == null || parseTime(endTime) == null || (visit && parseTime(visitTime) == null)) {
+                    Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //TODO
+            }
+        });
+
+        mRadioYes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                RelativeLayout relativeLayout = (RelativeLayout) getView().findViewById(R.id.relative_revisit_time);
+                if (isChecked) {
+                    relativeLayout.setVisibility(View.VISIBLE);
+                } else {
+                    relativeLayout.setVisibility(View.GONE);
+                }
+            }
+        });
         mBeginTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                final Calendar c = Calendar.getInstance();*/
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -121,7 +209,6 @@ public class RevisitFragment extends BaseFragment {
         mEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                final Calendar c = Calendar.getInstance();*/
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

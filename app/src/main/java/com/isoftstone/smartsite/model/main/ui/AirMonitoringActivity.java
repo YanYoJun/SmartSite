@@ -49,6 +49,7 @@ import com.isoftstone.smartsite.http.EQIRankingBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MonthlyComparisonBean;
 import com.isoftstone.smartsite.http.WeatherConditionBean;
+import com.isoftstone.smartsite.model.tripartite.view.MyListView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -156,6 +157,13 @@ public class AirMonitoringActivity extends Activity {
         mBarChart = (HorizontalBarChart)findViewById(R.id.chart1);
         mPieChart = (PieChart)findViewById(R.id.chart2);
         mLineChart = (LineChart)findViewById(R.id.chart3);
+
+        /*zhangwei  begin*/
+        MyListView lv = (MyListView) findViewById(R.id.lv);
+        lv.setAdapter(new AirMonitoringRankAdapter(this));
+
+        /*zhangwei  end*/
+
     }
     private void setOnCliceked(){
         mImageView_back.setOnClickListener(new View.OnClickListener() {
@@ -180,28 +188,28 @@ public class AirMonitoringActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HANDLER_GET_RANKING_START:{
-                     Thread thread = new Thread(){
-                         @Override
-                         public void run() {
-                             getEqiDataRanking();
-                         }
-                     };
-                     thread.start();
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getEqiDataRanking();
+                        }
+                    };
+                    thread.start();
                 }
-                     break;
+                break;
                 case HANDLER_GET_RANKING_END:{
                     setHorizontalBarChart();
                     setSpinnerData();
                 }
-                     break;
+                break;
                 case HANDLER_GET_DAYS_PROPORTION_START:{
-                     Thread thread = new Thread(){
-                         @Override
-                         public void run() {
-                             getWeatherConditionDay();
-                         }
-                     };
-                     thread.start();
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            getWeatherConditionDay();
+                        }
+                    };
+                    thread.start();
                 }
                 break;
                 case HANDLER_GET_DAYS_PROPORTION_END:{
@@ -537,7 +545,6 @@ public class AirMonitoringActivity extends Activity {
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         ll1.setTextSize(10f);
         //ll1.setTypeface(tf);
-
         LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
         ll2.setLineWidth(4f);
         ll2.enableDashedLine(10f, 10f, 0f);

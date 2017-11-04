@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/white">
-                
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
@@ -109,6 +109,11 @@
                     android:layout_height="1px"
                     android:layout_marginBottom="16dp"
                     android:background="@color/gray_9999"/>
+                <com.isoftstone.smartsite.model.tripartite.view.MyListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:id="@+id/lv"></com.isoftstone.smartsite.model.tripartite.view.MyListView>
             </LinearLayout>
 
             <com.github.mikephil.charting.charts.HorizontalBarChart

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,12 +28,13 @@ import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ITime;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
+import com.isoftstone.smartsite.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
 
 /**
  * 回访下面的白嫩及矿
@@ -98,6 +100,7 @@ public class RevisitFragment extends BaseFragment {
         initView();
         initListener();
         initGridView();
+        restoreData();
     }
 
     private void initView() {
@@ -128,6 +131,70 @@ public class RevisitFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void saveData() {
+        SPUtils.saveString("add_report_fragment_check_people_name", mEditName.getText().toString());
+        String beginTime = mBeginTime.getText().toString();
+        String endTime = mEndTime.getText().toString();
+        SPUtils.saveString("add_report_fragment_report_name", mEditReportName.getText().toString());
+        SPUtils.saveString("add_report_fragment_report_msg", mEditReportMsg.getText().toString());
+
+        if (parseTime(beginTime) != null) {
+            SPUtils.saveString("add_report_fragment_begin_time", beginTime);
+        }
+        if (parseTime(endTime) != null) {
+            SPUtils.saveString("add_report_framgent_end_time", endTime);
+        }
+        boolean visit = mRadioYes.isChecked();
+        String visitTime = mEditRevisitTime.getText().toString();
+        SPUtils.saveBoolean("add_report_fragment_isVisit", visit);
+        Log.e(TAG, "saveData:" + visitTime);
+        if (parseTime(visitTime) != null) {
+            Log.e(TAG, "saveData into sp");
+            SPUtils.saveString("add_report_fragment_visit_time", visitTime);
+        }
+    }
+
+    public void restoreData() {
+        if (mAddReportActivity != null) {
+            mEditName.setText(SPUtils.getString("add_report_fragment_check_people_name", ""));
+            mEditReportName.setText(SPUtils.getString("add_report_fragment_report_name", ""));
+            mEditReportMsg.setText(SPUtils.getString("add_report_fragment_report_msg", ""));
+
+            String beginTime = SPUtils.getString("add_report_fragment_begin_time", null);
+            String endTime = SPUtils.getString("add_report_framgent_end_time", null);
+            String visitTime = SPUtils.getString("add_report_fragment_visit_time", null);
+            Log.e(TAG, "visittime:" + visitTime);
+            if (beginTime != null) {
+                mBeginTime.setText(beginTime);
+                mBeginTime.setTextColor(getActivity().getResources().getColor(R.color.main_text_color));
+            }
+            if (endTime != null) {
+                mEndTime.setText(endTime);
+                mEndTime.setTextColor(getActivity().getResources().getColor(R.color.main_text_color));
+            }
+            if (beginTime != null && endTime != null) {
+                mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
+            }
+            boolean isVisit = SPUtils.getBoolean("add_report_fragment_isVisit", true);
+            if (isVisit) {
+                mRadioYes.setChecked(true);
+                mRadioNo.setChecked(false);
+                RelativeLayout relativeLayout = (RelativeLayout) getView().findViewById(R.id.relative_revisit_time);
+                relativeLayout.setVisibility(View.VISIBLE);
+            } else {
+                mRadioNo.setChecked(true);
+                mRadioYes.setChecked(false);
+                RelativeLayout relativeLayout = (RelativeLayout) getView().findViewById(R.id.relative_revisit_time);
+                relativeLayout.setVisibility(View.GONE);
+            }
+            if (visitTime != null) {
+                mEditRevisitTime.setText(visitTime);
+                mEditRevisitTime.setTextColor(getActivity().getResources().getColor(R.color.main_text_color));
+                mRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
+            }
         }
     }
 

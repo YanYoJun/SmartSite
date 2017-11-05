@@ -17,10 +17,14 @@ import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MobileHomeBean;
+import com.isoftstone.smartsite.http.WeatherLiveBean;
 import com.isoftstone.smartsite.model.message.data.ThreePartyData;
 import com.isoftstone.smartsite.model.message.ui.DetailsActivity;
 import com.isoftstone.smartsite.model.message.ui.MsgFragment;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -62,8 +66,10 @@ public class MainFragment extends BaseFragment{
 
     public static final  int HANDLER_GET_HOME_DATA_START = 1;
     public static final  int HANDLER_GET_HOME_DATA_END = 2;
-    public static final  int HANDLER_GET_MESSAGE_START = 3;
-    public static final  int HANDLER_GET_MESSAGE_END = 4;
+    public static final  int HANDLER_GET_WEATHER_DATA_START = 3;
+    public static final  int HANDLER_GET_WEATHER_DATA_END = 4;
+    private MobileHomeBean mMobileHomeBean = null;
+    private WeatherLiveBean mWeatherLiveBean = null;
 
     @Override
     protected int getLayoutRes() {
@@ -74,6 +80,7 @@ public class MainFragment extends BaseFragment{
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
         mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_START);
+        mHandler.sendEmptyMessage(HANDLER_GET_WEATHER_DATA_START);
     }
 
     private void initView(){
@@ -157,34 +164,44 @@ public class MainFragment extends BaseFragment{
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case HANDLER_GET_HOME_DATA_START:
-                {
-                    getMobileHomeData();
+                case HANDLER_GET_HOME_DATA_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            mMobileHomeBean = mHttpPost.getMobileHomeData();
+                            mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_END);
+                        }
+                    };
+                    thread.start();
                 }
                     break;
-                case HANDLER_GET_HOME_DATA_END:
-                {
+                case HANDLER_GET_HOME_DATA_END:{
                     setMobileHomeDataToView();
                 }
                     break;
-                case HANDLER_GET_MESSAGE_START:
+                case HANDLER_GET_WEATHER_DATA_START:{
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String time = df.format(new Date());
+                            mWeatherLiveBean = mHttpPost.getWeatherLive("1",time);
+                            mHandler.sendEmptyMessage(HANDLER_GET_WEATHER_DATA_END);
+                        }
+                    };
+                    thread.start();
+                }
                     break;
-                case HANDLER_GET_MESSAGE_END:
+                case HANDLER_GET_WEATHER_DATA_END:{
+                    setWeatherData();
+                }
                     break;
             }
         }
     };
 
-    private MobileHomeBean mMobileHomeBean = null;
-    private  void getMobileHomeData(){
-        Thread thread = new Thread(){
-            @Override
-            public void run() {
-                mMobileHomeBean = mHttpPost.getMobileHomeData();
-                mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_END);
-            }
-        };
-        thread.start();
+    private void setWeatherData(){
+          //设置天气情况
     }
 
     private void setMobileHomeDataToView(){

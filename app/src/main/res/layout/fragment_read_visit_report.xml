@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="张三丰"
+                android:gravity="center"
                 android:textColor="@color/des_text_color"
                 android:textSize="12sp" />
         </LinearLayout>

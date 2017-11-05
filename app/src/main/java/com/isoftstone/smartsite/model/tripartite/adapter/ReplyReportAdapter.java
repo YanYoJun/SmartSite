@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReplyReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
 
@@ -190,6 +192,12 @@ public class ReplyReportAdapter extends BaseAdapter {
         lab_creator_name.setText(data.getCreator());
 
         time.setText(date);
+        ImageView img = (ImageView) v.findViewById(R.id.img_status);
+        int status = data.getStatus();
+        if (status > 1) {
+            status--;
+        }
+        img.setImageDrawable(mContext.getResources().getDrawable(TripartiteActivity.STATUS_IMG[status]));
 
         TextView msg = (TextView) v.findViewById(R.id.lab_msg);
         msg.setText(data.getContent());

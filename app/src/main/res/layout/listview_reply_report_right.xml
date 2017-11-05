@@ -36,11 +36,14 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="张三丰"
+            android:text="张"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="@color/des_text_color"
             android:textSize="12sp" />
 
         <ImageView
+            android:id="@+id/img_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"

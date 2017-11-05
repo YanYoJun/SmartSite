@@ -33,6 +33,7 @@
                 android:src="@drawable/default_head" />
 
             <TextView
+                android:gravity="center"
                 android:id="@+id/lab_creator_name"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"

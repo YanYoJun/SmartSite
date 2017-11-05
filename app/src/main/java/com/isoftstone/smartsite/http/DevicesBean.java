@@ -1,10 +1,15 @@
 package com.isoftstone.smartsite.http;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/10/29.
  */
 
-public class DevicesBean {
+public class DevicesBean implements Serializable{
+
+    private static final long serialVersionUID = 0x0001L;
+
     private  String  deviceId;
     private  String  deviceCoding;
     private  String  deviceName;
@@ -87,7 +92,9 @@ public class DevicesBean {
         this.latitude = latitude;
     }
 
-    public static class DevicesArch{
+    public static class DevicesArch implements Serializable{
+        private static final long serialVersionUID = 0x0002L;
+
         private String id;
         private String parentId ;
         private String  parentName;

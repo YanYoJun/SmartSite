@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,8 +18,13 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -43,25 +50,32 @@ import java.util.Map;
  */
 public class IndividualCenterFragment extends BaseFragment implements UploadUtil.OnUploadProcessListener, View.OnClickListener{
     private boolean mHandledPress = false;
-    private ImageView mImageView;//用户头像IV
+    private ImageView mHeadImageView;//用户头像IV
     private Bitmap mHeadBitmap;//裁剪后得图片
     String picPath;//头像路径
     private PermissionsChecker mPermissionsChecker;
     private static final int REQUEST_CODE = 100; // 权限检查请求码
 
     private Fragment mCurrentFrame;
-    private TextView mUserNameView;
+    private EditText mUserNameView;
+    private ImageView mUserName;
     private TextView mUserRoleView;
     private TextView mUserSexView;
     private TextView mUserAccountView;
-    private TextView mUserPwdView;
-    private TextView mUserPhoneNumView;
+    private EditText mUserPwdView;
+    private ImageView mUserPwd;
+    private RelativeLayout mShowPwdLayout;
+    private EditText mUserPhoneNumView;
+    private ImageView mUserPhoneNum;
     private TextView mUserCompanyView;
-    private TextView mUserAutographView;
+    private ImageView mUserCompany;
+    private EditText mUserAutographView;
+    private ImageView mUserAutograph;
     private RelativeLayout mUserCompanySelectLayout;
     boolean isShowCancelOption = true;
     private Long mUserId;
     private Bitmap mUploadHeadBitmap;
+    private boolean isShowPwd = false;
 
     private RadioGroup mRadioGroup;
     private RadioButton mRadioButton1;
@@ -130,99 +144,27 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mPermissionsChecker = new PermissionsChecker(getActivity().getApplicationContext());
 
         picPath = Environment.getExternalStorageDirectory() + "/smartsite/";
-        mImageView = (ImageView) rootView.findViewById(R.id.head_iv);
-        mUserNameView = (TextView) rootView.findViewById(R.id.user_full_name);
+        mHeadImageView = (ImageView) rootView.findViewById(R.id.head_iv);
+        mUserNameView = (EditText) rootView.findViewById(R.id.user_name);
+        mUserName = (ImageView) rootView.findViewById(R.id.img_edit_2);
         mUserRoleView = (TextView) rootView.findViewById(R.id.user_role);
         mUserSexView = (TextView) rootView.findViewById(R.id.user_sex);
         mUserAccountView = (TextView) rootView.findViewById(R.id.user_account);
-        mUserPwdView = (TextView) rootView.findViewById(R.id.user_pwd);
-        mUserPhoneNumView = (TextView) rootView.findViewById(R.id.user_phoneNum);
+        mUserPwdView = (EditText) rootView.findViewById(R.id.user_pwd);
+        mUserPwd = (ImageView) rootView.findViewById(R.id.img_edit_6);
+        mShowPwdLayout = (RelativeLayout)  rootView.findViewById(R.id.show_pwd_layout);
+        mUserPhoneNumView = (EditText) rootView.findViewById(R.id.user_phoneNum);
+        mUserPhoneNum = (ImageView) rootView.findViewById(R.id.img_edit_7);
         mUserCompanyView = (TextView) rootView.findViewById(R.id.user_company);
-        mUserAutographView = (TextView) rootView.findViewById(R.id.user_autograph);
+        mUserCompany = (ImageView) rootView.findViewById(R.id.img_edit_8);
+        mUserAutographView = (EditText) rootView.findViewById(R.id.user_autograph);
+        mUserAutograph = (ImageView) rootView.findViewById(R.id.img_edit_9);
         mUserCompanySelectLayout = (RelativeLayout)  rootView.findViewById(R.id.droparrow_layout);
         mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radio_group);
         mRadioButton1 = (RadioButton) rootView.findViewById(R.id.radio_button_1);
         mRadioButton2 = (RadioButton) rootView.findViewById(R.id.radio_button_2);
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if (checkedId == mRadioButton1.getId()) {
-                    mUserSexView.setText(SEX_MALE_CODE);
-                } else {
-                    mUserSexView.setText(SEX_FEMALE_CODE);
-                }
-            }
-        });
-
-
-
-        mUserCompanySelectLayout.setOnClickListener(new LinearLayout.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                isShowCancelOption = false;
-                new ActionSheetDialog(getContext())
-                        .builder(isShowCancelOption)
-                        .setCancelable(true)
-                        .setCanceledOnTouchOutside(true)
-                        .addSheetItem(mContext.getText(R.string.user_company_1).toString(),
-                                ActionSheetDialog.SheetItemColor.Blue,
-                                new ActionSheetDialog.OnSheetItemClickListener() {
-
-                                    @Override
-                                    public void onClick(int which) {
-                                        mUserCompanyView.setText(R.string.user_company_1);
-                                    }
-                                })
-                        .addSheetItem(mContext.getText(R.string.user_company_2).toString(),
-                                ActionSheetDialog.SheetItemColor.Blue,
-                                new ActionSheetDialog.OnSheetItemClickListener() {
-
-                                    @Override
-                                    public void onClick(int which) {
-                                        mUserCompanyView.setText(R.string.user_company_2);
-                                    }
-                                })
-                        .addSheetItem(mContext.getText(R.string.user_company_3).toString(),
-                                ActionSheetDialog.SheetItemColor.Blue,
-                                new ActionSheetDialog.OnSheetItemClickListener() {
-
-                                    @Override
-                                    public void onClick(int which) {
-                                        mUserCompanyView.setText(R.string.user_company_3);
-                                    }
-                                }).show();
-            }
-        });
-
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isShowCancelOption = true;
-                new ActionSheetDialog(getContext())
-                        .builder(isShowCancelOption)
-                        .setCancelable(true)
-                        .setCanceledOnTouchOutside(true)
-                        .addSheetItem(mContext.getText(R.string.album).toString(),
-                                ActionSheetDialog.SheetItemColor.Blue,
-                                new ActionSheetDialog.OnSheetItemClickListener() {
-
-                                    @Override
-                                    public void onClick(int which) {
-                                        choseHeadImageFromGallery();
-                                    }
-                                })
-                        .addSheetItem(mContext.getText(R.string.camera).toString(),
-                                ActionSheetDialog.SheetItemColor.Blue,
-                                new ActionSheetDialog.OnSheetItemClickListener() {
-
-                                    @Override
-                                    public void onClick(int which) {
-                                        choseHeadImageFromCameraCapture();
-                                    }
-                                }).show();
-            }
-        });
+        registerListener();
     }
 
     @Override
@@ -244,14 +186,14 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                 // 如果是调用相机拍照时
                 case CAMERA_REQUEST_CODE:
                     File temp = new File(Environment.getExternalStorageDirectory()
-                            + "/head.jpg");
+                            + "/" + SystemFragment.HEAD_IMAGE_NAME);
                     cropPhoto(Uri.fromFile(temp));//裁剪图片
                     break;
                 case RESULECODE:
                     if (intent != null) {
                         Bundle extras = intent.getExtras();
                         mHeadBitmap = extras.getParcelable("data");
-                        mImageView.setImageBitmap(mHeadBitmap);
+                        mHeadImageView.setImageBitmap(mHeadBitmap);
                         if (mHeadBitmap != null) {
                             setPicToView(mHeadBitmap);//保存在SD卡中
                         }
@@ -280,7 +222,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         if (PhoneInfoUtils.hasSdcard()) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-                    "head.jpg")));
+                    SystemFragment.HEAD_IMAGE_NAME)));
             startActivityForResult(intent, CAMERA_REQUEST_CODE);//采用ForResult打开
         }
     }
@@ -316,7 +258,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         File file = new File(picPath);
         // 创建文件夹
         file.mkdirs();
-        String fileName = picPath + "head.jpg";//图片名字
+        String fileName = picPath + SystemFragment.HEAD_IMAGE_NAME;//图片名字
         try {
             b = new FileOutputStream(fileName);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
@@ -464,6 +406,17 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
                 //back toolbar click
                 Fragment systemFragment = new SystemFragment();
                 changeToAnotherFragment(mCurrentFrame, systemFragment);
+                break;
+            case R.id.show_pwd_layout:
+                isShowPwd = !isShowPwd;
+                if (isShowPwd) {
+                    //显示密码
+                    mUserPwdView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    //隐藏密码
+                    mUserPwdView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                break;
             default:
                 break;
         }
@@ -525,6 +478,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserAutographView.setText(userBean.getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
 
+        Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
+        if (null != headBitmap) {
+            mHeadImageView.setImageBitmap(headBitmap);
+        } else {
+            mHeadImageView.setImageResource(R.drawable.default_head);
+        }
+
+
+
         if (SEX_MALE_CODE.equals(mUserSexView.getText().toString())) {
             mRadioButton1.setChecked(true);
             mRadioButton2.setChecked(false);
@@ -565,16 +527,15 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //    userBean.setPassword("bmeB4000");
         //}
         if (null !=  mUserPhoneNumView.getText()) {
-            //userBean.setTelephone(mUserPhoneNumView.getText().toString());
-            userBean.setTelephone("13476181999");
+            userBean.setTelephone(mUserPhoneNumView.getText().toString());
         }
         if (null !=  mUserCompanyView.getText()) {
            userBean.setDepartmentId(mUserCompanyView.getText().toString());
            //userBean.setDepartmentId("234");
         }
-        //if (null !=  mUserAutographView.getText()) {
-         //   userBean.setDescription(mUserAutographView.getText().toString());
-        //}
+        if (null !=  mUserAutographView.getText()) {
+            userBean.setDescription(mUserAutographView.getText().toString());
+        }
         return userBean;
     }
 
@@ -589,4 +550,171 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             initUserInfo(userBean);
         }
     }
+
+    private void registerListener() {
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (checkedId == mRadioButton1.getId()) {
+                    mUserSexView.setText(SEX_MALE_CODE);
+                } else {
+                    mUserSexView.setText(SEX_FEMALE_CODE);
+                }
+            }
+        });
+
+        mShowPwdLayout.setOnClickListener(this);
+
+        mUserCompanySelectLayout.setOnClickListener(new LinearLayout.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                isShowCancelOption = false;
+                new ActionSheetDialog(getContext())
+                        .builder(isShowCancelOption)
+                        .setCancelable(true)
+                        .setCanceledOnTouchOutside(true)
+                        .addSheetItem(mContext.getText(R.string.user_company_1).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_1);
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.user_company_2).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_2);
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.user_company_3).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        mUserCompanyView.setText(R.string.user_company_3);
+                                    }
+                                }).show();
+            }
+        });
+
+        mHeadImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isShowCancelOption = true;
+                new ActionSheetDialog(getContext())
+                        .builder(isShowCancelOption)
+                        .setCancelable(true)
+                        .setCanceledOnTouchOutside(true)
+                        .addSheetItem(mContext.getText(R.string.album).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        choseHeadImageFromGallery();
+                                    }
+                                })
+                        .addSheetItem(mContext.getText(R.string.camera).toString(),
+                                ActionSheetDialog.SheetItemColor.Blue,
+                                new ActionSheetDialog.OnSheetItemClickListener() {
+
+                                    @Override
+                                    public void onClick(int which) {
+                                        choseHeadImageFromCameraCapture();
+                                    }
+                                }).show();
+            }
+        });
+
+        mUserNameView.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mUserName.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserName.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        mUserPwdView.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mUserPwd.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserPwd.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        mUserAutographView.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s != null && s.length() != 0) {
+                    mUserAutograph.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserAutograph.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mUserAutograph.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserAutograph.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        mUserPhoneNumView.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s != null && s.length() != 0) {
+                    mUserPhoneNum.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserPhoneNum.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() != 0) {
+                    mUserPhoneNum.setImageResource(R.drawable.editcolumn);
+                } else {
+                    mUserPhoneNum.setImageResource(R.drawable.addcolumn);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
 }

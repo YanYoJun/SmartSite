@@ -50,6 +50,8 @@ public class MsgFragment extends BaseFragment {
     private int[] dateView = new int[]{R.id.lab_vcr_time, R.id.lab_environ_time, R.id.lab_thirpartite_time};
     private int[] titleView = new int[]{R.id.lab_vcr_msg, R.id.lab_environ_msg, R.id.lab_threeparty_msg};
 
+    private boolean mInForgourd = false;
+
 
     @Override
     protected int getLayoutRes() {
@@ -63,9 +65,9 @@ public class MsgFragment extends BaseFragment {
 
     private void init() {
         mActivity = getActivity();
-        mVcr = (RelativeLayout) mActivity.findViewById(R.id.conlayout_vcr);
-        mEnviron = (RelativeLayout) mActivity.findViewById(R.id.conlayout_environ);
-        mTripartite = (RelativeLayout) mActivity.findViewById(R.id.conlayout_thirpartite);
+        mVcr = (RelativeLayout) rootView.findViewById(R.id.conlayout_vcr);
+        mEnviron = (RelativeLayout) rootView.findViewById(R.id.conlayout_environ);
+        mTripartite = (RelativeLayout) rootView.findViewById(R.id.conlayout_thirpartite);
 
         mVcr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,9 +97,16 @@ public class MsgFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mInForgourd = true;
         new QueryMsgTask(1).execute();
         new QueryMsgTask(2).execute();
         new QueryMsgTask(3).execute();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mInForgourd = false;
     }
 
     private class QueryMsgTask extends AsyncTask<String, Integer, SparseArray<Object>> {
@@ -135,9 +144,12 @@ public class MsgFragment extends BaseFragment {
         @Override
         protected void onPostExecute(SparseArray<Object> s) {
             super.onPostExecute(s);
-            TextView unReadMessageView = (TextView) getView().findViewById(unReadMsgCountView[mQueryType - 1]);
-            TextView title = (TextView) getView().findViewById(titleView[mQueryType - 1]);
-            TextView time = (TextView) getView().findViewById(dateView[mQueryType - 1]);
+            if(!mInForgourd){
+                return;
+            }
+            TextView unReadMessageView = (TextView) rootView.findViewById(unReadMsgCountView[mQueryType - 1]);
+            TextView title = (TextView) rootView.findViewById(titleView[mQueryType - 1]);
+            TextView time = (TextView) rootView.findViewById(dateView[mQueryType - 1]);
             if ((Integer) s.get(1) == 0) {
                 unReadMessageView.setVisibility(View.GONE);
             } else {

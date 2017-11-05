@@ -1,9 +1,13 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.PatrolBean;
 
 /**
  * Created by yanyongjun on 2017/10/19.
@@ -11,7 +15,16 @@ import com.isoftstone.smartsite.base.BaseFragment;
  */
 
 public class ReadReportFrag extends BaseFragment {
-
+    private BaseActivity mActivity = null;
+    private PatrolBean mData = null;
+    private TextView mLabAddress = null;
+    private TextView mLabCompany = null;
+    private TextView mLabStatus = null;
+    private TextView mLabTypes = null;
+    private TextView mBuildCompany = null;
+    private TextView mCosCompany = null;
+    private TextView mSupCompany = null;
+    private View mView = null;
 
     @Override
     protected int getLayoutRes() {
@@ -20,9 +33,37 @@ public class ReadReportFrag extends BaseFragment {
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-
+        mActivity = (BaseActivity) getActivity();
+        initView();
     }
 
+    private void initView() {
+        if (mView == null) {
+            mView = getView();
+        }
+        mLabAddress = (TextView) mView.findViewById(R.id.inspect_report_address);
+        mLabCompany = (TextView) mView.findViewById(R.id.inspect_report_company);
+        mLabStatus = (TextView) mView.findViewById(R.id.inspect_report_status);
+        mLabTypes = (TextView) mView.findViewById(R.id.inspect_report_types);
+        mBuildCompany = (TextView) mView.findViewById(R.id.inspect_report_build_company_read);
+        mCosCompany = (TextView) mView.findViewById(R.id.inspect_report_construction_company);
+        mSupCompany = (TextView) mView.findViewById(R.id.inspect_report_supervision_company);
+    }
+
+    private void initViewData() {
+        mLabAddress.setText(mData.getAddress());
+        mLabCompany.setText(mData.getCompany());
+        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[mData.getStatus() - 1]); //TODO
+//        mLabTypes.setText(mData.get); //TODO
+        mBuildCompany.setText(mData.getDevelopmentCompany());
+        mCosCompany.setText(mData.getConstructionCompany());
+        mSupCompany.setText(mData.getSupervisionCompany());
+    }
+
+    public void notifyDataChanged() {
+        mData = mActivity.getReportData();
+        initViewData();
+    }
 
 
 }

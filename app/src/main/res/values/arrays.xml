@@ -20,6 +20,14 @@
         <item>下拉选择3</item>
         <item>下拉选择4</item>
     </array>
+
+    <array name="status_array">
+        <item>待补充</item>
+        <item>待处理</item>
+        <item>待回访</item>
+        <item>已退回</item>
+        <item>已验收</item>
+    </array>
     <!--msg   end -->
     <!--system   start -->
 

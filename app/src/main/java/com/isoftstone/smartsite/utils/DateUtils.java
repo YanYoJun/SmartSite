@@ -13,6 +13,7 @@ import java.util.TimeZone;
 public class DateUtils {
     public final static SimpleDateFormat format1= new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public final static SimpleDateFormat format3 = new SimpleDateFormat("yyyy年MM月dd日");
 
     public static String checkDataTime(String dataTime, boolean isBeginValue) {
         StringBuilder stringBuilder = new StringBuilder();

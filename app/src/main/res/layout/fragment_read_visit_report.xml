@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -41,6 +40,7 @@
                 android:src="@drawable/default_head" />
 
             <TextView
+                android:id="@+id/lab_creator_name"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -138,6 +138,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/lab_report_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -154,6 +155,7 @@
                 android:numColumns="4"></GridView>
 
             <TextView
+                android:id="@+id/lab_next_visit_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

@@ -51,7 +51,7 @@ public class InspectReportAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.listview_inspect_report_item, null);
         }
@@ -66,7 +66,7 @@ public class InspectReportAdapter extends BaseAdapter {
             title.setText(reportData.getAddress());
             name.setText(reportData.getCreator());
             company.setText(reportData.getCompany());
-            imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[reportData.getStatus()-1]));
+            imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[reportData.getStatus() - 1]));
 
             View btnView = view.findViewById(R.id.linear_read_report);
             if (btnView != null) {
@@ -74,6 +74,7 @@ public class InspectReportAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, ReadReportActivity.class);
+                        intent.putExtra("_id", mDatas.get(position).getId());
                         mContext.startActivity(intent);
                     }
                 });
@@ -86,11 +87,12 @@ public class InspectReportAdapter extends BaseAdapter {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ReplyReportActivity.class);
+                            intent.putExtra("_id", mDatas.get(position).getId());
                             mContext.startActivity(intent);
                         }
                     });
                 }
-            }else{
+            } else {
                 btnReply.setClickable(false);
             }
             View btnRevisit = view.findViewById(R.id.linear_revisit_report);
@@ -100,10 +102,11 @@ public class InspectReportAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, RevistReportActivity.class);
+                        intent.putExtra("_id", mDatas.get(position).getId());
                         mContext.startActivity(intent);
                     }
                 });
-            }else{
+            } else {
                 btnRevisit.setClickable(false);
             }
 

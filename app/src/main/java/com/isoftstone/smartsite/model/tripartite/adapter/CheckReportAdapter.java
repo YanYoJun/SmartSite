@@ -50,7 +50,7 @@ public class CheckReportAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.listview_check_report_item, null);
         }
@@ -71,6 +71,7 @@ public class CheckReportAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ReadReportActivity.class);
+                    intent.putExtra("_id",mDatas.get(position).getId());
                     mContext.startActivity(intent);
                 }
             });
@@ -79,6 +80,7 @@ public class CheckReportAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, CheckReportActivity.class);
+                    intent.putExtra("_id",mDatas.get(position).getId());
                     mContext.startActivity(intent);
                 }
             });

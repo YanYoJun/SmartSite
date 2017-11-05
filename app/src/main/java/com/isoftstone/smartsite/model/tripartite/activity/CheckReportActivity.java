@@ -26,7 +26,7 @@ public class CheckReportActivity extends BaseActivity {
     private ReadReportFrag mReadReportFrag = null;
     private ViewReplyReportFragment mViewReplyReportFrag = null;
     private CheckFragment mCheckFrag = null;
-    public final static boolean isDebug = true;
+    public final static boolean isDebug = false;
     public final static int debugMsg = 158;
 
     public PatrolBean getReportData() {

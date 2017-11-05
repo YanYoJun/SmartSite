@@ -1,5 +1,7 @@
 package com.isoftstone.smartsite.http;
 
+import java.util.ArrayList;
+
 /**
  * Created by gone on 2017/10/31.
  */
@@ -16,6 +18,15 @@ public class PatrolBean {
     private String supervisionCompany;//		监理单位
     private boolean isVisit;  //	是否回访
     private String visitDate;  //	date(yyyy-MM-dd HH:mm:ss)	回访时间
+    private ArrayList<ReportBean> reports;
+
+    public ArrayList<ReportBean> getReports() {
+        return reports;
+    }
+
+    public void setReports(ArrayList<ReportBean> reports) {
+        this.reports = reports;
+    }
 
     public int getId() {
         return id;

@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/inspect_report_reply"
+                android:text="@string/check_report_submit_title"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -51,6 +51,7 @@
             android:id="@+id/linear_frag_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <fragment
@@ -58,18 +59,23 @@
                 android:name="com.isoftstone.smartsite.model.tripartite.fragment.ReadReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></fragment>
-            <fragment
-                android:id="@+id/frag_read_visit_report_view"
-                android:name="com.isoftstone.smartsite.model.tripartite.fragment.ReadVisitReportFrag"
+
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></fragment>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/shape_listview_year_bg" />
+
             <fragment
                 android:id="@+id/frag_view_reply_inspect_report"
                 android:name="com.isoftstone.smartsite.model.tripartite.fragment.ViewReplyReportFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>
+
             <fragment
-                android:id="@+id/frag_reply_inspect_report"
+                android:id="@+id/frag_check_inspect_report"
                 android:name="com.isoftstone.smartsite.model.tripartite.fragment.CheckFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></fragment>

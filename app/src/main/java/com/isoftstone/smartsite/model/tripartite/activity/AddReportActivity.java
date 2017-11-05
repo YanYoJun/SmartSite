@@ -119,9 +119,8 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void restoreData() {
-
-        mEditAddress.setText(SPUtils.getString("add_report_company", ""));
-        mEditCompany.setText(SPUtils.getString("add_report_address", ""));
+        mEditCompany.setText(SPUtils.getString("add_report_company", ""));
+        mEditAddress.setText(SPUtils.getString("add_report_address", ""));
         mEditBuildCompany.setText(SPUtils.getString("add_report_build_company", ""));
         mEditConsCompany.setText(SPUtils.getString("add_report_cons_company", ""));
         mEditSuperCompany.setText(SPUtils.getString("add_report_super_company", ""));

@@ -18,6 +18,8 @@ public class ReportBean {
     private String patrolDateStart;//	date(yyyy-MM-dd HH:mm)	巡查起始时间
     private String patrolDateEnd;//	date(yyyy-MM-dd HH:mm)	巡查结束时间
     private String patrolContent;	//string	巡查内容
+    private boolean visit;
+    private String visitDate;
 
     private PatrolBean patrol;
 
@@ -131,5 +133,21 @@ public class ReportBean {
 
     public void setPatrolContent(String patrolContent) {
         this.patrolContent = patrolContent;
+    }
+
+    public boolean isVisit() {
+        return visit;
+    }
+
+    public void setVisit(boolean visit) {
+        this.visit = visit;
+    }
+
+    public String getVisitDate() {
+        return visitDate;
+    }
+
+    public void setVisitDate(String visitDate) {
+        this.visitDate = visitDate;
     }
 }

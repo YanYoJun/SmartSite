@@ -1,6 +1,5 @@
 package com.isoftstone.smartsite.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.isoftstone.smartsite.http.HttpPost;
 
 /**
  * Created by zw on 2017/10/11.
@@ -20,6 +21,7 @@ public abstract class BaseFragment extends Fragment {
     protected View rootView;
 
     protected Context mContext;
+    protected HttpPost mHttpPost = null;
 
     //第一次加载才初始化View，避免重复调用onCreateView初始化数据
     private boolean isFirstCreate = true;
@@ -51,6 +53,7 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(isFirstCreate){
+            mHttpPost = new HttpPost();
             afterCreated(savedInstanceState);
             isFirstCreate = false;
         }

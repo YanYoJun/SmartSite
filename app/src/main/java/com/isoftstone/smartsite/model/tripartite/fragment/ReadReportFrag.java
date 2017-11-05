@@ -53,7 +53,11 @@ public class ReadReportFrag extends BaseFragment {
     private void initViewData() {
         mLabAddress.setText(mData.getAddress());
         mLabCompany.setText(mData.getCompany());
-        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[mData.getStatus() - 1]); //TODO
+        int status = mData.getStatus();
+        if(status > 1){
+            status--;
+        }
+        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]); //TODO
 //        mLabTypes.setText(mData.get); //TODO
         mBuildCompany.setText(mData.getDevelopmentCompany());
         mCosCompany.setText(mData.getConstructionCompany());

@@ -37,6 +37,9 @@ public class ReadReportActivity extends BaseActivity {
     protected void afterCreated(Bundle savedInstanceState) {
         Intent i = getIntent();
         mId = i.getIntExtra("_id", 0);
+        if(CheckReportActivity.isDebug){
+            mId = CheckReportActivity.debugMsg;
+        }
         mReadReportFrag = (ReadReportFrag) getSupportFragmentManager().findFragmentById(R.id.frag_inspect_report_view);
         mViewReplyReportFrag = (ViewReplyReportFragment) getSupportFragmentManager().findFragmentById(R.id.frag_view_reply_inspect_report);
         mHttpPost = new HttpPost();
@@ -46,7 +49,7 @@ public class ReadReportActivity extends BaseActivity {
     private class QueryBaseData extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            mData = mHttpPost.getPatrolReport("148"); //TODO
+            mData = mHttpPost.getPatrolReport(mId+""); //TODO
             return null;
         }
 

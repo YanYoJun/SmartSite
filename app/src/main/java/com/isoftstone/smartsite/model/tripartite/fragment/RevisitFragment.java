@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
@@ -205,7 +206,7 @@ public class RevisitFragment extends BaseFragment {
         mSubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReportData reportData = new ReportData();
+                PatrolBean reportData = new ReportData();
                 if (mAddReportActivity != null) {
 //                    private String company; //巡查单位
 //                    private String developmentCompany;//	建设单位
@@ -227,7 +228,16 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setDevelopmentCompany(developmentCompany);
                     reportData.setConstructionCompany(constructionCompany);
                     reportData.setSupervisionCompany(supervisionCompany);
+                    reportData.setDate(DateUtils.format2.format(new Date()));
+                    reportData.setCreator(mHttpPost.mLoginBean.getmName());
                     //TODO type?
+                    boolean visit = mRadioYes.isChecked();
+                    String visitTime = mEditRevisitTime.getText().toString();
+                    if (visit) {
+                        reportData.setVisitDate(parseTime(visitTime));
+                    }
+                } else {
+                    reportData = ((BaseActivity) getActivity()).getReportData();
                 }
                 String checkPeopleName = mEditName.getText().toString();
                 String beginTime = mBeginTime.getText().toString();
@@ -236,7 +246,7 @@ public class RevisitFragment extends BaseFragment {
                 String reportMsg = mEditReportMsg.getText().toString();
                 boolean visit = mRadioYes.isChecked();
                 String visitTime = mEditRevisitTime.getText().toString();
-                Log.e(TAG,"visit:"+visit+":"+visitTime);
+                Log.e(TAG, "visit:" + visit + ":" + visitTime);
 
                 if (TextUtils.isEmpty(reportName) || TextUtils.isEmpty(checkPeopleName) || TextUtils.isEmpty(reportMsg) || TextUtils.isEmpty(reportName) ||
                         parseTime(beginTime) == null || parseTime(endTime) == null || (visit && parseTime(visitTime) == null)) {
@@ -252,13 +262,13 @@ public class RevisitFragment extends BaseFragment {
                 reportBean.setCategory(1);
                 reportBean.setName(reportName);
                 reportBean.setDate(DateUtils.format2.format(new Date()));
-
+                reportBean.setVisit(visit);
                 reportData.setVisit(visit);
                 if (visit) {
-                    reportData.setVisitDate(parseTime(visitTime));
+                    reportBean.setVisitDate(parseTime(visitTime));
                 }
-                new SubReport(reportData,reportBean).execute();
-                Toast.makeText(getActivity(),"提交巡查报告成功",Toast.LENGTH_SHORT).show();
+                new SubReport(mAddReportActivity != null, reportData, reportBean).execute();
+                Toast.makeText(getActivity(), "提交巡查报告成功", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -391,10 +401,12 @@ public class RevisitFragment extends BaseFragment {
     }
 
     private class SubReport extends AsyncTask<String, Integer, String> {
-        private ReportData mReportData = null;
+        private PatrolBean mReportData = null;
         private ReportBean mRevisitData = null;
+        private boolean mIsAddReport = true;
 
-        public SubReport(ReportData data,ReportBean revisit) {
+        public SubReport(boolean isAddReport, PatrolBean data, ReportBean revisit) {
+            mIsAddReport = isAddReport;
             mReportData = data;
             mRevisitData = revisit;
         }
@@ -402,15 +414,18 @@ public class RevisitFragment extends BaseFragment {
         @Override
         protected String doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
-            if (mAddReportActivity != null) {
-                Log.e(TAG, "yanlog addReport");
+            Log.e(TAG, "yanlog addReport");
+            if (mIsAddReport) {
                 PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
                 mRevisitData.setPatrol(reponse);
                 mRevisitData.setCreator(reponse.getCreator());
-                mHttpPost.addPatrolVisit(mRevisitData);
-
-//                mHttpPost.getPatrolReport(reponse.getId()+"");
+            } else {
+                mRevisitData.setPatrol(mReportData);
+                mRevisitData.setCreator(mReportData.getCreator());
             }
+            mRevisitData.setDate(DateUtils.format2.format(new Date()));
+            mRevisitData.setStatus(2);
+            mHttpPost.addPatrolVisit(mRevisitData);
             return null;
         }
 

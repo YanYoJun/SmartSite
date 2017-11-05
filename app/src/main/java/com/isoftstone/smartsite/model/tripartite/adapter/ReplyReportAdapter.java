@@ -154,8 +154,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         time.setText(date);
-        TextView name = (TextView) v.findViewById(R.id.lab_name);
-        name.setText(data.getName());
+
         TextView msg = (TextView) v.findViewById(R.id.lab_msg);
         msg.setText(data.getContent());
 
@@ -191,8 +190,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         lab_creator_name.setText(data.getCreator());
 
         time.setText(date);
-        TextView name = (TextView) v.findViewById(R.id.lab_name);
-        name.setText(data.getName());
+
         TextView msg = (TextView) v.findViewById(R.id.lab_msg);
         msg.setText(data.getContent());
 

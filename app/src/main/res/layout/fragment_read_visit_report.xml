@@ -6,18 +6,13 @@
     android:orientation="vertical"
     >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:src="@drawable/shape_listview_year_bg" />
-
     <TextView
         android:id="@+id/lab_sub_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="2017-09-29"
+        android:layout_marginTop="32dp"
         android:textColor="@color/hit_text_color"
         android:textSize="12sp" />
 
@@ -151,6 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:visibility="gone"
                 android:layout_marginTop="16dp"
                 android:numColumns="4"></GridView>
 

@@ -38,7 +38,7 @@ public class HttpPost {
     private String   USER_UPDATE = URL + "/user/update";              //用户信息更改
     private String   USER_UPLOAD = URL + "/user/upload";              //用户头像修改
 
-    private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";   //获取视屏服务器参数
+    private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";   //获取视频服务器参数
     private String MOBILE_HOME = URL + "/mobile/home";                //获取首页数据
 
     private String EQI_DATA_RANKING = URL + "/eqi/dataRanking";      //区域月度综合排名

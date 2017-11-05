@@ -4,33 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/app_background">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:background="@color/mainColor"
-        android:gravity="center_vertical">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bigarrow"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/image_back"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textSize="16dp"
-            android:text="历史数据"
-            android:textColor="@color/white"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search"
-            android:layout_marginRight="16dp"
-            android:id="@+id/image_devices"/>
-    </LinearLayout>
+
+    <include layout="@layout/layout_toolbar_one_icon"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -51,8 +26,8 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设备编号："
-                android:textSize="16dp"
+                android:text="@string/res_code"
+                android:textSize="12dp"
                 android:textColor="@color/des_text_color"/>
             <TextView
                 android:id="@+id/textView1"

@@ -310,7 +310,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="视屏监控设备"
+                    android:text="视频监控设备"
                     android:textColor="#ffffff"
                     android:textSize="12dp" />
             </LinearLayout>
@@ -362,7 +362,7 @@
 
     </LinearLayout>
 
-    <!-- 视屏播放   环境监控   三方系统按钮 -->
+    <!-- 视频播放   环境监控   三方系统按钮 -->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="108dp"

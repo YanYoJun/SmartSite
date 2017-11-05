@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -58,6 +59,11 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     private String mResCode = null;
     private String mBeginTime = null;
     private String mEngTime = null;
+
+    private ImageButton mImageView_back = null;
+    private ImageButton mImageView_icon = null;
+    private TextView toolbar_title = null;
+
 
 
     @Override
@@ -120,6 +126,25 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mEndTimeLayout.setOnClickListener(this);
         mQueryText.setOnClickListener(this);
         gotomap.setOnClickListener(this);
+
+        mImageView_back = (ImageButton)findViewById(R.id.btn_back);
+        mImageView_icon = (ImageButton)findViewById(R.id.btn_icon);
+        toolbar_title = (TextView) findViewById(R.id.toolbar_title);
+        toolbar_title.setText("历史监控");
+        mImageView_icon.setVisibility(View.INVISIBLE);
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mImageView_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     /**

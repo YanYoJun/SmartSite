@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,8 +43,10 @@ import java.util.ArrayList;
  */
 
 public class PMHistoryInfoActivity extends Activity {
-    private ImageView mImageView_back = null;
-    private ImageView mImageView_devices = null;
+    private ImageButton mImageView_back = null;
+    private ImageButton mImageView_icon = null;
+    private TextView toolbar_title = null;
+
     private ListView mListView = null;
     private TextView mDevicesName = null;
     private TextView mMap = null;
@@ -66,8 +69,25 @@ public class PMHistoryInfoActivity extends Activity {
     }
 
     private void init(){
-        mImageView_back = (ImageView)findViewById(R.id.image_back);
-        mImageView_devices = (ImageView)findViewById(R.id.image_devices);
+        mImageView_back = (ImageButton)findViewById(R.id.btn_back);
+        mImageView_icon = (ImageButton)findViewById(R.id.btn_icon);
+        toolbar_title = (TextView) findViewById(R.id.toolbar_title);
+        toolbar_title.setText("历史数据");
+        mImageView_icon.setVisibility(View.INVISIBLE);
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mImageView_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         mListView = (ListView)findViewById(R.id.listview);
         mDevicesName = (TextView)findViewById(R.id.textView1);
         mMap = (TextView)findViewById(R.id.textView4);
@@ -76,19 +96,6 @@ public class PMHistoryInfoActivity extends Activity {
     }
 
     private void setOnCliceked(){
-        mImageView_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        mImageView_devices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         mGotoMap.setOnClickListener(new View.OnClickListener() {
             @Override

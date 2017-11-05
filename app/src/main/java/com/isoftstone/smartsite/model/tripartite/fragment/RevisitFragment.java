@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 import android.app.DatePickerDialog;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.PatrolBean;
+import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ITime;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
@@ -232,14 +235,30 @@ public class RevisitFragment extends BaseFragment {
                 String reportName = mEditReportName.getText().toString();
                 String reportMsg = mEditReportMsg.getText().toString();
                 boolean visit = mRadioYes.isChecked();
-                String visitTime = mRevisitTime.getText().toString();
+                String visitTime = mEditRevisitTime.getText().toString();
+                Log.e(TAG,"visit:"+visit+":"+visitTime);
 
-                if (TextUtils.isEmpty(checkPeopleName) || TextUtils.isEmpty(reportMsg) || TextUtils.isEmpty(reportName) ||
+                if (TextUtils.isEmpty(reportName) || TextUtils.isEmpty(checkPeopleName) || TextUtils.isEmpty(reportMsg) || TextUtils.isEmpty(reportName) ||
                         parseTime(beginTime) == null || parseTime(endTime) == null || (visit && parseTime(visitTime) == null)) {
                     Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                //TODO
+
+                ReportBean reportBean = new ReportBean();
+                reportBean.setPatrolUser(checkPeopleName);
+                reportBean.setPatrolDateStart(parseTime(beginTime));
+                reportBean.setPatrolDateEnd(parseTime(endTime));
+                reportBean.setContent(reportMsg);
+                reportBean.setCategory(1);
+                reportBean.setName(reportName);
+                reportBean.setDate(DateUtils.format2.format(new Date()));
+
+                reportData.setVisit(visit);
+                if (visit) {
+                    reportData.setVisitDate(parseTime(visitTime));
+                }
+                new SubReport(reportData,reportBean).execute();
+                Toast.makeText(getActivity(),"提交巡查报告成功",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -369,6 +388,35 @@ public class RevisitFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private class SubReport extends AsyncTask<String, Integer, String> {
+        private ReportData mReportData = null;
+        private ReportBean mRevisitData = null;
+
+        public SubReport(ReportData data,ReportBean revisit) {
+            mReportData = data;
+            mRevisitData = revisit;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+//            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
+            if (mAddReportActivity != null) {
+                Log.e(TAG, "yanlog addReport");
+                PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
+                mRevisitData.setPatrol(reponse);
+                mRevisitData.setCreator(reponse.getCreator());
+                mHttpPost.addPatrolVisit(mRevisitData);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            getActivity().finish();
+        }
     }
 
 

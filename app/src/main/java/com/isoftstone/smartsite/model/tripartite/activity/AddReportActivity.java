@@ -22,6 +22,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;
+import com.isoftstone.smartsite.model.tripartite.fragment.RevisitFragment;
 import com.isoftstone.smartsite.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -104,6 +105,8 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void saveData() {
+        RevisitFragment fragment = (RevisitFragment)getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
+        fragment.saveData();
         SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
         SPUtils.saveString("add_report_company", mEditCompany.getText().toString());
         SPUtils.saveString("add_report_build_company", mEditBuildCompany.getText().toString());
@@ -116,6 +119,7 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void restoreData() {
+
         mEditAddress.setText(SPUtils.getString("add_report_company", ""));
         mEditCompany.setText(SPUtils.getString("add_report_address", ""));
         mEditBuildCompany.setText(SPUtils.getString("add_report_build_company", ""));

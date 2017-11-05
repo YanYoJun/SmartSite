@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.data;
 
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.model.message.data.MsgData;
+import com.isoftstone.smartsite.utils.DateUtils;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ public class ReportData extends PatrolBean {
     public final static int STATUS_REJECT = 4;
     public final static int STATUS_CHECKED = 5;
     private Date mDate = null;
+    private Date mRevisitDate = null;
 
 //    private int id;	//	主键
 //    private String creator;//	创建人
@@ -57,6 +59,18 @@ public class ReportData extends PatrolBean {
             e.printStackTrace();
         }
         return mDate;
+    }
+
+    public Date getFormatRevisitDate(){
+        if(mRevisitDate != null){
+            return mRevisitDate;
+        }
+        try{
+            mRevisitDate = DateUtils.format2.parse(getVisitDate());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return mRevisitDate;
     }
 
     /**

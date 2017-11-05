@@ -58,6 +58,11 @@
                 android:name="com.isoftstone.smartsite.model.tripartite.fragment.ReadReportFrag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></fragment>
+            <fragment
+                android:id="@+id/frag_read_visit_report_view"
+                android:name="com.isoftstone.smartsite.model.tripartite.fragment.ReadVisitReportFrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></fragment>
 
             <fragment
                 android:id="@+id/frag_view_reply_inspect_report"

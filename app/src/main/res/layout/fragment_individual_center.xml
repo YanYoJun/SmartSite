@@ -61,8 +61,7 @@
                     android:layout_height="48dp"
                     android:layout_toLeftOf="@id/litarrow_iv"
                     android:layout_marginRight="6dp"
-                    android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/default_head" />
+                    android:layout_centerInParent="true"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -90,6 +89,7 @@
                 android:layout_toRightOf="@id/img_edit_2">
 
                 <TextView
+                    android:id="@+id/name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -98,15 +98,10 @@
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/user_full_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:text="刘王孙"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/user_name"
+                    style="@style/add_report_edittext"
+                    android:layout_toRightOf="@id/name_tv"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -155,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:text="监控人员"
+                    android:text=""
                     android:textColor="@color/des_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -277,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:text="账户123456"
+                    android:text=""
                     android:textColor="@color/des_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -313,6 +308,7 @@
                 android:layout_toRightOf="@id/img_edit_6">
 
                 <TextView
+                    android:id="@+id/pwd_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -321,34 +317,48 @@
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/password_visible_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/show_pwd_layout"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    app:srcCompat="@drawable/passwordvisible"/>
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_below="@id/password_visible_iv"
-                    app:srcCompat="@drawable/passwordhide"
-                    android:layout_toRightOf="@+id/user_pwd"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    <ImageView
+                        android:id="@+id/password_visible_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/passwordvisible"/>
 
-                <TextView
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/password_visible_iv"
+                        android:layout_marginTop="3dp"
+                        app:srcCompat="@drawable/passwordhide"
+                        android:layout_alignLeft="@+id/password_visible_iv"
+                        android:layout_alignStart="@+id/password_visible_iv" />
+
+                </RelativeLayout>
+
+                <EditText
                     android:id="@+id/user_pwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/password_visible_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:layout_marginRight="6dp"
-                    android:text="........"
+                    android:background="@null"
                     android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:singleLine="true"
+                    android:gravity="center_vertical|right"
+                    android:layout_toRightOf="@id/pwd_tv"
+                    android:layout_toLeftOf="@id/show_pwd_layout"
+                    android:inputType="textPassword"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -377,6 +387,7 @@
                 android:layout_toRightOf="@id/img_edit_7">
 
                 <TextView
+                    android:id="@+id/phone_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -385,15 +396,11 @@
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/user_phoneNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:text=""
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                    android:inputType="phone"
+                    style="@style/add_report_edittext"
+                    android:layout_toRightOf="@id/phone_tv"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -417,7 +424,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/addcolumn" />
+                app:srcCompat="@drawable/editcolumn" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -427,6 +434,7 @@
                 android:layout_toRightOf="@id/img_edit_8">
 
                 <TextView
+                    android:id="@+id/company_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -455,12 +463,14 @@
 
                 <TextView
                     android:id="@+id/user_company"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/company_tv"
                     android:layout_toLeftOf="@id/droparrow_layout"
                     android:layout_marginRight="6dp"
                     android:layout_centerInParent="true"
-                    android:text="请选择"
+                    android:gravity="center_vertical|right"
+                    android:hint="请选择"
                     android:textColor="@color/des_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -490,6 +500,7 @@
                 android:layout_toRightOf="@id/img_edit_9">
 
                 <TextView
+                    android:id="@+id/single_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -498,39 +509,11 @@
                     android:textColor="@color/single_text_color"
                     android:textSize="14sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/user_autograph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:text="签名信息ING..."
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                    style="@style/add_report_edittext"
+                    android:layout_toRightOf="@id/single_tv"/>
             </RelativeLayout>
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:visibility="gone"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/ok"
-                android:layout_weight="1"
-                android:text="@string/ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/cancle"
-                android:layout_weight="1"
-                android:text="@string/cancle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

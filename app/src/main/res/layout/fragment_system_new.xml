@@ -20,7 +20,6 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="center"
-            android:src="@drawable/default_head"
             app:border_width="2dp"
             app:border_color="@color/light" />
 

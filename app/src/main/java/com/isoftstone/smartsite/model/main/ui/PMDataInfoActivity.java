@@ -9,9 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +78,9 @@ public class PMDataInfoActivity extends Activity {
     private TextView text_humidity ;
     private TextView text_precipitation ;
 
+    private Spinner shujuSpinner = null;
+    private String[] name = {"PM2.5","PM10","co2","uv"};
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +138,23 @@ public class PMDataInfoActivity extends Activity {
 
 
         mGotoMap = (LinearLayout)findViewById(R.id.gotomap);
+
+
+        shujuSpinner = (Spinner) findViewById(R.id.shuju_name);
+        shujuSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setLineChart();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        ArrayAdapter adapter_tongqi = new ArrayAdapter<String>(this,R.layout.spinner_item,name);
+        shujuSpinner.setAdapter(adapter_tongqi);
+        shujuSpinner.setSelection(0);
     }
 
     private Handler mHandler = new Handler(){
@@ -229,9 +252,9 @@ public class PMDataInfoActivity extends Activity {
     }
 
     private void setLineChart(){
-        if(list_24 == null || list_24.size() <= 0){
+        /*if(list_24 == null || list_24.size() <= 0){
             return;
-        }
+        }*/
         mLineChart.setDrawGridBackground(false);
 
         // no description text
@@ -241,14 +264,14 @@ public class PMDataInfoActivity extends Activity {
         mLineChart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
+        mLineChart.setDragEnabled(false);
+        mLineChart.setScaleEnabled(false);
         // mChart.setScaleXEnabled(true);
         // mChart.setScaleYEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
         mLineChart.setPinchZoom(true);
-        mLineChart.setExtraOffsets(20,20,20,20);
+        mLineChart.setExtraOffsets(10,20,20,10);
 
         // set an alternative background color
         // mChart.setBackgroundColor(Color.GRAY);
@@ -304,7 +327,7 @@ public class PMDataInfoActivity extends Activity {
         leftAxis.setAxisMinimum(0f);
         //leftAxis.setYOffset(20f);
         //leftAxis.setEnabled(false);
-        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+        leftAxis.enableGridDashedLine(10f, 0f, 0f);
         leftAxis.setDrawZeroLine(false);
 
         // limit lines are drawn behind data (and not on top)
@@ -327,34 +350,43 @@ public class PMDataInfoActivity extends Activity {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        // // dont forget to refresh the drawing
+        l.setEnabled(false);
+        // dont forget to refresh the drawing
         // mChart.invalidate();
 
         ArrayList<Entry> values = new ArrayList<Entry>();
 
-        int count = list_24.size();
+        /*int count = list_24.size();
         for (int i = 0; i < count; i++) {
 
             Double value = list_24.get(i).getPm2_5();
             Entry entry = new Entry(i,Float.parseFloat(value.toString()));
+            values.add(entry);
+        }*/
+
+        for (int i = 0; i < 24; i++) {
+            double val = (Math.random() * 88) + 3;
+            Entry entry = new Entry(i,(float) val);
             values.add(entry);
         }
 
         LineDataSet set2 = new LineDataSet(values, "DataSet 2");
         set2.setDrawIcons(false);
         // set the line to be drawn like this "- - - - - -"
-        //set2.enableDashedLine(10f, 5f, 0f);//设置连线样式
-        set2.setColor(Color.BLACK);
-        set2.setCircleColor(Color.RED);
-        set2.setDrawCircleHole(false);
+        set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
+        set2.setColor(Color.parseColor("#ff9e5d"));
+        set2.setCircleColor(Color.parseColor("#ff9e5d"));
+        set2.setDrawCircleHole(true);
         set2.setFormLineWidth(1f);
         set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
         set2.setFormSize(15.f);
         set2.setLineWidth(1f);//设置线宽
-        set2.setCircleRadius(3f);//设置焦点圆心的大小
+        set2.setCircleRadius(4f);//设置焦点圆心的大小
+        set2.setCircleHoleRadius(2);
+        set2.setCircleColorHole(Color.WHITE);
         set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
         set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-        set2.setHighlightEnabled(true);//是否禁用点击高亮线
+        set2.setHighlightEnabled(false);//是否禁用点击高亮线
         set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
         set2.setValueTextSize(9f);//设置显示值的文字大小
         set2.setDrawFilled(false);//设置禁用范围背景填充

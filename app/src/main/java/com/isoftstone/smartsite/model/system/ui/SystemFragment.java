@@ -2,6 +2,8 @@ package com.isoftstone.smartsite.model.system.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -35,6 +37,7 @@ public class SystemFragment extends BaseFragment{
     private TextView mUserNameView;//用户名
     private TextView mUserAutographView;//签名信息
     String picPath;//头像路径
+    public static final String HEAD_IMAGE_NAME = "user_head.jpg";
     private LinearLayout mIndividualCenterLayout;//个人中心Btn
     private LinearLayout mAboutUsLayout;//关于我们Btn
     private LinearLayout mLogOffLayout;//退出Btn
@@ -176,8 +179,7 @@ public class SystemFragment extends BaseFragment{
     }
 
     private void initUserInfo(UserBean userBean) {
-        //UserBean userBean = mHttpPost.getLoginUser();
-        //Log.i("zyf", userBean.toString());
+        Log.i("zyf", userBean.toString());
         String userName = userBean.getName();
         mUserNameView.setText(userName);
         String userAutograph = userBean.getDescription();
@@ -185,6 +187,13 @@ public class SystemFragment extends BaseFragment{
             mUserAutographView.setVisibility(View.INVISIBLE);
         } else {
             mUserAutographView.setText(userAutograph);
+        }
+
+        Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
+        if (null != headBitmap) {
+            mHeadImageView.setImageBitmap(headBitmap);
+        } else {
+            mHeadImageView.setImageResource(R.drawable.default_head);
         }
     }
 

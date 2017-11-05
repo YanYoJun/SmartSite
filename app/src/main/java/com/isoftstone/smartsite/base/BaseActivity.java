@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.isoftstone.smartsite.common.AppManager;
+import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.utils.StatusViewUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -61,5 +62,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void onBackBtnClick(View v){
         finish();;
+    }
+
+    /**
+     * 获取巡查报告的数据，非三方协同界面不用关注
+     * @return
+     */
+    public PatrolBean getReportData(){
+        return null;
     }
 }

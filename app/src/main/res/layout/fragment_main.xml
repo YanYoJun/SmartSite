@@ -182,6 +182,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:background="@drawable/selector_common_press"
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -227,6 +228,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:background="@drawable/selector_common_press"
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -272,6 +274,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:background="@drawable/selector_common_press"
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -316,6 +319,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:background="@drawable/selector_common_press"
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -371,6 +375,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:background="@drawable/selector_common_press"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -394,6 +399,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:background="@drawable/selector_common_press"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -417,6 +423,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:background="@drawable/selector_common_press"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

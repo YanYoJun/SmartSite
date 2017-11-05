@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
@@ -52,6 +54,15 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     private Context mContext;
     private VideoMonitorAdapter.ViewHolder mViewHolder;
 
+    private ImageButton mImageView_back = null;
+    private ImageButton mImageView_serch = null;
+    private View oneIconLayout = null;
+    private View searchLayout = null;
+    private ImageButton mSearch_back = null;
+    private TextView mSearch_cancel = null;
+    private TextView mtitleTextView = null;
+    private ImageButton search_btn_search = null;
+    private EditText search_edit_text = null;
 
     @Override
     protected void onStart() {
@@ -119,6 +130,24 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     private void init(){
+
+        mImageView_back = (ImageButton)findViewById(R.id.btn_back);
+        mImageView_serch = (ImageButton)findViewById(R.id.btn_icon);
+        oneIconLayout = (View)findViewById(R.id.one_icon);
+        searchLayout = (View)findViewById(R.id.serch);
+        mSearch_back = (ImageButton)findViewById(R.id.search_btn_back);
+        mSearch_cancel = (TextView)findViewById(R.id.search_btn_icon_right);
+        mtitleTextView = (TextView) findViewById(R.id.toolbar_title);
+        search_btn_search = (ImageButton)findViewById(R.id.search_btn_search);
+        search_edit_text = (EditText)findViewById(R.id.search_edit_text);
+        mtitleTextView.setText("视频监控");
+        mImageView_serch.setImageResource(R.drawable.search);
+        mImageView_back.setOnClickListener(this);
+        mImageView_serch.setOnClickListener(this);
+        mSearch_back.setOnClickListener(this);
+        mSearch_cancel.setOnClickListener(this);
+        search_btn_search.setOnClickListener(this);
+
         mListView = (ListView) findViewById(R.id.list);
     }
 
@@ -206,8 +235,32 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
                 //ToastUtils.showShort(cameraCode);
                 queryReplayVideo(cameraCode,beginTime + " 00:00:00", endTime + " 23:59:59");
                 break;
+            case R.id.btn_back:{
+                finish();
+            }
+                break;
+            case R.id.btn_icon:{
+                oneIconLayout.setVisibility(View.GONE);
+                searchLayout.setVisibility(View.VISIBLE);
+            }
+                break;
+            case R.id.search_btn_back:{
+                finish();
+            }
+                break;
+            case R.id.search_btn_icon_right:{
+                oneIconLayout.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.GONE);
+            }
+                break;
+            case R.id.search_btn_search:{
+                String serch = search_edit_text.getText().toString();
+                Toast.makeText(getBaseContext(),"搜索内容为:"+serch,2000).show();
+            }
+                break;
             default:
                 break;
+
         }
     }
 

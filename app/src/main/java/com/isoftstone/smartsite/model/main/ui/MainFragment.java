@@ -44,16 +44,16 @@ public class MainFragment extends BaseFragment{
     private TextView mTemperatureTextView = null;
     private TextView lab_main_unread_num = null;  //未查看消息数目
     private TextView lab_report_unread_num = null;  //未查看报告数目
-    private TextView lab_vcr_unread_num = null;//视屏监控设备数
+    private TextView lab_vcr_unread_num = null;//视频监控设备数
     private TextView lab_air_unread_num = null;//环境监控数目
     private HttpPost mHttpPost = new HttpPost();
     private View mVideoMonitoring = null; //视频监控
-    private View mAirMonitoring = null; //环境监测
-    private View mThirdPartReport = null; //三方协同按钮
-    private LinearLayout mVideoMonitoringMsg = null;
-    private LinearLayout mAirMonitoringMsg = null;
-    private LinearLayout mUnCheckMsg = null;
-    private LinearLayout mUntreatedReport = null;
+    private View mAirMonitoring = null;                //环境监测
+    private View mThirdPartReport = null;             //三方协同按钮
+    private LinearLayout mVideoMonitoringMsg = null;    //未查看消息点击区域
+    private LinearLayout mAirMonitoringMsg = null;      //待处理报告点击区域
+    private LinearLayout mUnCheckMsg = null;            //视频监控设备
+    private LinearLayout mUntreatedReport = null;       //环境监控设备
     private ListView mListView = null;
     private ImageView  wuran_image = null;
     private ImageView wuran_icon = null;
@@ -80,7 +80,7 @@ public class MainFragment extends BaseFragment{
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
         lab_main_unread_num = (TextView) rootView.findViewById(R.id.lab_main_unread_num);  //未查看消息数目
         lab_report_unread_num = (TextView) rootView.findViewById(R.id.lab_report_unread_num);  //未查看报告数目
-        lab_vcr_unread_num = (TextView) rootView.findViewById(R.id.lab_vcr_unread_num);//视屏监控设备数
+        lab_vcr_unread_num = (TextView) rootView.findViewById(R.id.lab_vcr_unread_num);//视频监控设备数
         lab_air_unread_num = (TextView) rootView.findViewById(R.id.lab_air_unread_num);//环境监控数目
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
         mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
@@ -94,7 +94,7 @@ public class MainFragment extends BaseFragment{
         mUntreatedReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterUntreatedReport();
+                enterThirdPartReport();
             }
         });
         mVideoMonitoringMsg = (LinearLayout) rootView.findViewById(R.id.textView12);
@@ -206,7 +206,7 @@ public class MainFragment extends BaseFragment{
         }else {
             lab_report_unread_num.setVisibility(View.INVISIBLE);
         }
-        lab_vcr_unread_num.setText(mMobileHomeBean.getAllVses()+"");//视屏监控设备数
+        lab_vcr_unread_num.setText(mMobileHomeBean.getAllVses()+"");//视频监控设备数
         lab_air_unread_num.setText(mMobileHomeBean.getAllEmes()+"");//环境监控数目
 
         InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
@@ -249,7 +249,7 @@ public class MainFragment extends BaseFragment{
     }
 
     private void enterVideoMonitoring(){
-        //进入视屏监控
+        //进入视频监控
         Intent intent = new Intent(getActivity(),VideoMonitoringActivity.class);
         getActivity().startActivity(intent);
     }

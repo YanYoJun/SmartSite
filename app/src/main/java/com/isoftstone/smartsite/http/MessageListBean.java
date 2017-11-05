@@ -7,7 +7,7 @@ package com.isoftstone.smartsite.http;
 public class MessageListBean {
     private String title = "";
     private String detail = "";
-    private int state = 0;    //1：视屏；2：环境
+    private int state = 0;    //1：视频；2：环境
     private String time = "";
 
     public String getTitle() {

@@ -148,6 +148,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 //跳转到地图
                 Intent intent = new Intent();
+                intent.putExtra("devices",mData);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 mContext.startActivity(intent);
             }

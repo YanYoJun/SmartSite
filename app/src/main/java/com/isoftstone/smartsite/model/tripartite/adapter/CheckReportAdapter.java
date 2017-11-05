@@ -36,7 +36,7 @@ public class CheckReportAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return mDatas.size();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CheckReportAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.listview_inspect_report_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.listview_check_report_item, null);
         }
         if (view != null) {
             TextView time = (TextView) view.findViewById(R.id.lab_time);

@@ -408,6 +408,8 @@ public class RevisitFragment extends BaseFragment {
                 mRevisitData.setPatrol(reponse);
                 mRevisitData.setCreator(reponse.getCreator());
                 mHttpPost.addPatrolVisit(mRevisitData);
+
+//                mHttpPost.getPatrolReport(reponse.getId()+"");
             }
             return null;
         }

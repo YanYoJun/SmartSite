@@ -81,7 +81,7 @@ public class ReportOperation {
             builder.add("supervisionCompany",supervisionCompany);
         }
 
-        builder.add("isVisit",reportBean.isVisit()+"");
+        builder.add("visit",reportBean.isVisit()+"");
 
         String visitDate = reportBean.getVisitDate();
         if(visitDate != null && !visitDate.equals("")){

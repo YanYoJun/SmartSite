@@ -10,7 +10,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
-import com.isoftstone.smartsite.model.tripartite.adapter.InspectReportAdapter;
+import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class CheckReportMainFragment extends BaseFragment {
     private void init() {
         //初始化Listview
         mListView = (ListView) mActivity.findViewById(R.id.listview_check_frag);
-        mAdapter = new InspectReportAdapter(mActivity, mDatas);
+        mAdapter = new CheckReportAdapter(mActivity, mDatas);
         mListView.setAdapter(mAdapter);
     }
 }

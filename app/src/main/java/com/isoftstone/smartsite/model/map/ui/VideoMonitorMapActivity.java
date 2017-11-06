@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -34,6 +35,8 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.DevicesBean;
+import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
+import com.isoftstone.smartsite.model.main.ui.PMHistoryInfoActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
@@ -233,8 +236,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             markerOption1.position(new LatLng(Double.parseDouble(currentCameraDevice.getLatitude()
             ), Double.parseDouble(currentCameraDevice.getLongitude())));
         }else if(type == TYPE_ENVIRONMENT){
-            markerOption1.position(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()
-            ), Double.parseDouble(currentEnvirDevice.getLongitude())));
+            /*markerOption1.position(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()
+            ), Double.parseDouble(currentEnvirDevice.getLongitude())));*/
+            markerOption1.position(aotiLatLon);
         }
 
         markerOption1.visible(true);
@@ -353,35 +357,46 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     intent.setClass(this, VideoPlayActivity.class);
                     startActivity(intent);
                 } else if(type == TYPE_ENVIRONMENT){
-                    /*Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("resCode", currentDevice.getDeviceCoding());
-                    bundle.putInt("resSubType", currentDevice);
-                    intent.putExtras(bundle);
-                    intent.setClass(this, VideoPlayActivity.class);
-                    startActivity(intent);*/
-                }
+                        //实时数据
+                        Intent intent = new Intent();
+                        intent.putExtra("id",currentEnvirDevice.getDeviceId());
+                        //TODO 数据要换
+                        intent.putExtra("address","光谷一路");
+                        intent.setClass(this, PMDataInfoActivity.class);
+                        this.startActivity(intent);
+                    }
 
                 break;
             case R.id.history:
-                Date now = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                String beginTime = formatter.format(now) + " 00:00:00";
-                String endTime = formatter.format(now) + " 23:59:59";
+                if(type == TYPE_CAMERA){
+                    Date now = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String beginTime = formatter.format(now) + " 00:00:00";
+                    String endTime = formatter.format(now) + " 23:59:59";
 
-                Intent intent1 = new Intent();
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("resCode", currentCameraDevice.getDeviceCoding());
-                bundle1.putInt("resSubType", currentCameraDevice.getDeviceType());
-                bundle1.putString("resName", currentCameraDevice.getDeviceName());
-                bundle1.putBoolean("isOnline", "0".equals(currentCameraDevice.getDeviceStatus()));
-                bundle1.putString("beginTime", beginTime);
-                bundle1.putString("endTime", endTime);
-                //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
-                intent1.putExtras(bundle1);
-                intent1.setClass(this, VideoRePlayListActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent1);
+                    Intent intent1 = new Intent();
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("resCode", currentCameraDevice.getDeviceCoding());
+                    bundle1.putInt("resSubType", currentCameraDevice.getDeviceType());
+                    bundle1.putString("resName", currentCameraDevice.getDeviceName());
+                    bundle1.putBoolean("isOnline", "0".equals(currentCameraDevice.getDeviceStatus()));
+                    bundle1.putString("beginTime", beginTime);
+                    bundle1.putString("endTime", endTime);
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+                    intent1.putExtras(bundle1);
+                    intent1.setClass(this, VideoRePlayListActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent1);
+                } else if(type == TYPE_ENVIRONMENT){
+                        //历史数据
+                        Intent intent = new Intent();
+                        intent.setClass(this, PMHistoryInfoActivity.class);
+                        intent.putExtra("id",currentEnvirDevice.getDeviceId());
+                        //TODO 数据要换
+                        intent.putExtra("address","光谷一路");
+                        this.startActivity(intent);
+                    }
+
                 break;
             case R.id.gallery:
                 //打开系统相册浏览照片  
@@ -442,7 +457,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             } else if(type == TYPE_ENVIRONMENT){
                 DataQueryVoBean device = (DataQueryVoBean) marker.getObject();
                 currentEnvirDevice = device;
-                tv_deviceNumber.setText(device.getDeviceId());
+                tv_deviceNumber.setText(device.getDeviceId() + "");
                 if(0 == device.getDeviceStatus()){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
@@ -509,7 +524,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 }
 
                 tv_pm10.setText(Html.fromHtml(pm10));
-                String pm25 = "PM2.5：<font color='" + COLOR_0 + "'> + " + pm_25 + "</font>";
+                String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25 + "</font>";
                 tv_pm25.setText(Html.fromHtml(pm25));
                 String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
                 tv_pmso2.setText(Html.fromHtml(so2));

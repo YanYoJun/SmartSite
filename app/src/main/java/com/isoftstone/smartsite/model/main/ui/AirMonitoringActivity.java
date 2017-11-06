@@ -352,7 +352,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         }
         mPieChart.setUsePercentValues(true);
         mPieChart.getDescription().setEnabled(false);
-        mPieChart.setExtraOffsets(40, 20, 40, 20);
+        mPieChart.setExtraOffsets(40, 10, 30, 10);
 
         mPieChart.setDragDecelerationFrictionCoef(0.95f);
 
@@ -396,7 +396,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         l.setFormToTextSpace(6); //图标和文字距离
         l.setXEntrySpace(20f);  //左右间隔
         l.setYEntrySpace(0f); //
-        l.setXOffset(5f);  //距离左边距离
+        l.setXOffset(10f);  //距离左边距离
         l.setYOffset(5f); //距离底部距离
 
         // entry label styling
@@ -411,10 +411,12 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
         for (int i = 0; i < mWeatherList.size(); i ++) {
             int value = mWeatherList.get(i).getValue();
-            PieEntry entry = new PieEntry(value);
-            entry.setLabel(mWeatherList.get(i).getName());
-            entry.setData(value+"天");
-            entries.add(entry);
+            if(value > 0){
+                PieEntry entry = new PieEntry(value);
+                entry.setLabel(mWeatherList.get(i).getName());
+                entry.setData(value+"天");
+                entries.add(entry);
+            }
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -428,17 +430,31 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_you));
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_liang));
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_qingdu));
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhong1du));
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhongdu));
-        colors.add((Integer)getBaseContext().getColor(R.color.huanjin_yanzhong));
+        for (int i = 0; i < mWeatherList.size() ;i ++){
+            String name = mWeatherList.get(i).getName();
+            if(mWeatherList.get(i).getValue() > 0){
+                if(name.equals("优")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_you));
+                }else if(name.equals("良")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_liang));
+                }else if(name.equals("轻度污染")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_qingdu));
+                }
+                else if(name.equals("中度污染")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhong1du));
+                }
+                else if(name.equals("重度污染")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_zhongdu));
+                }
+                else if(name.equals("严重污染")){
+                    colors.add((Integer)getBaseContext().getColor(R.color.huanjin_yanzhong));
+                }
+            }
+        }
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
-        dataSet.setValueLinePart1OffsetPercentage(75.f);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
         dataSet.setValueLinePart1Length(0.2f);
         dataSet.setValueLinePart2Length(0.6f);
         dataSet.setValueTextColor(Color.RED);
@@ -448,7 +464,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 return entry.getData().toString();
             }
         });
-        //dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
         PieData data = new PieData(dataSet);

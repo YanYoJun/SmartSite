@@ -2,6 +2,8 @@ package com.isoftstone.smartsite.model.video;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,10 +12,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.utils.DateUtils;
@@ -53,6 +59,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private ImageView mPlayPreviousIV;
     private ImageView mPlayPlayIV;
     private ImageView mPlayNextIV;
+    private ImageView mBackView;
 
     //message.what
     private static final int STATE_CHANGED = 0x111; //播放状态变化
@@ -72,6 +79,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private String mVideoEndTime;
 
     private SeekBar  mBottomSeekBar;
+    private ImageView mCaptureView;
+    private ImageView mShowFullScreenView;
+    private LinearLayout mPortLayout;
+    private Toolbar mTitleToolbar;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -116,6 +127,14 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             }
         });*/
 
+        mBackView = (ImageView) findViewById(R.id.iv_back);
+        mBackView.setOnClickListener(this);
+        mCaptureView = (ImageView)findViewById(R.id.capture_view);
+        mCaptureView.setOnClickListener(this);
+        mShowFullScreenView = (ImageView) findViewById(R.id.show_full_screen_view);
+        mShowFullScreenView.setOnClickListener(this);
+        mPortLayout = (LinearLayout) findViewById(R.id.port_layout);
+        mTitleToolbar = (Toolbar) findViewById(R.id.video_toolbar);
         mPalyerControllerLayout = (LinearLayout) findViewById(R.id.media_player_controller_layout);
         mPlayPreviousIV = (ImageView) findViewById(R.id.play_previous);
         mPlayPlayIV = (ImageView) findViewById(R.id.play_play);
@@ -145,7 +164,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     }
 
     /**
-     * 启动实况
+     * 启动历史回放
      *
      * @param cameraCode 摄像机编码
      */
@@ -302,8 +321,81 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             case R.id.play_next:
 
                 break;
+            case R.id.iv_back:
+                VideoRePlayActivity.this.finish();
+                break;
+            case R.id.capture_view:
+                //抓拍图片，返回路径
+                String path = mPlayer.snatch(null);
+                if (null != path) {
+                    Toast.makeText(VideoRePlayActivity.this, path, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.show_full_screen_view:
+                Log.i("zyf1","onClick");
+                if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_PORTRAIT) {
+                    Log.i("zyf1","竖屏");
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE) {
+                    Log.i("zyf1","横屏");
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+                break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        onScreenOrientationChanged(newConfig);
+    }
+
+    /**
+     * 当屏幕方向发生改变时
+     *
+     * @param config
+     */
+    private void onScreenOrientationChanged(Configuration config) {
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
+            //隐藏状态栏
+            WindowManager.LayoutParams attrs = getWindow().getAttributes();
+            attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(attrs);
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
+            lp.setMargins(0,0,0,0);
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            mSurfaceView.setLayoutParams(lp);
+            mPortLayout.setVisibility(View.GONE);
+            mTitleToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+            //mIvSuspension.setImageResource(R.mipmap.video_play_icon_suspension);
+            //mRlTopSeerBar.setVisibility(View.VISIBLE);
+            //mTvSystemTime.setVisibility(View.VISIBLE);
+        } else if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
+            //显示状态栏
+            WindowManager.LayoutParams attrs = getWindow().getAttributes();
+            attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(attrs);
+            getWindow().clearFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
+            int topMargin = getResources().getDimensionPixelOffset(R.dimen.tool_bar_height);
+            lp.setMargins(0,topMargin,0,0);
+            lp.height = getResources().getDimensionPixelOffset(R.dimen.surface_view_height);
+            mSurfaceView.setLayoutParams(lp);
+            mPortLayout.setVisibility(View.VISIBLE);
+            mTitleToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+            //mIvSuspension.setImageResource(R.mipmap.video_flotting_play_icon_suspension);
+            //mRlTopSeerBar.setVisibility(View.GONE);
+            //mTvSystemTime.setVisibility(View.GONE);
         }
     }
 

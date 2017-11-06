@@ -282,6 +282,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                     public void onClick(View view) {
                         ToastUtils.showShort("点击了中心圆圈");
                         ptzCommand(mCameraCode,PtzCommandParam.PTZ_CMD.ALLSTOP);
+                        //ptzCommand(mCameraCode,PtzCommandParam.PTZ_CMD.ZOOMTELE);
                     }
         });
     }

@@ -23,6 +23,7 @@ import com.isoftstone.smartsite.UserUtils;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 
@@ -189,12 +190,16 @@ public class SystemFragment extends BaseFragment{
             mUserAutographView.setText(userAutograph);
         }
 
-        Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
-        if (null != headBitmap) {
-            mHeadImageView.setImageBitmap(headBitmap);
-        } else {
-            mHeadImageView.setImageResource(R.drawable.default_head);
-        }
+        //Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
+        //if (null != headBitmap) {
+        //    mHeadImageView.setImageBitmap(headBitmap);
+        //} else {
+        //    mHeadImageView.setImageResource(R.drawable.default_head);
+        //}
+        String urlString = mHttpPost.getFileUrl(userBean.getImageData());
+        //ToastUtils.showShort("urlString = " + urlString);
+        //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
+        ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
     }
 
     class MyThread implements Runnable {

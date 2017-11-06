@@ -124,6 +124,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
                     bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoRePlayActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -146,6 +147,7 @@ public class VideoRePlayAdapter extends BaseAdapter {
                     bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoRePlayActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();

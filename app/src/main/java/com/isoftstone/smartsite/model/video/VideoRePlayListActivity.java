@@ -106,7 +106,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mBeginTimeTv.setText(mBeginTime.split(" ")[0]);
         mEndTimeTv.setText(mEngTime.split(" ")[0]);
 
-        queryReplayVideo(mResCode, mBeginTime + " 00:00:00", mEngTime + " 23:59:59");
+        queryOrStartReplayVideo(mResCode, mBeginTime + " 00:00:00", mEngTime + " 23:59:59", false);
     }
 
     private void init(){
@@ -188,7 +188,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
                     ToastUtils.showShort(getText(R.string.data_pick_dialog_error_msg2).toString());
                     return;
                 };
-                queryReplayVideo(mResCode, beginTime + " 00:00:00", endTime + " 23:59:59");
+                queryOrStartReplayVideo(mResCode, beginTime + " 00:00:00", endTime + " 23:59:59", true);
                 break;
             case R.id.gotomap:
                 Intent intent = new Intent();
@@ -213,7 +213,8 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         dialog.show();
     }
 
-    public void queryReplayVideo(final String cameraCode, final String beginTime, final String endTime) {
+    public void queryOrStartReplayVideo(final String cameraCode, final String beginTime, final String endTime, final boolean isStartOptions) {
+
         //查询回放记录参数
         QueryReplayParam p = new QueryReplayParam(cameraCode, DateUtils.checkDataTime(beginTime,true), DateUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
 
@@ -232,25 +233,27 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
                     return;
                 }
 
-                int size = recordList.size();
-                ArrayList<VideoMonitorBean> sList = new ArrayList<VideoMonitorBean>();
-                VideoMonitorBean video;
+                if (isStartOptions) {
+                    startReplayVideo(cameraCode, DateUtils.checkDataTime(beginTime,true), DateUtils.checkDataTime(endTime, false));
+                } else {
+                    int size = recordList.size();
+                    ArrayList<VideoMonitorBean> sList = new ArrayList<VideoMonitorBean>();
+                    VideoMonitorBean video;
 
-                //ToastUtils.showShort("queryListener  ----> Adapter size = " +  size);
+                    for (int i = 0; i < size; i++) {
+                        video = new VideoMonitorBean(DateUtils.checkDataTime(beginTime,true),  DateUtils.checkDataTime(endTime, false)
+                                , recordList.get(i).getFileName(), cameraCode);
+                        sList.add(video);
+                    }
+                    //刷新ListView
+                    mListView.setAdapter(null);
 
-                for (int i = 0; i < size; i++) {
-                    video = new VideoMonitorBean(DateUtils.checkDataTime(beginTime,true),  DateUtils.checkDataTime(endTime, false)
-                            , recordList.get(i).getFileName(), cameraCode);
-                    sList.add(video);
+                    VideoRePlayAdapter adapter = new VideoRePlayAdapter(VideoRePlayListActivity.this);
+                    adapter.notifyDataSetChanged();
+                    adapter.setData(sList);
+                    mListView.setAdapter(adapter);
+                    mListView.invalidate();
                 }
-                //刷新ListView
-                mListView.setAdapter(null);
-
-                VideoRePlayAdapter adapter = new VideoRePlayAdapter(VideoRePlayListActivity.this);
-                adapter.notifyDataSetChanged();
-                adapter.setData(sList);
-                mListView.setAdapter(adapter);
-                mListView.invalidate();
             }
         };
 
@@ -287,5 +290,18 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
             isBigger = false;
         }
         return isBigger;
+    }
+
+    private void startReplayVideo(String resCode, String beginTime, String endTime) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("resCode", resCode);
+        bundle.putString("beginTime", beginTime);
+        bundle.putString("endTime", endTime);
+        bundle.putInt("position", 0);
+        intent.putExtras(bundle);
+        intent.setClass(mContext, VideoRePlayActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 }

@@ -34,7 +34,7 @@ import java.util.List;
  */
 
 public class AddReportActivity extends BaseActivity {
-    private final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
+    public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
 
     private List<Uri> attach = new ArrayList<>();
     private Resources mRes = null;
@@ -42,7 +42,6 @@ public class AddReportActivity extends BaseActivity {
     private Drawable mWattingChanged = null;
     private HttpPost mHttpPost = null;
     private ArrayList<String> mQueryTypes = new ArrayList<>();
-
 
     //the view in this activity
     public EditText mEditAddress = null;
@@ -59,6 +58,7 @@ public class AddReportActivity extends BaseActivity {
     public EditText mEditConsCompany = null;
     public EditText mEditSuperCompany = null;
     public boolean isSettedType = false;
+    public RevisitFragment mRevisitFrag = null;
 
 
     @Override
@@ -102,11 +102,11 @@ public class AddReportActivity extends BaseActivity {
         mEditConsCompany = (EditText) findViewById(R.id.edit_cons_company);
         mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
         mTypesEditor.setTextColor(getResources().getColor(R.color.des_text_color));
+        mRevisitFrag = (RevisitFragment)getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
     }
 
     public void saveData() {
-        RevisitFragment fragment = (RevisitFragment)getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
-        fragment.saveData();
+        mRevisitFrag.saveData();
         SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
         SPUtils.saveString("add_report_company", mEditCompany.getText().toString());
         SPUtils.saveString("add_report_build_company", mEditBuildCompany.getText().toString());
@@ -299,14 +299,11 @@ public class AddReportActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_ACTIVITY_ATTACH: {
                 Log.e(TAG, "onactivityresult:" + data.getData());
+                mRevisitFrag.addAttachUri(data.getDataString());
                 break;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void addImageAttach(Uri uri) {
-
     }
 
 

@@ -1,8 +1,11 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,6 +35,7 @@ import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ITime;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -49,6 +53,7 @@ public class RevisitFragment extends BaseFragment {
     private SimpleAdapter mAttachAdapter = null;
     private ArrayList<Map<String, Object>> mData = null;
     private AddReportActivity mAddReportActivity = null;
+    public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
 
     private Resources mRes = null;
     private Drawable mWaittingAdd = null;
@@ -77,6 +82,8 @@ public class RevisitFragment extends BaseFragment {
     private ITime mRevisitDate = null;
 
     private Calendar mCal = null;
+
+    private ArrayList<String> mFilesPathUrl = new ArrayList<>();
 
 
     @Override
@@ -450,13 +457,41 @@ public class RevisitFragment extends BaseFragment {
         mAttachView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-/*                if (position == mData.size() - 1) {
+                if (position == mData.size() - 1) {
                     //点击添加附件
                     Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                    i.setType("image*//*");
+                    i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
-                }*/
+                }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_ACTIVITY_ATTACH: {
+                Log.e(TAG,"onActivityResult:"+data);
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    Log.e(TAG,"yanlog uri:"+uri);
+                    if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
+                        Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String path = FilesUtils.getPath(getActivity(), uri);
+                    Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //add files
+    public void addAttachUri(String pathUrl) {
+        mFilesPathUrl.add(pathUrl);
+
+        Log.e(TAG, "yanlog pathUrl:" + pathUrl);
+        //mAttachAdapter.notifyDataSetChanged();
     }
 }

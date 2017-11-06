@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by yanyongjun on 2017/10/16.
@@ -55,6 +56,85 @@ public class TripartiteActivity extends BaseActivity {
 
     public static final int[] STATUS_IMG = new int[]{R.drawable.pending, R.drawable.pending,
             R.drawable.waitvisiting, R.drawable.sendback, R.drawable.pass};
+    public static final HashMap<String,Integer> mAttach = new HashMap<>();
+    public static final ArrayList<String> mDocList = new ArrayList<>();
+    public static final ArrayList<String> mPdfList = new ArrayList<>();
+    public static final ArrayList<String> mPptList = new ArrayList<>();
+    public static final ArrayList<String> mVideoList = new ArrayList<>();
+    public static final ArrayList<String> mXlsList = new ArrayList<>();
+    public static final ArrayList<String> mImageList = new ArrayList<>();
+    static {
+        mAttach.put("doc",R.drawable.doc);
+        mAttach.put("pdf",R.drawable.pdf);
+        mAttach.put("ppt",R.drawable.ppt);
+        mAttach.put("video",R.drawable.video);
+        mAttach.put("xls",R.drawable.xls);
+        mAttach.put("image",R.drawable.pic);
+
+        mDocList.add("doc");
+        mDocList.add("docx");
+
+        mPdfList.add("pdf");
+
+        mPptList.add("ppt");
+        mPptList.add("pptx");
+
+        mVideoList.add("mpeg");
+        mVideoList.add("mpg");
+        mVideoList.add("dat");
+        mVideoList.add("avi");
+        mVideoList.add("mov");
+        mVideoList.add("asf");
+        mVideoList.add("wmv");
+        mVideoList.add("navi");
+        mVideoList.add("3gp");
+        mVideoList.add("ra");
+        mVideoList.add("ram");
+        mVideoList.add("mkv");
+        mVideoList.add("flv");
+        mVideoList.add("f4v");
+        mVideoList.add("rmvb");
+        mVideoList.add("webm");
+        mVideoList.add("hddvd");
+        mVideoList.add("qsv");
+        mVideoList.add("mp4");
+        mVideoList.add("mov");
+        mVideoList.add("asf");
+        mVideoList.add("rm");
+        mVideoList.add("vob");
+
+        mXlsList.add("txt");
+        mXlsList.add("csv");
+        mXlsList.add("xls");
+        mXlsList.add("xlsx");
+
+        mImageList.add("bmp");
+        mImageList.add("pcx");
+        mImageList.add("gif");
+        mImageList.add("tiff");
+        mImageList.add("jpeg");
+        mImageList.add("jpg");
+        mImageList.add("png");
+        mImageList.add("tga");
+        mImageList.add("exif");
+        mImageList.add("fpx");
+        mImageList.add("svg");
+        mImageList.add("psd");
+        mImageList.add("cdr");
+        mImageList.add("pcd");
+        mImageList.add("cdr");
+        mImageList.add("dxf");
+        mImageList.add("ufo");
+        mImageList.add("eps");
+        mImageList.add("ai");
+        mImageList.add("hdpi");
+        mImageList.add("raw");
+        mImageList.add("wmf");
+        mImageList.add("lic");
+        mImageList.add("fli");
+        mImageList.add("emf");
+    }
+
 
 
     @Override

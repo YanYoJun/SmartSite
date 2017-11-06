@@ -3,7 +3,9 @@ package com.isoftstone.smartsite.model.main.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
@@ -21,6 +24,7 @@ import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
+import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -36,19 +40,31 @@ import java.util.Date;
 
 public class PMDevicesListAdapter extends BaseAdapter {
 
+    public static final String COLOR_OFFLINE = "#AAAAAA";
+    public static final String COLOR_0= "#3464DD";
+    public static final String COLOR_50 = "#01B663";
+    public static final String COLOR_150 = "#FFD801";
+    public static final String COLOR_250 = "#FD8200";
+    public static final String COLOR_350 = "#FD0001";
+    public static final String COLOR_420 = "#95014B";
+    public static final String COLOR_600 = "#5C011B";
+
 
     private LayoutInflater mInflater;
-    private ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
+    private ArrayList<DataQueryVoBean> mData = new ArrayList<DataQueryVoBean>();
     private Context mContext = null;
     private final String IMAGE_TYPE = "image/*";
 
     public PMDevicesListAdapter(Context context){
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
+
     }
 
-    public void setData(ArrayList<DevicesBean> list){
+    public void setData(ArrayList<DataQueryVoBean> list){
         mData = list;
+        for (int i = 0; i < list.size(); i++) {
+        }
     }
 
     @Override
@@ -75,15 +91,15 @@ public class PMDevicesListAdapter extends BaseAdapter {
         ViewHolder holder = null;
         if (null == convertView) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.pmdeviceslist_adapter, null);
+            convertView = mInflater.inflate(R.layout.pmdeviceslist_adapter, parent,false);
             holder.resName = (TextView)convertView.findViewById(R.id.textView1);
             holder.isOnline = (TextView)convertView.findViewById(R.id.textView2);
             holder.installTime = (TextView)convertView.findViewById(R.id.textView3);
             holder.address = (TextView)convertView.findViewById(R.id.textView4);
-            holder.PM10 = (TextView)convertView.findViewById(R.id.textView5);
-            holder.PM25 = (TextView)convertView.findViewById(R.id.textView6);
-            holder.SO2 = (TextView)convertView.findViewById(R.id.textView7);
-            holder.NO2 = (TextView)convertView.findViewById(R.id.textView8);
+            holder.PM10 = (TextView)convertView.findViewById(R.id.text_pm10);
+            holder.PM25 = (TextView)convertView.findViewById(R.id.text_pm25);
+            holder.SO2 = (TextView)convertView.findViewById(R.id.text_so2);
+            holder.NO2 = (TextView)convertView.findViewById(R.id.text_no2);
             holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
             holder.button_2 = (LinearLayout)convertView.findViewById(R.id.button2);
             holder.gotomap = (LinearLayout) convertView.findViewById(R.id.gotomap);
@@ -91,7 +107,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
         }else {
             holder = (ViewHolder)convertView.getTag();
         }
-        final  DevicesBean devices = mData.get(position);
+        final  DataQueryVoBean devices = mData.get(position);
         holder.resName.setText(devices.getDeviceName());
         TextPaint paint = holder.resName.getPaint();
         paint.setFakeBoldText(true);
@@ -101,11 +117,43 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
         }
         holder.installTime.setText("安装时间: "+devices.getInstallTime());
-        holder.address.setText("地址: "+devices.getArch().getName());
-        //holder.PM10.setText("PM10 "+devices);
-        //holder.PM25.setText("PM2.5 "+devices.getPM25());
-        //holder.SO2.setText("SO2 "+devices.getO3());
-        //holder.NO2.setText("NO2 "+devices.getNO2());
+        //TODO 数据要换
+        holder.address.setText("地址: "+"光谷1路");
+
+        String pm10 = "";
+
+        double d_pm10 = devices.getPm10();
+        int pm_10 = (int) d_pm10;
+
+        double d_pm25 = devices.getPm2_5();
+        int pm_25 = (int) d_pm25;
+
+        double d_so2 = devices.getCo2();
+        int pm_so2 = (int) d_so2;
+
+
+        if(pm_10 < 50){
+            pm10 = "PM10：<font color='" + COLOR_50 + "'>" + pm_10 + "</font>";
+        } else if(pm_10 < 150){
+            pm10 = "PM10：<font color='" + COLOR_150 + "'>" + pm_10 + "</font>";
+        } else if(pm_10 < 250){
+            pm10 = "PM10：<font color='" + COLOR_250 + "'>" + pm_10 + "</font>";
+        } else if(pm_10 < 350){
+            pm10 = "PM10：<font color='" + COLOR_350 + "'>" + pm_10 + "</font>";
+        } else if(pm_10 < 420){
+            pm10 = "PM10：<font color='" + COLOR_420 + "'>" + pm_10 + "</font>";
+        } else {
+            pm10 = "PM10：<font color='" + COLOR_600 + "'>" + pm_10 + "</font>";
+        }
+
+        holder.PM10.setText(Html.fromHtml(pm10));
+        String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25+ "</font>";
+        holder.PM25.setText(Html.fromHtml(pm25));
+        String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+        holder.SO2.setText(Html.fromHtml(so2));
+        String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+        holder.NO2.setText(Html.fromHtml(no2));
+
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
@@ -116,7 +164,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     //实时数据
                     Intent intent = new Intent();
                     intent.putExtra("id",devices.getDeviceId());
-                    intent.putExtra("address",devices.getArch().getName());
+                    //TODO 数据要换
+                    intent.putExtra("address","光谷一路");
                     intent.setClass(mContext, PMDataInfoActivity.class);
                     mContext.startActivity(intent);
                 } else {
@@ -135,7 +184,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     Intent intent = new Intent();
                     intent.setClass(mContext, PMHistoryInfoActivity.class);
                     intent.putExtra("id",devices.getDeviceId());
-                    intent.putExtra("address",devices.getArch().getName());
+                    //TODO 数据要换
+                    intent.putExtra("address","光谷一路");
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -149,6 +199,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 //跳转到地图
                 Intent intent = new Intent();
                 intent.putExtra("devices",mData);
+                intent.putExtra("type",VideoMonitorMapActivity.TYPE_ENVIRONMENT);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 mContext.startActivity(intent);
             }

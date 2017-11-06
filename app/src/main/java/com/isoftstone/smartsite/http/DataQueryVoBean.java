@@ -1,10 +1,15 @@
 package com.isoftstone.smartsite.http;
 
+import java.io.Serializable;
+
 /**
  * Created by gone on 2017/11/1.
  */
 
-public class DataQueryVoBean {
+public class DataQueryVoBean implements Serializable{
+
+    private static final long serialVersionUID = 0x0011L;
+
     private Integer Id;
     private Integer deviceId;//设备Id
     private String deviceName;//	 	设备名称

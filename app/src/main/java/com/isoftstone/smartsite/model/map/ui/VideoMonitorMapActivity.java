@@ -9,11 +9,14 @@ import android.net.Uri;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -29,10 +32,12 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
+import com.isoftstone.smartsite.utils.LogUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -40,15 +45,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_0;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_150;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_250;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_350;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_420;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_50;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_600;
+
 public class VideoMonitorMapActivity extends BaseActivity implements View.OnClickListener, AMap.OnMarkerClickListener {
 
+    public static final int TYPE_CAMERA = 0x0001;
+    public static final int TYPE_ENVIRONMENT = 0x0002;
 
     private MapView mMapView;
     private AMap aMap;
 
     private LatLng aotiLatLon = new LatLng(30.479736,114.476322);
     private PopupWindow mPopWindow;
-    private List<DevicesBean> devices;
+    private List<DataQueryVoBean> envir_devices;
+    private List<DevicesBean> camera_devices;
+
+
     private TextView tv_deviceNumber;
     private TextView tv_isOnline;
     private TextView tv_deviceTime;
@@ -62,9 +80,19 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     private View galleryView;
     private ImageView iv_gallery;
     private TextView tv_gallery;
-    private DevicesBean currentDevice;
+    private DataQueryVoBean currentEnvirDevice;
+    private DevicesBean currentCameraDevice;
     private Marker roundMarker;
 
+    private int type;
+    private View eviorment_view;
+    private TextView tv_pm10;
+    private TextView tv_pm25;
+    private TextView tv_pmso2;
+    private TextView tv_pmno2;
+    private View background_line;
+
+    private boolean isHasData = false;
 
     @Override
     protected int getLayoutRes() {
@@ -73,21 +101,43 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
-        devices = (ArrayList<DevicesBean>) getIntent().getSerializableExtra("devices");
-        if(devices == null || devices.size() == 0 ){
-            ToastUtils.showLong("没有获取到设备地址信息！");
-        } /*else {
-            aotiLatLon = new LatLng(Double.parseDouble(devices.get(0).getArch().getLatitude()),
-                    Double.parseDouble(devices.get(0).getArch().getLongitude()));
-        }*/
+        type = getIntent().getIntExtra("type",0);
+
+        if(type == TYPE_CAMERA){
+            camera_devices = (ArrayList<DevicesBean>) getIntent().getSerializableExtra("devices");
+            if(camera_devices == null || camera_devices.size() == 0 ){
+                ToastUtils.showLong("没有获取到设备地址信息！");
+            }else {
+                isHasData = true;
+            }
+        } else if(type == TYPE_ENVIRONMENT){
+            envir_devices = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
+            if(envir_devices == null || envir_devices.size() == 0 ){
+                ToastUtils.showLong("没有获取到设备地址信息！");
+            }else {
+                isHasData = true;
+            }
+        }
+
         initView(savedInstanceState);
     }
 
     private void initView(Bundle savedInstanceState){
         TextView tv_title = (TextView) findViewById(R.id.toolbar_title);
-        tv_title.setText("视频监控地图");
+
+        if(type == TYPE_CAMERA){
+            tv_title.setText("视频监控地图");
+        } else if(type == TYPE_ENVIRONMENT) {
+            tv_title.setText("环境监控地图");
+        } else if(type == 0){
+            tv_title.setText("");
+        }
+
 
         findViewById(R.id.btn_back).setOnClickListener(this);
+
+        ImageButton btn_search = (ImageButton) findViewById(R.id.btn_icon);
+        btn_search.setImageResource(R.drawable.search);
 
         mMapView = (MapView) findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
@@ -102,48 +152,91 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(new CameraPosition(aotiLatLon,12f,0,0));
         aMap.moveCamera(update);
 
-        if(devices != null && devices.size() != 0){
-            initMarker();
+        if((camera_devices != null && camera_devices.size() != 0)){
+
         }
 
+        if(isHasData){
+            initMarker();
+        }
     }
 
     private void initMarker(){
-        for (int i = 0; i < devices.size(); i++){
-            DevicesBean device = devices.get(i);
-            LatLng latLng = new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude()));
-            MarkerOptions markerOption = new MarkerOptions();
-            markerOption.position(latLng);
-            markerOption.visible(true);
+        if(type == TYPE_CAMERA){
+            for (int i = 0; i < camera_devices.size(); i++){
+                DevicesBean device = camera_devices.get(i);
+                LatLng latLng = new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude()));
+                MarkerOptions markerOption = new MarkerOptions();
+                markerOption.position(latLng);
+                markerOption.visible(true);
 
-            markerOption.draggable(false);//设置Marker可拖动
+                markerOption.draggable(false);//设置Marker可拖动
 
-            //0在线，1离线，2故障
-            if("0".equals(device.getDeviceStatus())){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_normal)));
-            }else if("1".equals(device.getDeviceStatus())){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_gray)));
-            } else  if("2".equals(device.getDeviceStatus())){
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(),R.drawable.camera_red)));
+                //0在线，1离线，2故障
+                if("0".equals(device.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_normal)));
+                }else if("1".equals(device.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_gray)));
+                } else  if("2".equals(device.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_red)));
+                }
+
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(true);//设置marker平贴地图效果
+
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setAnchor(0.5f,1.2f);
+
+                marker.setObject(device);
             }
+        } else if(type == TYPE_ENVIRONMENT){
+            for (int i = 0; i < envir_devices.size(); i++){
+                DataQueryVoBean device = envir_devices.get(i);
+//                LatLng latLng = new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude()));
+                MarkerOptions markerOption = new MarkerOptions();
+                markerOption.position(aotiLatLon);
+                markerOption.visible(true);
 
-            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-            markerOption.setFlat(true);//设置marker平贴地图效果
+                markerOption.draggable(false);//设置Marker可拖动
+                //0在线，1离线，2故障
+                if(0 == device.getDeviceStatus()){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_blue)));
+                }else if(1 == device.getDeviceStatus()){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_gray)));
+                } else  if(2 == device.getDeviceStatus()){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_red)));
+                }
 
-            Marker marker = aMap.addMarker(markerOption);
-            marker.setAnchor(0.5f,1.2f);
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(true);//设置marker平贴地图效果
 
-            marker.setObject(device);
+                Marker marker = aMap.addMarker(markerOption);
+                marker.setAnchor(0.5f,1.2f);
+
+                marker.setObject(device);
+            }
         }
+
+
+
     }
 
     private void addAndRemoveRoundMarker(){
         MarkerOptions markerOption1 = new MarkerOptions();
-        markerOption1.position(new LatLng(Double.parseDouble(currentDevice.getLatitude()
-                               ), Double.parseDouble(currentDevice.getLongitude())));
+        if(type == TYPE_CAMERA){
+            markerOption1.position(new LatLng(Double.parseDouble(currentCameraDevice.getLatitude()
+            ), Double.parseDouble(currentCameraDevice.getLongitude())));
+        }else if(type == TYPE_ENVIRONMENT){
+            markerOption1.position(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()
+            ), Double.parseDouble(currentEnvirDevice.getLongitude())));
+        }
+
         markerOption1.visible(true);
 
         markerOption1.draggable(false);//设置Marker可拖动
@@ -179,6 +272,25 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         historyView.setOnClickListener(this);
         galleryView.setOnClickListener(this);
 
+        eviorment_view = popWindowView.findViewById(R.id.eviorment_view);
+
+        tv_pm10 = (TextView) popWindowView.findViewById(R.id.text_pm10);
+        tv_pm25 = (TextView) popWindowView.findViewById(R.id.text_pm25);
+        tv_pmso2 = (TextView) popWindowView.findViewById(R.id.text_so2);
+        tv_pmno2 = (TextView) popWindowView.findViewById(R.id.text_no2);
+        background_line = popWindowView.findViewById(R.id.background_line);
+        if(type == TYPE_CAMERA){
+            eviorment_view.setVisibility(View.GONE);
+            tv_video.setText("实时视频");
+            tv_history.setText("历史监控");
+            tv_gallery.setText("视频抓拍");
+
+        } else if(type == TYPE_ENVIRONMENT){
+            galleryView.setVisibility(View.GONE);
+            background_line.setVisibility(View.GONE);
+            tv_video.setText("实时数据");
+            tv_history.setText("历史数据");
+        }
 
         mPopWindow = new PopupWindow(this);
         mPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -232,13 +344,24 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 mPopWindow.dismiss();
                 break;
             case R.id.video:
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("resCode", currentDevice.getDeviceCoding());
-                bundle.putInt("resSubType", currentDevice.getDeviceType());
-                intent.putExtras(bundle);
-                intent.setClass(this, VideoPlayActivity.class);
-                startActivity(intent);
+                if(type == TYPE_CAMERA){
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("resCode", currentCameraDevice.getDeviceCoding());
+                    bundle.putInt("resSubType", currentCameraDevice.getDeviceType());
+                    intent.putExtras(bundle);
+                    intent.setClass(this, VideoPlayActivity.class);
+                    startActivity(intent);
+                } else if(type == TYPE_ENVIRONMENT){
+                    /*Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("resCode", currentDevice.getDeviceCoding());
+                    bundle.putInt("resSubType", currentDevice);
+                    intent.putExtras(bundle);
+                    intent.setClass(this, VideoPlayActivity.class);
+                    startActivity(intent);*/
+                }
+
                 break;
             case R.id.history:
                 Date now = new Date();
@@ -248,10 +371,10 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
                 Intent intent1 = new Intent();
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("resCode", currentDevice.getDeviceCoding());
-                bundle1.putInt("resSubType", currentDevice.getDeviceType());
-                bundle1.putString("resName", currentDevice.getDeviceName());
-                bundle1.putBoolean("isOnline", "0".equals(currentDevice.getDeviceStatus()));
+                bundle1.putString("resCode", currentCameraDevice.getDeviceCoding());
+                bundle1.putInt("resSubType", currentCameraDevice.getDeviceType());
+                bundle1.putString("resName", currentCameraDevice.getDeviceName());
+                bundle1.putBoolean("isOnline", "0".equals(currentCameraDevice.getDeviceStatus()));
                 bundle1.putString("beginTime", beginTime);
                 bundle1.putString("endTime", endTime);
                 //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -272,48 +395,128 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     @Override
     public boolean onMarkerClick(Marker marker) {
         if(marker.getObject() != null){
-            DevicesBean device = (DevicesBean) marker.getObject();
-            currentDevice = device;
-            tv_deviceNumber.setText(device.getDeviceId());
-            if("0".equals(device.getDeviceStatus())){
-                tv_isOnline.setText("在线");
-                tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
-            } else if("1".equals(device.getDeviceStatus())){
-                tv_isOnline.setText("离线");
-                tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
-            } else if("2".equals(device.getDeviceStatus())){
-                tv_isOnline.setText("故障");
-                tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
+            if(type == TYPE_CAMERA){
+                DevicesBean device = (DevicesBean) marker.getObject();
+                currentCameraDevice = device;
+                tv_deviceNumber.setText(device.getDeviceId());
+                if("0".equals(device.getDeviceStatus())){
+                    tv_isOnline.setText("在线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
+                } else if("1".equals(device.getDeviceStatus())){
+                    tv_isOnline.setText("离线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
+                } else if("2".equals(device.getDeviceStatus())){
+                    tv_isOnline.setText("故障");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
+                }
+                tv_deviceTime.setText("安装日期：" + device.getInstallTime().substring(0,10));
+                tv_deviceAddress.setText(device.getArch().getName());
+                if("0".equals(device.getDeviceStatus())){
+                    videoView.setClickable(true);
+                    videoView.setEnabled(true);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
+                    galleryView.setClickable(true);
+                    galleryView.setEnabled(true);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    videoView.setClickable(false);
+                    videoView.setEnabled(false);
+                    historyView.setClickable(false);
+                    historyView.setEnabled(false);
+                    galleryView.setClickable(false);
+                    galleryView.setEnabled(false);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
+                }
+
+            } else if(type == TYPE_ENVIRONMENT){
+                DataQueryVoBean device = (DataQueryVoBean) marker.getObject();
+                currentEnvirDevice = device;
+                tv_deviceNumber.setText(device.getDeviceId());
+                if(0 == device.getDeviceStatus()){
+                    tv_isOnline.setText("在线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
+                } else if(1 == device.getDeviceStatus()){
+                    tv_isOnline.setText("离线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
+                } else if(2 == device.getDeviceStatus()){
+                    tv_isOnline.setText("故障");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
+                }
+                tv_deviceTime.setText("安装日期：" + device.getInstallTime().substring(0,10));
+                //TODO 需要更改数据
+                tv_deviceAddress.setText("光谷一路");
+                if(0 == device.getDeviceStatus()){
+                    videoView.setClickable(true);
+                    videoView.setEnabled(true);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
+                    galleryView.setClickable(true);
+                    galleryView.setEnabled(true);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    videoView.setClickable(false);
+                    videoView.setEnabled(false);
+                    historyView.setClickable(false);
+                    historyView.setEnabled(false);
+                    galleryView.setClickable(false);
+                    galleryView.setEnabled(false);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
+                }
+
+                String pm10 = "";
+                double d_pm10 = device.getPm10();
+                int pm_10 = (int) d_pm10;
+
+                double d_pm25 = device.getPm2_5();
+                int pm_25 = (int) d_pm25;
+
+                double d_so2 = device.getCo2();
+                int pm_so2 = (int) d_so2;
+
+                if(pm_10 < 50){
+                    pm10 = "PM10：<font color='" + COLOR_50 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 150){
+                    pm10 = "PM10：<font color='" + COLOR_150 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 250){
+                    pm10 = "PM10：<font color='" + COLOR_250 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 350){
+                    pm10 = "PM10：<font color='" + COLOR_350 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 420){
+                    pm10 = "PM10：<font color='" + COLOR_420 + "'>" + pm_10 + "</font>";
+                } else {
+                    pm10 = "PM10：<font color='" + COLOR_600 + "'>" + pm_10 + "</font>";
+                }
+
+                tv_pm10.setText(Html.fromHtml(pm10));
+                String pm25 = "PM2.5：<font color='" + COLOR_0 + "'> + " + pm_25 + "</font>";
+                tv_pm25.setText(Html.fromHtml(pm25));
+                String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+                tv_pmso2.setText(Html.fromHtml(so2));
+                String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+                tv_pmno2.setText(Html.fromHtml(no2));
             }
-            tv_deviceTime.setText("安装日期：" + device.getInstallTime().substring(0,10));
-            tv_deviceAddress.setText(device.getArch().getName());
-            if("0".equals(device.getDeviceStatus())){
-                videoView.setClickable(true);
-                videoView.setEnabled(true);
-                historyView.setClickable(true);
-                historyView.setEnabled(true);
-                galleryView.setClickable(true);
-                galleryView.setEnabled(true);
-                iv_video.setImageResource(R.drawable.time);
-                iv_history.setImageResource(R.drawable.history);
-                iv_gallery.setImageResource(R.drawable.capture);
-                tv_video.setTextColor(getResources().getColor(R.color.colorPrimary));
-                tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
-                tv_gallery.setTextColor(getResources().getColor(R.color.colorPrimary));
-            } else {
-                videoView.setClickable(false);
-                videoView.setEnabled(false);
-                historyView.setClickable(false);
-                historyView.setEnabled(false);
-                galleryView.setClickable(false);
-                galleryView.setEnabled(false);
-                iv_video.setImageResource(R.drawable.time);
-                iv_history.setImageResource(R.drawable.history);
-                iv_gallery.setImageResource(R.drawable.capture);
-                tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
-                tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
-                tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
-            }
+
             addAndRemoveRoundMarker();
 
             mPopWindow.showAtLocation(mMapView, Gravity.BOTTOM,0,DensityUtils.dip2px(this,-8));

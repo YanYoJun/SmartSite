@@ -8,7 +8,8 @@
     android:fitsSystemWindows="true"
     >
 
-   <include layout="@layout/layout_toorbar_no_icon"></include>
+
+   <include layout="@layout/layout_toolbar_one_icon"></include>
 
     <com.amap.api.maps.MapView
         android:layout_width="match_parent"

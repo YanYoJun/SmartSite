@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
@@ -31,7 +32,7 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
     public static  final  int HANDLER_GET_DATA_START = 1;
     public static  final  int HANDLER_GET_DATA_END = 2;
     private HttpPost mHttpPost = new HttpPost();
-    private ArrayList<DevicesBean> mList = null;
+    private ArrayList<DataQueryVoBean> mList = null;
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_serch = null;
@@ -98,7 +99,8 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
     };
 
     private  void getDevices(){
-        mList = mHttpPost.getDevices("0","","","");
+//        mList = mHttpPost.getDevices("0","","","");
+        mList = mHttpPost.onePMDevicesDataList("","0","","");
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
 

@@ -16,7 +16,7 @@ public class PatrolBean {
     private String developmentCompany;//	建设单位
     private String constructionCompany;//	施工单位
     private String supervisionCompany;//		监理单位
-    private boolean isVisit;  //	是否回访
+    private boolean needVisit;  //	是否回访
     private String visitDate;  //	date(yyyy-MM-dd HH:mm:ss)	回访时间
     private ArrayList<ReportBean> reports;
 
@@ -101,11 +101,11 @@ public class PatrolBean {
     }
 
     public boolean isVisit() {
-        return isVisit;
+        return needVisit;
     }
 
     public void setVisit(boolean visit) {
-        isVisit = visit;
+        needVisit = visit;
     }
 
     public String getVisitDate() {

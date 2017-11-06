@@ -53,17 +53,17 @@
     <color name="bgColor_actionsheet_cancel_nor">#ffffff</color>
 
     <!--环境监控  优-->
-    <color name="huanjin_you">#3cd080</color>
+    <color name="huanjin_you">#01b663</color>
     <!--环境监控  良-->
-    <color name="huanjin_liang">#599fff</color>
+    <color name="huanjin_liang">#ffd801</color>
     <!--环境监控  轻度-->
-    <color name="huanjin_qingdu">#ffcc00</color>
+    <color name="huanjin_qingdu">#fd8200</color>
     <!--环境监控  中度-->
-    <color name="huanjin_zhong1du">#ff6600</color>
+    <color name="huanjin_zhong1du">#fd0001</color>
     <!--环境监控  重度-->
-    <color name="huanjin_zhongdu">#ff0000</color>
+    <color name="huanjin_zhongdu">#95014b</color>
     <!--环境监控  严重污染-->
-    <color name="huanjin_yanzhong">#000000</color>
+    <color name="huanjin_yanzhong">#5c011b</color>
     <!-- main   end -->
     <!-- map   start -->
     <color name="devices_press">#88ffffff</color>

@@ -100,7 +100,8 @@
                         android:layout_marginLeft="10dp"
                         android:text="东南风2级"
                         android:textColor="#ffffff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:id="@+id/fengxiang_textview"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -121,7 +122,8 @@
                         android:layout_marginLeft="10dp"
                         android:text="51%"
                         android:textColor="#ffffff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:id="@+id/shidu_textview"/>
                 </LinearLayout>
             </LinearLayout>
 

@@ -260,31 +260,13 @@ public class ReportOperation {
     public static void reportFileUpload(String strurl, OkHttpClient mClient, String filepath, int id){
 
         String funName = "reportFileUpload";
-        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), new File(filepath));
+        File file = new File(filepath);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"),file);
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file","test.png",fileBody)
+                .addFormDataPart("file",file.getName(),fileBody)
                 .addFormDataPart("id", id+"")
                 .build();
-
-
-        ///                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\""),
-//                        RequestBody.create(MEDIA_TYPE_PNG, file))
-//                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"imagetype\""),
-//                        RequestBody.create(null, imageType))
-//                .addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"userphone\""),
-//                        RequestBody.create(null, userPhone))
-
-        /*RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), new File(filepath));
-
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addPart(Headers.of("Content-Disposition","form-data; name=\"id\""),RequestBody.create(null, ""+id))
-                .addPart(Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"test.png\""), fileBody)
-                .build();*/
 
         Request request = new Request.Builder()
                 .url(strurl)
@@ -317,8 +299,9 @@ public class ReportOperation {
     }
 
 
-    public static void  getDictionaryList(String strurl, OkHttpClient mClient,String lang,int category){
+    public static ArrayList<DictionaryBean>  getDictionaryList(String strurl, OkHttpClient mClient,String lang,int category){
         String funName = "getDictionaryList";
+        ArrayList<DictionaryBean> list = null;
         FormBody body = new FormBody.Builder()
                 .add("lang", lang)
                 .add("category",category+"")
@@ -335,14 +318,36 @@ public class ReportOperation {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                //String content = new JSONObject(responsebody).getString("content");
-                //list = HttpPost.stringToList(content,DataQueryVoBean.class);
+                list = HttpPost.stringToList(responsebody,DictionaryBean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } /*catch (JSONException e) {
+        }
+        return list;
+    }
+
+    public static  ArrayList<String> getPatrolAddress(String strurl, OkHttpClient mClient){
+        String funName = "getPatrolAddress";
+        ArrayList<String> list = null;
+        Request request = new Request.Builder()
+                .url(strurl)
+                .get()
+                .addHeader("X-Requested-With","X-Requested-With")
+                .build();
+        Response response = null;
+        try {
+            response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                list = HttpPost.stringToList(responsebody,String.class);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
+        return list;
     }
 
 }

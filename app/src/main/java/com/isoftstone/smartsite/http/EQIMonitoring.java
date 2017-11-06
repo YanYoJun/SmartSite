@@ -76,7 +76,14 @@ public class EQIMonitoring {
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
                 //
                 Gson gson = new Gson();
-                monthlyComparisonBean = gson.fromJson(responsebody,MonthlyComparisonBean.class);
+                if(type.equals("0")){
+                    ArrayList<MonthlyComparisonBean.AirQualityBean> list = new ArrayList<MonthlyComparisonBean.AirQualityBean>();
+                    list = HttpPost.stringToList(responsebody,MonthlyComparisonBean.AirQualityBean.class);
+                    monthlyComparisonBean = new MonthlyComparisonBean();
+                    monthlyComparisonBean.setCurrentMonth(list);
+                }else {
+                    monthlyComparisonBean = gson.fromJson(responsebody,MonthlyComparisonBean.class);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

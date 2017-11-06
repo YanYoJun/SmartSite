@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.DataQueryBean;
 import com.isoftstone.smartsite.http.HomeBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MobileHomeBean;
@@ -63,13 +64,12 @@ public class MainFragment extends BaseFragment{
     private ImageView wuran_icon = null;
     private TextView wuran_text = null;
     private TextView wuran_number = null;
+    private TextView shidu_textview = null;
+    private TextView fengxiang_textview = null;
 
     public static final  int HANDLER_GET_HOME_DATA_START = 1;
     public static final  int HANDLER_GET_HOME_DATA_END = 2;
-    public static final  int HANDLER_GET_WEATHER_DATA_START = 3;
-    public static final  int HANDLER_GET_WEATHER_DATA_END = 4;
     private MobileHomeBean mMobileHomeBean = null;
-    private WeatherLiveBean mWeatherLiveBean = null;
 
     @Override
     protected int getLayoutRes() {
@@ -80,7 +80,6 @@ public class MainFragment extends BaseFragment{
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
         mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_START);
-        mHandler.sendEmptyMessage(HANDLER_GET_WEATHER_DATA_START);
     }
 
     private void initView(){
@@ -150,15 +149,11 @@ public class MainFragment extends BaseFragment{
         wuran_icon = (ImageView) rootView.findViewById(R.id.wuran_icon);
         wuran_text = (TextView) rootView.findViewById(R.id.wuran_text);
         wuran_number = (TextView) rootView.findViewById(R.id.wuran_number);
-        setWuran();
+        shidu_textview = (TextView) rootView.findViewById(R.id.shidu_textview);
+        fengxiang_textview = (TextView) rootView.findViewById(R.id.fengxiang_textview);
     }
 
-    private void setWuran(){
-        wuran_image.setBackgroundResource(R.drawable.wuran_qingdu_jingdu);
-        wuran_icon.setBackgroundResource(R.drawable.main_aqi);
-        wuran_text.setText("轻度污染");
-        wuran_number.setText(""+165);
-    }
+
 
     private Handler mHandler = new Handler(){
         @Override
@@ -179,29 +174,30 @@ public class MainFragment extends BaseFragment{
                     setMobileHomeDataToView();
                 }
                     break;
-                case HANDLER_GET_WEATHER_DATA_START:{
-                    Thread thread = new Thread(){
-                        @Override
-                        public void run() {
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String time = df.format(new Date());
-                            mWeatherLiveBean = mHttpPost.getWeatherLive("1",time);
-                            mHandler.sendEmptyMessage(HANDLER_GET_WEATHER_DATA_END);
-                        }
-                    };
-                    thread.start();
-                }
-                    break;
-                case HANDLER_GET_WEATHER_DATA_END:{
-                    setWeatherData();
-                }
-                    break;
             }
         }
     };
 
     private void setWeatherData(){
           //设置天气情况
+        /*
+        R.drawable.wuran_you_jingdu
+        R.drawable.wuran_you_jingdu
+        R.drawable.wuran_liang_jingdu
+        R.drawable.wuran_zhong1du_jingdu
+        R.drawable.wuran_zhongdu_jingdu
+        R.drawable.wuran_yanzhong_jingdu
+        */
+        DataQueryBean dataQueryBean = mMobileHomeBean.getAvgEqis();
+        if(dataQueryBean != null){
+            wuran_image.setBackgroundResource(R.drawable.wuran_qingdu_jingdu);
+            wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+            wuran_text.setText("轻度污染");
+            wuran_number.setText(""+165);
+            mTemperatureTextView.setText(dataQueryBean.getAirTemperature()+"");
+            //shidu_textview.setText(dataQueryBean.getAirHumidity()+"%");
+            //fengxiang_textview.setText(dataQueryBean.get);
+        }
     }
 
     private void setMobileHomeDataToView(){
@@ -226,6 +222,9 @@ public class MainFragment extends BaseFragment{
         lab_vcr_unread_num.setText(mMobileHomeBean.getAllVses()+"");//视频监控设备数
         lab_air_unread_num.setText(mMobileHomeBean.getAllEmes()+"");//环境监控数目
 
+        //设置天气参数
+        setWeatherData();
+        //设置即使消息
         InstantMessageAdapter adapter = new InstantMessageAdapter(getContext());
         adapter.setData(mMobileHomeBean.getMessages());
         mListView.setAdapter(adapter);

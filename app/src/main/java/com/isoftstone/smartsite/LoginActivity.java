@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.request.target.ImageViewTargetFactory;
 import com.isoftstone.smartsite.common.NewKeepAliveService;
+import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.http.PatrolBean;
@@ -369,6 +370,18 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
             */
 
 			//mHttpPost.getDictionaryList("zh",2);
+
+			/*ArrayList<String> addresslist = mHttpPost.getPatrolAddress();
+			for (String str:addresslist){
+				Log.i("Test",str);
+			}*/
+
+			/*
+			ArrayList<DictionaryBean> list = mHttpPost.getDictionaryList("zh",1);
+			for (DictionaryBean str:list){
+				Log.i("Test",str.getContent()+" "+str.getValue());
+			}
+			*/
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;

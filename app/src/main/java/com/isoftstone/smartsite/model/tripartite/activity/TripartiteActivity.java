@@ -232,7 +232,7 @@ public class TripartiteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //new QueryMsgTask().execute();
+        new QueryMsgTask().execute();
     }
 
     public ArrayList<ReportData> getDatas() {

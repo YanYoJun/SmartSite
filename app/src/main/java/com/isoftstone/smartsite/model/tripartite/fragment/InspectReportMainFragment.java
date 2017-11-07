@@ -60,7 +60,7 @@ public class InspectReportMainFragment extends BaseFragment {
                     }
                     ArrayList<ReportData> sourceData = mActivity.getDatas();
                     for (ReportData temp : sourceData) {
-                        if (mAccountName.equals(temp.getCreator())) {
+                        if (mAccountName.equals(temp.getCreator().getAccount())) {
                             mDatas.add(temp);
                         }
                     }

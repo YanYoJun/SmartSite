@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
-import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
@@ -117,7 +116,7 @@ public class RevisitFragment extends BaseFragment {
 
     private void initView() {
         mReportPeopleName = (TextView) getView().findViewById(R.id.lab_report_people_name);
-        //mReportPeopleName.setText(mHttpPost.mLoginBean.getmName());
+        mReportPeopleName.setText(mHttpPost.mLoginBean.getmName());
         mName = (TextView) getView().findViewById(R.id.lab_name);
         mReportName = (TextView) getView().findViewById(R.id.lab_report_name);
         mReportMsg = (TextView) getView().findViewById(R.id.lab_report_msg);

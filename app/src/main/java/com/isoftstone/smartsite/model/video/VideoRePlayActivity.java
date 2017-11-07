@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -55,10 +61,6 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private String mEndTime;
     private String mFileName;
     private int mPosition;
-    private LinearLayout  mPalyerControllerLayout;
-    private ImageView mPlayPreviousIV;
-    private ImageView mPlayPlayIV;
-    private ImageView mPlayNextIV;
     private ImageView mBackView;
 
     //message.what
@@ -66,6 +68,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private static final int VISIBLE_TOP_BOTTOM = 0x113;    //视频顶部，底部布局的显示隐藏
     private static final int SEEKBAR_TOUCHED = 0x114;   //滑动进度条被手动滑动后(快进快退)
     private static final int SYSTEM_TIME_CHANED = 0x115;   //系统时间发生改变时
+    private static final int START_REPLAY_VIDEO = 0x116;   //开始播放历史视频
 
     private static final int PLAY = 0;
     //private static final int PAUSE = 1;
@@ -81,8 +84,22 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private SeekBar  mBottomSeekBar;
     private ImageView mCaptureView;
     private ImageView mShowFullScreenView;
+    private ImageView mShowSmallScreenView;
     private LinearLayout mPortLayout;
     private Toolbar mTitleToolbar;
+    private LinearLayout mPlaySeekbarLandLayout;
+    private RelativeLayout mPlaySeekbarPortLayout;
+
+    private TextView mCameraCodeView;
+    private TextView mCameraTypeView;
+    private String mCameraType;
+    private TextView mCameraNameView;
+    private String mCameraName;
+    private boolean isCameraOnLine = false;
+    private ImageView mIsOnLineView;
+    private TextView mBeginDateView;
+    private TextView mEndDateView;
+    private TextView mStartPlayView;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -113,7 +130,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         mEndTime = bundle.getString("endTime");
         mFileName = bundle.getString("fileName");
         mPosition = bundle.getInt("position");
-
+        mCameraName = bundle.getString("resName");
+        mCameraType= bundle.getString("resSubType");
+        isCameraOnLine = bundle.getBoolean("isOnline");
 
         /**mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -129,21 +148,38 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
         mBackView = (ImageView) findViewById(R.id.iv_back);
         mBackView.setOnClickListener(this);
-        mCaptureView = (ImageView)findViewById(R.id.capture_view);
+        mCaptureView = (ImageView)findViewById(R.id.capture_replay_view);
         mCaptureView.setOnClickListener(this);
         mShowFullScreenView = (ImageView) findViewById(R.id.show_full_screen_view);
         mShowFullScreenView.setOnClickListener(this);
+        mShowSmallScreenView = (ImageView) findViewById(R.id.show_small_screen_view);
+        mShowSmallScreenView.setOnClickListener(this);
         mPortLayout = (LinearLayout) findViewById(R.id.port_layout);
         mTitleToolbar = (Toolbar) findViewById(R.id.video_toolbar);
-        mPalyerControllerLayout = (LinearLayout) findViewById(R.id.media_player_controller_layout);
-        mPlayPreviousIV = (ImageView) findViewById(R.id.play_previous);
-        mPlayPlayIV = (ImageView) findViewById(R.id.play_play);
-        mPlayNextIV = (ImageView) findViewById(R.id.play_next);
-        mBottomSeekBar = (SeekBar) findViewById(R.id.play_seekbar);
+        mPlaySeekbarLandLayout = (LinearLayout) findViewById(R.id.play_seekbar_land_layout);
+        mPlaySeekbarPortLayout = (RelativeLayout) findViewById(R.id.play_seekbar_port_layout);
+        mCameraCodeView  = (TextView) findViewById(R.id.res_code_tv);
+        mCameraCodeView.setText(mResCode);
+        mCameraTypeView = (TextView) findViewById(R.id.res_type_tv);
+        mCameraTypeView.setText(mCameraType);
+        mCameraNameView = (TextView) findViewById(R.id.res_name_tv);
+        mCameraNameView.setText(mCameraName);
+        mIsOnLineView = (ImageView) findViewById(R.id.is_online_tv);
+        if (isCameraOnLine) {
+            mIsOnLineView.setImageResource(R.drawable.online);
+        } else {
+            mIsOnLineView.setImageResource(R.drawable.offline);
+        }
+        mBeginDateView = (TextView) findViewById(R.id.begin_time_txt);
+        mBeginDateView.setText(mBeginTime);
+        mEndDateView = (TextView) findViewById(R.id.end_time_txt);
+        mEndDateView.setText(mEndTime);
+        mStartPlayView = (TextView) findViewById(R.id.start_play_view);
+        mStartPlayView.setOnClickListener(this);
 
-        mPlayPreviousIV.setOnClickListener(this);
-        mPlayPlayIV.setOnClickListener(this);
-        mPlayNextIV.setOnClickListener(this);
+
+
+        mBottomSeekBar = (SeekBar) findViewById(R.id.play_seekbar_for_land);
         mBottomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -159,6 +195,20 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             public void onStopTrackingTouch(SeekBar seekBar) {
                 ToastUtils.showShort(seekBar.getProgress() + "");
                 mHandler.sendEmptyMessage(SEEKBAR_TOUCHED);
+            }
+        });
+
+        visiblePlayerSeekbarLayout(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+
+        mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+                        break;
+                }
+                return false;
             }
         });
     }
@@ -258,6 +308,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             //停止回放
             ServiceManager.stopReplay(mPlayer.getPlaySession(), null);
             mEndDateTime = getNowDateTime();
+            mStartPlayView.setEnabled(true);
         }
 
         //停止收流线程
@@ -293,10 +344,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.play_previous:
-
-                break;
-            case R.id.play_play:
+            /**case R.id.play_play:
                 if (null == mPlayer) {
                     return;
                 }
@@ -317,14 +365,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                         //ToastUtils.showShort("mVideoBeginTime : " + mVideoBeginTime + "    &  mVideoEndTime:  " + mVideoEndTime);
                     }
                 }
-                break;
-            case R.id.play_next:
+                break;*/
 
-                break;
             case R.id.iv_back:
                 VideoRePlayActivity.this.finish();
                 break;
-            case R.id.capture_view:
+            case R.id.capture_replay_view:
                 //抓拍图片，返回路径
                 String path = mPlayer.snatch(null);
                 if (null != path) {
@@ -332,13 +378,18 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 }
                 break;
             case R.id.show_full_screen_view:
-                Log.i("zyf1","onClick");
                 if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_PORTRAIT) {
-                    Log.i("zyf1","竖屏");
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE) {
-                    Log.i("zyf1","横屏");
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+                break;
+            case R.id.show_small_screen_view:
+                 if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE) {
+                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                 }
+                break;
+            case R.id.start_play_view:
+                if (mStartPlayView.isEnabled()) {
+                    mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
                 }
                 break;
             default:
@@ -349,7 +400,33 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        onScreenOrientationChanged(newConfig);
+        final Configuration config = newConfig;
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                onScreenOrientationChanged(config);
+            }
+        });
+    }
+
+
+    /**
+     * 设置顶部，底部布局的显示和隐藏
+     */
+    private void visiblePlayerSeekbarLayout(boolean isLand0rientation) {
+        if (isLand0rientation) {
+            mPortLayout.setVisibility(View.GONE);
+            mPlaySeekbarLandLayout.setVisibility(View.VISIBLE);
+            mPlaySeekbarPortLayout.setVisibility(View.GONE);
+            mTitleToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        } else {
+            mPortLayout.setVisibility(View.VISIBLE);
+            mPlaySeekbarLandLayout.setVisibility(View.GONE);
+            mPlaySeekbarPortLayout.setVisibility(View.VISIBLE);
+            mTitleToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
     }
 
     /**
@@ -357,42 +434,52 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
      *
      * @param config
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void onScreenOrientationChanged(Configuration config) {
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
-            //隐藏状态栏
-            WindowManager.LayoutParams attrs = getWindow().getAttributes();
-            attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            getWindow().setAttributes(attrs);
-            getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            hideStatusBarAndNavigationBar();
 
+            Display d = getWindowManager().getDefaultDisplay();
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
 
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
-            lp.setMargins(0,0,0,0);
+            lp.setMargins(0,0,(realWidth - displayWidth) > 0 ? (realWidth - displayWidth) : 0 , (realHeight - displayHeight) > 0 ?  (realHeight - displayHeight) : 0);
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
             lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
             mSurfaceView.setLayoutParams(lp);
-            mPortLayout.setVisibility(View.GONE);
-            mTitleToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
+
+            visiblePlayerSeekbarLayout(true);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPlaySeekbarLandLayout.getLayoutParams();
+            layoutParams.setMargins(0,0,(realWidth - displayWidth) > 0 ? (realWidth - displayWidth) + getResources().getDimensionPixelOffset(R.dimen.play_seekbar_layout_margin_right) : getResources().getDimensionPixelOffset(R.dimen.play_seekbar_layout_margin_right)
+                    , (realHeight - displayHeight) > 0 ?  (realHeight - displayHeight) + getResources().getDimensionPixelOffset(R.dimen.play_seekbar_layout_margin_bottom) : getResources().getDimensionPixelOffset(R.dimen.play_seekbar_layout_margin_bottom));
+            mPlaySeekbarLandLayout.setLayoutParams(layoutParams);
             //mIvSuspension.setImageResource(R.mipmap.video_play_icon_suspension);
             //mRlTopSeerBar.setVisibility(View.VISIBLE);
             //mTvSystemTime.setVisibility(View.VISIBLE);
         } else if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
-            //显示状态栏
-            WindowManager.LayoutParams attrs = getWindow().getAttributes();
-            attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().setAttributes(attrs);
-            getWindow().clearFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            showStatusBarAndNavigationBar();
 
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
             int topMargin = getResources().getDimensionPixelOffset(R.dimen.tool_bar_height);
             lp.setMargins(0,topMargin,0,0);
+            //lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
             lp.height = getResources().getDimensionPixelOffset(R.dimen.surface_view_height);
             mSurfaceView.setLayoutParams(lp);
-            mPortLayout.setVisibility(View.VISIBLE);
-            mTitleToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
+
+            visiblePlayerSeekbarLayout(false);
             //mIvSuspension.setImageResource(R.mipmap.video_flotting_play_icon_suspension);
             //mRlTopSeerBar.setVisibility(View.GONE);
             //mTvSystemTime.setVisibility(View.GONE);
@@ -403,9 +490,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
         public void surfaceCreated(SurfaceHolder holder) {
             Log.d(TAG, "===== surfaceCreated =====");
-            if (mPlayer != null && !mPlayer.AVIsPlaying()) {
-                startReplay(mResCode, mBeginTime, mEndTime, mFileName, mPosition);
-            }
+            //if (mPlayer != null && !mPlayer.AVIsPlaying()) {
+            //    startReplay(mResCode, mBeginTime, mEndTime, mFileName, mPosition);
+            //}
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -430,7 +517,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     videoStateChanged();
                     break;
                 case VISIBLE_TOP_BOTTOM:
-                    visibleSurfaceTopAndBottom();
+                    //visibleSurfaceTopAndBottom();
                     if (isTopBottomVisible && !mHandler.hasMessages(VISIBLE_TOP_BOTTOM)) {
                         mHandler.sendEmptyMessageDelayed(VISIBLE_TOP_BOTTOM, 5000);
                     }
@@ -448,25 +535,17 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 case SYSTEM_TIME_CHANED:
 
                     break;
+                case START_REPLAY_VIDEO:
+                    Drawable drawable = null;
+                    mSurfaceView.setBackground(drawable);
+                    if (mPlayer != null && !mPlayer.AVIsPlaying()) {
+                        mStartPlayView.setEnabled(false);
+                        startReplay(mResCode, mBeginTime, mEndTime, mFileName, mPosition);
+                    }
+                    break;
             }
         }
     };
-
-    /**
-     * 设置顶部，底部布局的显示和隐藏
-     */
-    private void visibleSurfaceTopAndBottom() {
-        if (isTopBottomVisible) {
-            //mRlSurfaceTop.setVisibility(View.GONE);
-            mPalyerControllerLayout.setVisibility(View.GONE);
-            isTopBottomVisible = false;
-        } else {
-            //mRlSurfaceTop.setVisibility(View.VISIBLE);
-            mPalyerControllerLayout.setVisibility(View.VISIBLE);
-            isTopBottomVisible = true;
-        }
-    }
-
 
     /**
      * 改变Video的状态
@@ -501,15 +580,15 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private void videoStateChanged() {
         switch (mVideoState) {
             case PLAY:
-                mPlayPlayIV.setImageResource(R.drawable.pause);
-                mPlayPlayIV.invalidate();
+                //mPlayPlayIV.setImageResource(R.drawable.pause);
+                //mPlayPlayIV.invalidate();
                 break;
             /**case PAUSE:
                 mPlayPlayIV.setImageResource(R.drawable.litplay);
                 break;*/
             case STOP:
-                mPlayPlayIV.setImageResource(R.drawable.litplay);
-                mPlayPlayIV.invalidate();
+                //mPlayPlayIV.setImageResource(R.drawable.litplay);
+                //mPlayPlayIV.invalidate();
                 break;
         }
     }
@@ -519,5 +598,33 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         return now.getTime();
     }
 
+    private void hideStatusBarAndNavigationBar() {
+        //隐藏导航栏
+        /**View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);*/
+
+        //隐藏状态栏
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        getWindow().setAttributes(attrs);
+        getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
+
+    private void showStatusBarAndNavigationBar() {
+        //显示导航栏
+        /**View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+        decorView.setSystemUiVisibility(uiOptions);*/
+
+        //显示状态栏
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setAttributes(attrs);
+        getWindow().clearFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
 
 }

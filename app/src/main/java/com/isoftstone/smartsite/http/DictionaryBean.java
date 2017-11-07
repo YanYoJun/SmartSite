@@ -6,7 +6,11 @@ package com.isoftstone.smartsite.http;
 
 public class DictionaryBean {
     private String content;
-    private  int value;
+    private  String value;
+    private  String code;
+    private  String id;
+    private  String lang;
+    private  String category;
 
     public String getContent() {
         return content;
@@ -16,11 +20,43 @@ public class DictionaryBean {
         this.content = content;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -299,12 +299,12 @@ public class ReportOperation {
     }
 
 
-    public static ArrayList<DictionaryBean>  getDictionaryList(String strurl, OkHttpClient mClient,String lang,int category){
+    public static ArrayList<DictionaryBean>  getDictionaryList(String strurl, OkHttpClient mClient,String lang){
         String funName = "getDictionaryList";
         ArrayList<DictionaryBean> list = null;
         FormBody body = new FormBody.Builder()
                 .add("lang", lang)
-                .add("category",category+"")
+                .add("category","patrol.category")
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)
@@ -315,12 +315,14 @@ public class ReportOperation {
             response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
             if(response.isSuccessful()){
-
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                list = HttpPost.stringToList(responsebody,DictionaryBean.class);
+                String rawRecords = new JSONObject(responsebody).getString("rawRecords");
+                list = HttpPost.stringToList(rawRecords,DictionaryBean.class);
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return list;

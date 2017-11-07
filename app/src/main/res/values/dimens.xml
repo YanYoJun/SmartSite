@@ -39,6 +39,7 @@
     <dimen name="listview_divider">10dp</dimen>
     <!--msg   end -->
     <!--system   start -->
-
+    <dimen name="surface_view_height">210dp</dimen>
+    <dimen name="tool_bar_height">48dp</dimen>
     <!--system   end -->
 </resources>

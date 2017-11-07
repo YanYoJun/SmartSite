@@ -6,15 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -35,13 +32,13 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;;
+import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
 /**
  * Created by zyf on 2017/10/13 20:00.
  * 个人中心页面
@@ -68,7 +65,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private EditText mUserPhoneNumView;
     private ImageView mUserPhoneNum;
     private TextView mUserCompanyView;
-    private ImageView mUserCompany;
     private EditText mUserAutographView;
     private ImageView mUserAutograph;
     private RelativeLayout mUserCompanySelectLayout;
@@ -156,7 +152,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserPhoneNumView = (EditText) rootView.findViewById(R.id.user_phoneNum);
         mUserPhoneNum = (ImageView) rootView.findViewById(R.id.img_edit_7);
         mUserCompanyView = (TextView) rootView.findViewById(R.id.user_company);
-        mUserCompany = (ImageView) rootView.findViewById(R.id.img_edit_8);
         mUserAutographView = (EditText) rootView.findViewById(R.id.user_autograph);
         mUserAutograph = (ImageView) rootView.findViewById(R.id.img_edit_9);
         mUserCompanySelectLayout = (RelativeLayout)  rootView.findViewById(R.id.droparrow_layout);
@@ -478,12 +473,17 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         mUserAutographView.setText(userBean.getDescription());
         Log.i("zyf","getUserInfo--->" + userBean.toString());
 
-        Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
+        /**Bitmap headBitmap = BitmapFactory.decodeFile(picPath + userBean.getImageData());
         if (null != headBitmap) {
             mHeadImageView.setImageBitmap(headBitmap);
         } else {
             mHeadImageView.setImageResource(R.drawable.default_head);
-        }
+        }*/
+
+        String urlString = mHttpPost.getFileUrl(userBean.getImageData());
+        //ToastUtils.showShort("urlString = " + urlString);
+        //String urlstr = "http://g.hiphotos.baidu.com/zhidao/wh%3D600%2C800/sign=edebdc82f91986184112e7827add024b/b812c8fcc3cec3fda2f3fe96d788d43f86942707.jpg";
+        ImageUtils.loadImageWithPlaceHolder(mContext, mHeadImageView, urlString, R.drawable.default_head);
 
 
 
@@ -505,8 +505,8 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         UserBean userBean = new UserBean();
 
         userBean.setId(mUserId);
-        userBean.setAccount("admin");
-        userBean.setPassword("bmeB4000");
+        //userBean.setAccount("admin");
+        //userBean.setPassword("bmeB4000");
         //userBean.setImageData("upload\\admin920.png");
         //userBean.setFax("123");
         //userBean.setEmail("123@qq.com");
@@ -514,7 +514,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         //userBean.setAccountType(1);
 
         if (null !=  mUserNameView.getText()) {
-            userBean.setName(mUserNameView.getText().toString() + 2222);
+            userBean.setName(mUserNameView.getText().toString());
         }
         if (null !=  mUserSexView.getText()) {
             userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
@@ -554,7 +554,7 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     private void registerListener() {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == mRadioButton1.getId()) {
                     mUserSexView.setText(SEX_MALE_CODE);
                 } else {

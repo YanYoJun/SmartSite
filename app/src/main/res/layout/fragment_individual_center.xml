@@ -289,6 +289,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/msg_item_press_bg"
+            android:visibility="gone"
             android:paddingLeft="14dp"
             android:paddingRight="14dp">
 
@@ -440,13 +441,14 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_company"
-                    android:textColor="@color/single_text_color"
+                    android:textColor="@color/hit_text_color"
                     android:textSize="14sp" />
 
                 <RelativeLayout
                     android:id="@+id/droparrow_layout"
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true">
 
@@ -457,6 +459,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/droparrow" />
 
                 </RelativeLayout>
@@ -465,12 +468,11 @@
                     android:id="@+id/user_company"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/company_tv"
-                    android:layout_toLeftOf="@id/droparrow_layout"
-                    android:layout_marginRight="6dp"
+                    android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
+                    android:layout_toRightOf="@id/company_tv"
+                    android:layout_marginRight="6dp"
                     android:gravity="center_vertical|right"
-                    android:hint="请选择"
                     android:textColor="@color/des_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>

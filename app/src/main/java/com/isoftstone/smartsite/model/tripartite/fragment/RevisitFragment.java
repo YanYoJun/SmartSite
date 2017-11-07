@@ -25,11 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.User;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
@@ -235,7 +237,9 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setConstructionCompany(constructionCompany);
                     reportData.setSupervisionCompany(supervisionCompany);
                     reportData.setDate(DateUtils.format2.format(new Date()));
-                    reportData.setCreator(mHttpPost.mLoginBean.getmName());
+                    //
+                    UserBean user = new UserBean();
+                    reportData.setCreator(user);
                     //TODO type?
                     boolean visit = mRadioYes.isChecked();
                     String visitTime = mEditRevisitTime.getText().toString();
@@ -424,10 +428,10 @@ public class RevisitFragment extends BaseFragment {
             if (mIsAddReport) {
                 PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
                 mRevisitData.setPatrol(reponse);
-                mRevisitData.setCreator(reponse.getCreator());
+                mRevisitData.setCreator(reponse.getCreator().getName());
             } else {
                 mRevisitData.setPatrol(mReportData);
-                mRevisitData.setCreator(mReportData.getCreator());
+                mRevisitData.setCreator(mReportData.getCreator().getName());
             }
             mRevisitData.setDate(DateUtils.format2.format(new Date()));
             mRevisitData.setStatus(2);

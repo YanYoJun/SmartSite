@@ -59,7 +59,7 @@ public class PMDataInfoActivity extends Activity {
     public static  final  int HANDLER_GET_DATA_END = 2;
     public static  final  int HANDLER_GET_24DATA_START = 3;
     public static  final  int HANDLER_GET_24DATA_END = 4;
-    private String devicesId ;
+    private int devicesId ;
     private String address ;
     private ArrayList<DataQueryVoBean> list = null;
     private ArrayList<DataQueryVoBean> list_24 = null;
@@ -79,18 +79,16 @@ public class PMDataInfoActivity extends Activity {
     private TextView text_precipitation ;
 
     private Spinner shujuSpinner = null;
-    private String[] name = {"PM2.5","PM10","co2","uv"};
+    private String[] name = {"PM2.5","PM10","co2"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmdatainfo);
-        devicesId = getIntent().getStringExtra("id");
+        devicesId = getIntent().getIntExtra("id",0);
         address = getIntent().getStringExtra("address");
         init();
         setOnCliceked();
-        //setData();
-        //setLineChart();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
         mHandler.sendEmptyMessage(HANDLER_GET_24DATA_START);
     }
@@ -204,8 +202,8 @@ public class PMDataInfoActivity extends Activity {
         String startTime = df.format(calendar.getTime());
         calendar.add(Calendar.DATE, -1);
         String endTime = df.format(calendar.getTime());
-        list_24 =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","2",startTime,endTime);
-        //list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,startTime);
+        //list_24 =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","2",startTime,endTime);
+        list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,startTime);
         mHandler.sendEmptyMessage(HANDLER_GET_24DATA_END);
     }
 
@@ -252,9 +250,10 @@ public class PMDataInfoActivity extends Activity {
     }
 
     private void setLineChart(){
-        /*if(list_24 == null || list_24.size() <= 0){
+        if(list_24 == null || list_24.size() <= 0){
             return;
-        }*/
+        }
+        int index = shujuSpinner.getSelectedItemPosition();
         mLineChart.setDrawGridBackground(false);
 
         // no description text
@@ -264,69 +263,27 @@ public class PMDataInfoActivity extends Activity {
         mLineChart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        mLineChart.setDragEnabled(false);
-        mLineChart.setScaleEnabled(false);
+        mLineChart.setDragEnabled(false);  //是否可以缩放
+        mLineChart.setScaleEnabled(false);  //是否可以缩放
         // mChart.setScaleXEnabled(true);
         // mChart.setScaleYEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
         mLineChart.setPinchZoom(true);
-        mLineChart.setExtraOffsets(10,20,20,10);
+        mLineChart.setExtraOffsets(10,0,10,20);
 
-        // set an alternative background color
-        // mChart.setBackgroundColor(Color.GRAY);
 
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-        /*
-        MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-        mv.setChartView(mChart); // For bounds control
-        mLineChart.setMarker(mv); // Set the marker to the chart
-        */
-
-        // x-axis limit line
-        LimitLine llXAxis = new LimitLine(10f, "Index 10");
-        llXAxis.setLineWidth(4f);
-        llXAxis.enableDashedLine(10f, 10f, 0f);
-        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        llXAxis.setTextSize(10f);
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMaximum(24);
-        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
-
-        //Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
-        /*
-        LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-        ll1.setLineWidth(4f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll1.setTextSize(10f);
-        //ll1.setTypeface(tf);
-
-        LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-        ll2.setLineWidth(4f);
-        ll2.enableDashedLine(10f, 10f, 0f);
-        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        ll2.setTextSize(10f);
-        //ll2.setTypeface(tf);
-        */
 
         YAxis leftAxis = mLineChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        //leftAxis.addLimitLine(ll1);
-        //leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(100f);
-        leftAxis.setAxisMinimum(0f);
-        //leftAxis.setYOffset(20f);
-        //leftAxis.setEnabled(false);
         leftAxis.enableGridDashedLine(10f, 0f, 0f);
         leftAxis.setDrawZeroLine(false);
 
@@ -335,8 +292,6 @@ public class PMDataInfoActivity extends Activity {
 
         mLineChart.getAxisRight().setEnabled(false);
 
-        //mChart.getViewPortHandler().setMaximumScaleY(2f);
-        //mChart.getViewPortHandler().setMaximumScaleX(2f);
 
 
         mLineChart.animateX(2500);
@@ -344,68 +299,64 @@ public class PMDataInfoActivity extends Activity {
 
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
-
-        // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setEnabled(false);
-        // dont forget to refresh the drawing
-        // mChart.invalidate();
-
-        ArrayList<Entry> values = new ArrayList<Entry>();
-
-        /*int count = list_24.size();
-        for (int i = 0; i < count; i++) {
-
-            Double value = list_24.get(i).getPm2_5();
-            Entry entry = new Entry(i,Float.parseFloat(value.toString()));
-            values.add(entry);
-        }*/
-
-        for (int i = 0; i < 24; i++) {
-            double val = (Math.random() * 88) + 3;
-            Entry entry = new Entry(i,(float) val);
-            values.add(entry);
-        }
-
-        LineDataSet set2 = new LineDataSet(values, "DataSet 2");
-        set2.setDrawIcons(false);
-        // set the line to be drawn like this "- - - - - -"
-        set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
-        set2.setColor(Color.parseColor("#ff9e5d"));
-        set2.setCircleColor(Color.parseColor("#ff9e5d"));
-        set2.setDrawCircleHole(true);
-        set2.setFormLineWidth(1f);
-        set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-        set2.setFormSize(15.f);
-        set2.setLineWidth(1f);//设置线宽
-        set2.setCircleRadius(4f);//设置焦点圆心的大小
-        set2.setCircleHoleRadius(2);
-        set2.setCircleColorHole(Color.WHITE);
-        set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-        set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-        set2.setHighlightEnabled(false);//是否禁用点击高亮线
-        set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-        set2.setValueTextSize(9f);//设置显示值的文字大小
-        set2.setDrawFilled(false);//设置禁用范围背景填充
-
-        if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-            //set1.setFillDrawable(drawable);
-        }
-        else {
-            set2.setFillColor(Color.BLACK);
-        }
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set2); // add the datasets
+        int beforeMonthSize = list_24.size();
+        if(beforeMonthSize > 0){
+            ArrayList<Entry> values = new ArrayList<Entry>();
+            for (int i = 0; i < beforeMonthSize; i++) {
+                String value = "";
+                if(index == 0){
+                    value =list_24.get(i).getPm10().toString();
+                }else if(index == 1){
+                    value = list_24.get(i).getPm2_5().toString();
+                }else if(index == 2){
+                    value =list_24.get(i).getCo2().toString();
+                }
+                Entry entry = new Entry(i,Float.parseFloat(value));
+                values.add(entry);
+            }
+
+            LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+            set1.setDrawIcons(false);
+            // set the line to be drawn like this "- - - - - -"
+            //set1.enableDashedLine(10f, 10f, 0f);
+            set1.setColor(Color.parseColor("#ff9e5d"));
+            set1.setCircleColor(Color.parseColor("#ff9e5d"));
+            set1.setLineWidth(1f);
+            set1.setCircleRadius(4f);//设置焦点圆心的大小
+            set1.setDrawCircleHole(true);
+            set1.setCircleHoleRadius(2);
+            set1.setCircleColorHole(Color.WHITE);
+            set1.setValueTextSize(9f);
+            set1.setDrawFilled(false);
+            set1.setFormLineWidth(1f);
+            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+            set1.setFormSize(15.f);
+            set1.setDrawFilled(false);
+            set1.setHighlightEnabled(false);
+            set1.setDrawValues(false);
+
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                //set1.setFillDrawable(drawable);
+            }
+            else {
+                set1.setFillColor(Color.BLACK);
+            }
+            dataSets.add(set1); // add the datasets
+        }
+
+
 
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
-
         // set data
         mLineChart.setData(data);
 

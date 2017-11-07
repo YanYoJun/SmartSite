@@ -55,13 +55,13 @@ public class PMHistoryInfoActivity extends Activity {
     public static  final  int HANDLER_GET_DATA_END = 2;
     private HttpPost mHttpPost = new HttpPost();
     ArrayList<DataQueryVoBean> list = null;
-    private String devicesId ;
+    private int devicesId ;
     private String address;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmhistoryinfo);
-        devicesId = getIntent().getStringExtra("id");
+        devicesId = getIntent().getIntExtra("id",0);
         address = getIntent().getStringExtra("address");
         init();
         setOnCliceked();
@@ -130,7 +130,7 @@ public class PMHistoryInfoActivity extends Activity {
     };
 
     private void getDevices(){
-        list = mHttpPost.getOneDevicesHistoryData(devicesId);
+        list = mHttpPost.getOneDevicesHistoryData(devicesId+"");
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
     private void setmListViewData(){

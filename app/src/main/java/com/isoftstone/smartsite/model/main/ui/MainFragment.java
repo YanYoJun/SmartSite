@@ -180,23 +180,38 @@ public class MainFragment extends BaseFragment{
 
     private void setWeatherData(){
           //设置天气情况
-        /*
-        R.drawable.wuran_you_jingdu
-        R.drawable.wuran_you_jingdu
-        R.drawable.wuran_liang_jingdu
-        R.drawable.wuran_zhong1du_jingdu
-        R.drawable.wuran_zhongdu_jingdu
-        R.drawable.wuran_yanzhong_jingdu
-        */
         DataQueryBean dataQueryBean = mMobileHomeBean.getAvgEqis();
         if(dataQueryBean != null){
-            wuran_image.setBackgroundResource(R.drawable.wuran_qingdu_jingdu);
-            wuran_icon.setBackgroundResource(R.drawable.main_aqi);
-            wuran_text.setText("轻度污染");
-            wuran_number.setText(""+165);
+            int  AQI = mMobileHomeBean.getAQI();
+            if(AQI < 50){
+                wuran_image.setBackgroundResource(R.drawable.wuran_you_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("优");
+            }else if(AQI < 150 && AQI >= 50){
+                wuran_image.setBackgroundResource(R.drawable.wuran_liang_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("良");
+            }else if(AQI < 250 && AQI >= 150){
+                wuran_image.setBackgroundResource(R.drawable.wuran_qingdu_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("轻度污染");
+            }else if(AQI < 350 && AQI >= 250){
+                wuran_image.setBackgroundResource(R.drawable.wuran_zhong1du_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("中度污染");
+            }else if(AQI < 420 && AQI >= 350){
+                wuran_image.setBackgroundResource(R.drawable.wuran_zhongdu_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("重度污染");
+            }else if(AQI < 600 && AQI >= 420){
+                wuran_image.setBackgroundResource(R.drawable.wuran_yanzhong_jingdu);
+                wuran_icon.setBackgroundResource(R.drawable.main_aqi);
+                wuran_text.setText("严重污染");
+            }
+            wuran_number.setText(""+AQI);
             mTemperatureTextView.setText(dataQueryBean.getAirTemperature()+"");
-            //shidu_textview.setText(dataQueryBean.getAirHumidity()+"%");
-            //fengxiang_textview.setText(dataQueryBean.get);
+            shidu_textview.setText(dataQueryBean.getAirHumidity()+"%");
+            fengxiang_textview.setText(dataQueryBean.getWindDirection());
         }
     }
 

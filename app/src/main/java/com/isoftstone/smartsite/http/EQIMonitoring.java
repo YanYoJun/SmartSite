@@ -136,6 +136,7 @@ public class EQIMonitoring {
                 .add("endTime",endTime)
                 .build();
         Request request = new Request.Builder()
+                .addHeader("X-Requested-With","X-Requested-With")
                 .url(strurl)
                 .post(body)
                 .build();

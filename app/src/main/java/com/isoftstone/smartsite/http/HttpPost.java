@@ -327,7 +327,9 @@ public class HttpPost {
 
     //获取下载文件、图片的URL
     public  String  getFileUrl(String filename){
-        filename = filename.replaceAll("\\\\","/");
+        if(filename != null){
+            filename = filename.replaceAll("\\\\","/");
+        }
         return URL + "/"+filename;
     }
 

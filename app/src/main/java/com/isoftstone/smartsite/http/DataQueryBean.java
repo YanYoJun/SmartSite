@@ -20,6 +20,15 @@ public class DataQueryBean {
     private double airHumidity;// 	空气湿度
     private double lightIntensity;//	Double 	光照强度
     private double atmosphericPressure;//	Double	大气压力
+    private String windDirection;  //风向
+
+    public String getWindDirection() {
+        return windDirection;
+    }
+
+    public void setWindDirection(String windDirection) {
+        this.windDirection = windDirection;
+    }
 
     public Integer getId() {
         return id;

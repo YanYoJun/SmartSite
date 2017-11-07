@@ -109,13 +109,15 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
         final  DataQueryVoBean devices = mData.get(position);
-        holder.resName.setText(devices.getDeviceName());
+        holder.resName.setText(devices.getDeviceCoding());
         TextPaint paint = holder.resName.getPaint();
         paint.setFakeBoldText(true);
-        if(devices.getDeviceStatus().equals("1")){
+        if(devices.getDeviceStatus() == 0){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.online));
-        }else{
+        }else if(devices.getDeviceStatus() == 1){
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
+        }else if(devices.getDeviceStatus() == 2){
+            holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.breakdown));
         }
         holder.installTime.setText("安装时间: "+devices.getInstallTime().substring(0,10));
         holder.address.setText("地址: "+ devices.getAddress());

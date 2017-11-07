@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
+import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.adapter.DialogListViewAdapter;
 import com.isoftstone.smartsite.model.tripartite.fragment.RevisitFragment;
@@ -44,7 +45,7 @@ public class AddReportActivity extends BaseActivity {
     private ArrayList<String> mQueryTypes = new ArrayList<>();
 
     //the view in this activity
-    public EditText mEditAddress = null;
+    public TextView mEditAddress = null;
     public TextView mTypesEditor = null;
     public TextView mAddress = null;
     public TextView mCompany = null;
@@ -59,6 +60,10 @@ public class AddReportActivity extends BaseActivity {
     public EditText mEditSuperCompany = null;
     public boolean isSettedType = false;
     public RevisitFragment mRevisitFrag = null;
+
+    public ArrayList<String> mAddressList = new ArrayList<>();
+    public ArrayList<String> mTypesList = new ArrayList<>();
+    public boolean isSettedAddress = false;
 
 
     @Override
@@ -88,7 +93,7 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void initView() {
-        mEditAddress = (EditText) findViewById(R.id.edit_report_address);
+        mEditAddress = (TextView) findViewById(R.id.edit_address);
         mTypesEditor = (TextView) findViewById(R.id.lab_report_types);
         mAddress = (TextView) findViewById(R.id.lab_address);
         mCompany = (TextView) findViewById(R.id.lab_company);
@@ -102,12 +107,12 @@ public class AddReportActivity extends BaseActivity {
         mEditConsCompany = (EditText) findViewById(R.id.edit_cons_company);
         mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
         mTypesEditor.setTextColor(getResources().getColor(R.color.des_text_color));
+        mEditAddress.setTextColor(getResources().getColor(R.color.des_text_color));
         mRevisitFrag = (RevisitFragment)getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
     }
 
     public void saveData() {
         mRevisitFrag.saveData();
-        SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
         SPUtils.saveString("add_report_company", mEditCompany.getText().toString());
         SPUtils.saveString("add_report_build_company", mEditBuildCompany.getText().toString());
         SPUtils.saveString("add_report_cons_company", mEditConsCompany.getText().toString());
@@ -116,11 +121,13 @@ public class AddReportActivity extends BaseActivity {
         if (isSettedType) {
             SPUtils.saveString("add_report_type", mTypesEditor.getText().toString());
         }
+        if (isSettedAddress) {
+            SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
+        }
     }
 
     public void restoreData() {
         mEditCompany.setText(SPUtils.getString("add_report_company", ""));
-        mEditAddress.setText(SPUtils.getString("add_report_address", ""));
         mEditBuildCompany.setText(SPUtils.getString("add_report_build_company", ""));
         mEditConsCompany.setText(SPUtils.getString("add_report_cons_company", ""));
         mEditSuperCompany.setText(SPUtils.getString("add_report_super_company", ""));
@@ -132,6 +139,15 @@ public class AddReportActivity extends BaseActivity {
             mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
             mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
         }
+
+        String address = SPUtils.getString("add_report_address","");
+        if (!TextUtils.isEmpty(address)) {
+            mEditAddress.setText(address);
+            isSettedAddress = true;
+            mAddress.setCompoundDrawables(mWattingChanged, null, null, null);
+            mEditAddress.setTextColor(getResources().getColor(R.color.main_text_color));
+        }
+
     }
 
     public void initListener() {
@@ -142,11 +158,7 @@ public class AddReportActivity extends BaseActivity {
                 View dialogLayout = LayoutInflater.from(AddReportActivity.this).inflate(R.layout.dialog_add_report, null);
                 ListView listView = (ListView) dialogLayout.findViewById(R.id.listview_dialog_add_report);
 
-                //TODO
-                final ArrayList<String> list = new ArrayList<>();
-                list.add("工地报告");
-                list.add("巡查报告");
-                DialogListViewAdapter adapter = new DialogListViewAdapter(AddReportActivity.this, list);
+                DialogListViewAdapter adapter = new DialogListViewAdapter(AddReportActivity.this, mTypesList);
                 listView.setAdapter(adapter);
 
                 builder.setView(dialogLayout);
@@ -155,7 +167,7 @@ public class AddReportActivity extends BaseActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mTypesEditor.setText(list.get(position));
+                        mTypesEditor.setText(mTypesList.get(position));
                         isSettedType = true;
                         mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
                         mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
@@ -166,26 +178,54 @@ public class AddReportActivity extends BaseActivity {
             }
         });
 
-        mEditAddress.addTextChangedListener(new TextWatcher() {
+        mEditAddress.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddReportActivity.this);
+                View dialogLayout = LayoutInflater.from(AddReportActivity.this).inflate(R.layout.dialog_add_report, null);
+                ListView listView = (ListView) dialogLayout.findViewById(R.id.listview_dialog_add_report);
 
-            }
+                DialogListViewAdapter adapter = new DialogListViewAdapter(AddReportActivity.this, mAddressList);
+                listView.setAdapter(adapter);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s != null && s.length() != 0) {
-                    mAddress.setCompoundDrawables(mWattingChanged, null, null, null);
-                } else {
-                    mAddress.setCompoundDrawables(mWaittingAdd, null, null, null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+                builder.setView(dialogLayout);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mEditAddress.setText(mAddressList.get(position));
+                        isSettedAddress = true;
+                        mAddress.setCompoundDrawables(mWattingChanged, null, null, null);
+                        mEditAddress.setTextColor(getResources().getColor(R.color.main_text_color));
+                        dialog.dismiss();
+                    }
+                });
 
             }
         });
+
+
+//        mEditAddress.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (s != null && s.length() != 0) {
+//                    mAddress.setCompoundDrawables(mWattingChanged, null, null, null);
+//                } else {
+//                    mAddress.setCompoundDrawables(mWaittingAdd, null, null, null);
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
         mEditCompany.addTextChangedListener(new TextWatcher() {
             @Override
@@ -311,6 +351,11 @@ public class AddReportActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
+            mAddressList = mHttpPost.getPatrolAddress();
+            ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
+            for(DictionaryBean temp:tempLists){
+                mTypesList.add(temp.getContent());
+            }
             return null;
         }
     }

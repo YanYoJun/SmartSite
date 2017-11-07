@@ -225,7 +225,7 @@ public class RevisitFragment extends BaseFragment {
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
+                    if (!mAddReportActivity.isSettedAddress || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
                             || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;
@@ -409,7 +409,7 @@ public class RevisitFragment extends BaseFragment {
         });
     }
 
-    private class SubReport extends AsyncTask<String, Integer, String> {
+    private class SubReport extends AsyncTask<String, Integer, Boolean> {
         private PatrolBean mReportData = null;
         private ReportBean mRevisitData = null;
         private boolean mIsAddReport = true;
@@ -421,27 +421,55 @@ public class RevisitFragment extends BaseFragment {
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             Log.e(TAG, "yanlog addReport");
+            int id = -1;
             if (mIsAddReport) {
                 PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
-                mRevisitData.setPatrol(reponse);
-                mRevisitData.setCreator(reponse.getCreator());
+                //mRevisitData.setPatrol(reponse);
+                PatrolBean temp = new PatrolBean();
+                temp.setId(reponse.getId());
+                id = reponse.getId();
+                mRevisitData.setPatrol(temp);
+                //mRevisitData.setCreator(reponse.getCreator());
             } else {
-                mRevisitData.setPatrol(mReportData);
-                mRevisitData.setCreator(mReportData.getCreator());
+                PatrolBean temp = new PatrolBean();
+                temp.setId(mReportData.getId());
+                mRevisitData.setPatrol(temp);
+                id = mReportData.getId();
+                //mRevisitData.setPatrol(mReportData);
+                //mRevisitData.setCreator(mReportData.getCreator());
+
             }
             mRevisitData.setDate(DateUtils.format2.format(new Date()));
             mRevisitData.setStatus(2);
             mHttpPost.addPatrolVisit(mRevisitData);
-            return null;
+
+            PatrolBean report = mHttpPost.getPatrolReport(id + "");
+            if (report.getStatus() == 2) {
+                ArrayList<ReportBean> reports = report.getReports();
+
+                int reportId = reports.get(reports.size() - 1).getId();
+                for (String path : mFilesPath) {
+                    mHttpPost.reportFileUpload(path, reportId);
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(Boolean s) {
             super.onPostExecute(s);
-            getActivity().finish();
+            if (s == true) {
+                Toast.makeText(getActivity(), "添加回访报告成功", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else {
+                Toast.makeText(getActivity(), "添加回访报告失败", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -477,13 +505,13 @@ public class RevisitFragment extends BaseFragment {
                     Uri uri = data.getData();
                     Log.e(TAG, "yanlog uri:" + uri);
                     if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
-                        Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
-                        addAttach(uri.getPath(),uri.toString());
+                        //Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
+                        addAttach(uri.getPath(), uri.toString());
                         return;
                     }
                     String path = FilesUtils.getPath(getActivity(), uri);
-                    Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
-                    addAttach(path,uri.toString());
+                    //Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
+                    addAttach(path, uri.toString());
                 }
             }
         }
@@ -491,11 +519,12 @@ public class RevisitFragment extends BaseFragment {
     }
 
     //add files
-    public void addAttach(String path,String uri) {
+    public void addAttach(String path, String uri) {
         Log.e(TAG, "yanlog remove begin size:" + mData.size());
         String formatPath = FilesUtils.getFormatString(path);
         Log.e(TAG, "yanlog remove begin size at0:" + mData.get(0));
         mData.remove(mData.size() - 1);
+        mFilesPath.add(path);
         if (TripartiteActivity.mImageList.contains(formatPath)) {
             mData.add(uri);
         } else if (TripartiteActivity.mXlsList.contains(formatPath)) {

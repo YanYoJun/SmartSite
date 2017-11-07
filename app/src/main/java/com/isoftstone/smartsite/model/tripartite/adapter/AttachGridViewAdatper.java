@@ -51,17 +51,15 @@ public class AttachGridViewAdatper extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null);
         }
         Object data = mDatas.get(position);
-        Log.e(TAG, "yanlog:position:" + position + "getView:" + data);
+        Log.e(TAG, "yanlog:position:" + position + "getView:" + data +"convertview:"+convertView);
         ImageView imgView = (ImageView) convertView.findViewById(R.id.image);
-        if (data instanceof String) {
-            ImageUtils.loadImage(imgView, (String) data);
-        } else {
+        if (data instanceof Integer) {
+            Log.e(TAG,"yanlog load int view:"+data);
             imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
+        } else {
+            Log.e(TAG,"yanlog load string view:"+data);
+            ImageUtils.loadImage(imgView, (String) data);
         }
-
-//        if (position == mDatas.size() - 1) {
-//            imgView.setBackgroundResource(R.drawable.shape_report_sub_bg);
-//        }
         return convertView;
     }
 }

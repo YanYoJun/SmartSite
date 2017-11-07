@@ -60,7 +60,7 @@ public class HttpPost {
     private String ADD_PATROL_REPORT  = URL + "/patrol";      //新增巡查报告
     private String GET_PATROL_REPORT = URL + "/patrol/";      //获取巡查报告
     private String ADD_REPORT  = URL + "/report";            //新增巡查报告回复 回访  验收
-    private String IMAGE_UPLOAD  = URL + "/report/image/mobile";  //图片上传
+    private String IMAGE_UPLOAD  = URL + "/report/attach/mobile";  //图片上传
     private String DICTIONARY_LIST = URL + "/dictionary/list";   //获取报告类型
     private String GET_PATROL_ADDRESS  = URL+"/patrol/addresses";//获取巡查报告地点
 

@@ -15,7 +15,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
+import eu.medsea.mimeutil.MimeUtil;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -257,11 +259,14 @@ public class ReportOperation {
         }
     }
 
+
     public static void reportFileUpload(String strurl, OkHttpClient mClient, String filepath, int id){
 
         String funName = "reportFileUpload";
-        File file = new File(filepath);
-        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"),file);
+        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+        File file = new File (filepath);
+        Collection<?> mimeTypes = MimeUtil.getMimeTypes(file);
+        RequestBody fileBody = RequestBody.create(MediaType.parse(mimeTypes.toString()),file);
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file",file.getName(),fileBody)
@@ -276,14 +281,13 @@ public class ReportOperation {
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG, funName + " response code " + response.code());
             if (response.isSuccessful()) {
-
                 String responsebody = response.body().string();
                 LogUtils.i(TAG, funName + " responsebody  " + responsebody);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static  void downloadfile(String downloadUrl,String storagePath,String imageName){

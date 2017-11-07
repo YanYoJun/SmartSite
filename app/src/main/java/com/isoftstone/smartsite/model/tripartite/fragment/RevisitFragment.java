@@ -225,7 +225,7 @@ public class RevisitFragment extends BaseFragment {
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
+                    if (!mAddReportActivity.isSettedAddress || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
                             || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;
@@ -505,12 +505,12 @@ public class RevisitFragment extends BaseFragment {
                     Uri uri = data.getData();
                     Log.e(TAG, "yanlog uri:" + uri);
                     if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
-                        Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), uri.getPath() + "11111", Toast.LENGTH_SHORT).show();
                         addAttach(uri.getPath(), uri.toString());
                         return;
                     }
                     String path = FilesUtils.getPath(getActivity(), uri);
-                    Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), path, Toast.LENGTH_SHORT).show();
                     addAttach(path, uri.toString());
                 }
             }

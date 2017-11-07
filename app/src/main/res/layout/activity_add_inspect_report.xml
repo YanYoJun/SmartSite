@@ -81,9 +81,24 @@
                     style="@style/add_report_lab"
                     android:text="@string/inspect_report_address" />
 
-                <EditText
-                    android:id="@+id/edit_report_address"
-                    style="@style/add_report_edittext" />
+                <ImageView
+                    android:id="@+id/img_address_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/droparrow" />
+
+                <TextView
+                    android:id="@+id/edit_address"
+                    style="@style/add_report_spinner"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/img_address_down"
+                    android:background="@null"
+                    android:gravity="right|center_vertical"
+                    android:text="请选择"
+                    android:textColor="@color/des_text_color" />
 
             </RelativeLayout>
 

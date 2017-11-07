@@ -119,6 +119,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 ToastUtils.showLong("没有获取到设备地址信息！");
             }else {
                 isHasData = true;
+                for (int i = 0; i < envir_devices.size(); i++) {
+                    LogUtils.i("zw",envir_devices.get(i).toString());
+                }
             }
         }
 
@@ -198,9 +201,10 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         } else if(type == TYPE_ENVIRONMENT){
             for (int i = 0; i < envir_devices.size(); i++){
                 DataQueryVoBean device = envir_devices.get(i);
-//                LatLng latLng = new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude()));
+                LogUtils.d(TAG,device);
+                LatLng latLng = new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude()));
                 MarkerOptions markerOption = new MarkerOptions();
-                markerOption.position(aotiLatLon);
+                markerOption.position(latLng);
                 markerOption.visible(true);
 
                 markerOption.draggable(false);//设置Marker可拖动
@@ -236,9 +240,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             markerOption1.position(new LatLng(Double.parseDouble(currentCameraDevice.getLatitude()
             ), Double.parseDouble(currentCameraDevice.getLongitude())));
         }else if(type == TYPE_ENVIRONMENT){
-            /*markerOption1.position(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()
-            ), Double.parseDouble(currentEnvirDevice.getLongitude())));*/
-            markerOption1.position(aotiLatLon);
+            markerOption1.position(new LatLng(Double.parseDouble(currentEnvirDevice.getLatitude()
+            ), Double.parseDouble(currentEnvirDevice.getLongitude())));
         }
 
         markerOption1.visible(true);
@@ -360,11 +363,10 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         //实时数据
                         Intent intent = new Intent();
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
-                        //TODO 数据要换
-                        intent.putExtra("address","光谷一路");
+                        intent.putExtra("address",currentEnvirDevice.getAddress());
                         intent.setClass(this, PMDataInfoActivity.class);
                         this.startActivity(intent);
-                    }
+                }
 
                 break;
             case R.id.history:
@@ -392,8 +394,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         Intent intent = new Intent();
                         intent.setClass(this, PMHistoryInfoActivity.class);
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
-                        //TODO 数据要换
-                        intent.putExtra("address","光谷一路");
+                        intent.putExtra("address",currentEnvirDevice.getAddress());
                         this.startActivity(intent);
                     }
 
@@ -469,8 +470,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
                 tv_deviceTime.setText("安装日期：" + device.getInstallTime().substring(0,10));
-                //TODO 需要更改数据
-                tv_deviceAddress.setText("光谷一路");
+                tv_deviceAddress.setText(device.getAddress());
                 if(0 == device.getDeviceStatus()){
                     videoView.setClickable(true);
                     videoView.setEnabled(true);

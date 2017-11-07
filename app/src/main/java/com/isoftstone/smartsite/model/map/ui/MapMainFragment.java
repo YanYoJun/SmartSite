@@ -13,6 +13,7 @@ import android.os.Message;
 import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTabHost;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,9 +43,13 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.common.App;
+import com.isoftstone.smartsite.common.AppManager;
+import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
+import com.isoftstone.smartsite.model.main.ui.PMHistoryInfoActivity;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
@@ -56,6 +61,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_0;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_150;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_250;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_350;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_420;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_50;
+import static com.isoftstone.smartsite.model.main.ui.PMDevicesListAdapter.COLOR_600;
 
 /**
  * Created by zw on 2017/10/14.
@@ -70,19 +83,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private static final int ADD_MARKER = 0x0001;
 
     private List<Marker> markers = new ArrayList<>();
-    private PopupWindow chooseCameraPopWindow;
-    private TextView tvDeviceName;
-    private TextView tvDeviceAddress;
-    private TextView tvDeviceDate;
-    private Button btnDeviceInfo;
-    private Button btnDeviceCancel;
-    private PopupWindow deviceInfoPopWindow;
+
     private FrameLayout mapContentView;
     private HttpPost mHttpPost;
-    private ArrayList<DevicesBean> mDeviceList;
+    private ArrayList<DevicesBean> mVideoList  = new ArrayList<>();
+    private ArrayList<DataQueryVoBean> mEnvList  = new ArrayList<>();
     private LatLng aotiLatLon = new LatLng(30.47,114.51);
 
-    private DevicesBean currentEvBean,currentVideoBean;
+    private DevicesBean currentVideoBean;
+    private DataQueryVoBean currentEnvirBean;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -93,6 +102,27 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             }
         }
     };
+    private TextView tv_deviceNumber;
+    private TextView tv_isOnline;
+    private TextView tv_deviceTime;
+    private TextView tv_deviceAddress;
+    private View videoView;
+    private ImageView iv_video;
+    private TextView tv_video;
+    private View historyView;
+    private ImageView iv_history;
+    private TextView tv_history;
+    private View galleryView;
+    private ImageView iv_gallery;
+    private TextView tv_gallery;
+    private View eviorment_view;
+    private TextView tv_pm10;
+    private TextView tv_pm25;
+    private TextView tv_pmso2;
+    private TextView tv_pmno2;
+    private View background_line;
+    private PopupWindow mPopWindow;
+    private Marker roundMarker;
 
 
     @Override
@@ -109,8 +139,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
         initToolbar();
 
-        initChooseCameraPopWindow();
-        initDeviceInfoPopWindow();
+        initPopWindow();
 
         initData();
 
@@ -120,8 +149,6 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     private void initData(){
         mHttpPost = new HttpPost();
-
-
     }
 
     private void initToolbar(){
@@ -131,10 +158,69 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         rootView.findViewById(R.id.btn_back).setOnClickListener(this);
         ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.btn_icon);
         imageButton.setImageResource(R.drawable.search);
-        imageButton.setOnClickListener(this);
+//        imageButton.setOnClickListener(this);
     }
 
-    private void initChooseCameraPopWindow(){
+    private void initPopWindow(){
+        View popWindowView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_map_video_monitor_popwindow,null);
+        popWindowView.findViewById(R.id.iv_dismiss).setOnClickListener(this);
+        tv_deviceNumber = (TextView) popWindowView.findViewById(R.id.tv_device_number);
+        tv_isOnline = (TextView) popWindowView.findViewById(R.id.tv_isonline);
+        tv_deviceTime = (TextView) popWindowView.findViewById(R.id.tv_device_time);
+        tv_deviceAddress = (TextView) popWindowView.findViewById(R.id.tv_address);
+
+        videoView = popWindowView.findViewById(R.id.video);
+        iv_video = (ImageView) popWindowView.findViewById(R.id.iv_video);
+        tv_video = (TextView) popWindowView.findViewById(R.id.tv_video);
+        historyView = popWindowView.findViewById(R.id.history);
+        iv_history = (ImageView) popWindowView.findViewById(R.id.iv_history);
+        tv_history = (TextView) popWindowView.findViewById(R.id.tv_history);
+        galleryView = popWindowView.findViewById(R.id.gallery);
+        iv_gallery = (ImageView) popWindowView.findViewById(R.id.iv_gallery);
+        tv_gallery = (TextView) popWindowView.findViewById(R.id.tv_gallery);
+        videoView.setOnClickListener(this);
+        historyView.setOnClickListener(this);
+        galleryView.setOnClickListener(this);
+
+        eviorment_view = popWindowView.findViewById(R.id.eviorment_view);
+
+        tv_pm10 = (TextView) popWindowView.findViewById(R.id.text_pm10);
+        tv_pm25 = (TextView) popWindowView.findViewById(R.id.text_pm25);
+        tv_pmso2 = (TextView) popWindowView.findViewById(R.id.text_so2);
+        tv_pmno2 = (TextView) popWindowView.findViewById(R.id.text_no2);
+        background_line = popWindowView.findViewById(R.id.background_line);
+        /*if(type == TYPE_CAMERA){
+            eviorment_view.setVisibility(View.GONE);
+            tv_video.setText("实时视频");
+            tv_history.setText("历史监控");
+            tv_gallery.setText("视频抓拍");
+
+        } else if(type == TYPE_ENVIRONMENT){
+            galleryView.setVisibility(View.GONE);
+            background_line.setVisibility(View.GONE);
+            tv_video.setText("实时数据");
+            tv_history.setText("历史数据");
+        }*/
+
+        mPopWindow = new PopupWindow(getActivity());
+        mPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopWindow.setContentView(popWindowView);
+        mPopWindow.setOutsideTouchable(false);
+        mPopWindow.setFocusable(true);
+        mPopWindow.setTouchable(true);
+        mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if(roundMarker != null){
+                    roundMarker.remove();
+                }
+            }
+        });
+    }
+
+    /*private void initChooseCameraPopWindow(){
         View chooseCameraView = LayoutInflater.from(mContext).inflate(R.layout.layout_pop_choose_camera,null);
         View chooseCameraHeader = LayoutInflater.from(mContext).inflate(R.layout.layout_choose_camera_head,null);
 
@@ -190,9 +276,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         chooseCameraPopWindow.setTouchable(true);
         chooseCameraPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-    }
+    }*/
 
-    private void initDeviceInfoPopWindow(){
+    /*private void initDeviceInfoPopWindow(){
         View deviceInfoView = LayoutInflater.from(mContext).inflate(R.layout.layout_map_device_info,null);
         tvDeviceName = (TextView) deviceInfoView.findViewById(R.id.device_name);
         tvDeviceAddress = (TextView) deviceInfoView.findViewById(R.id.device_address);
@@ -212,7 +298,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         deviceInfoPopWindow.setOutsideTouchable(false);
         deviceInfoPopWindow.setFocusable(true);
         deviceInfoPopWindow.setTouchable(true);
-    }
+    }*/
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -239,7 +325,13 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mDeviceList = mHttpPost.getDevices("","","","");
+//                    mDeviceList = mHttpPost.getDevices("","","","");
+                    DevicesBean bean = new DevicesBean();
+                    bean.setDeviceId("123");
+                    bean.setDeviceStatus("0");
+
+                    mEnvList = mHttpPost.onePMDevicesDataList("","0","","");
+
                     mHandler.sendEmptyMessage(ADD_MARKER);
                 }
             }).start();
@@ -274,41 +366,56 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     }
 
     private void initMarker(){
-        if(mDeviceList == null || mDeviceList.size() == 0){
+        if(mEnvList.size() == 0 && mVideoList.size() == 0){
             ToastUtils.showLong("没有获取到设备信息!");
         }else {
-            for (int i = 0;i<mDeviceList.size();i++){
-                DevicesBean bean = mDeviceList.get(i);
+            for (int i = 0;i<mVideoList.size();i++){
+                DevicesBean bean = mVideoList.get(i);
                 MarkerOptions markerOption = new MarkerOptions();
                 double lat = Double.parseDouble(bean.getLatitude());
                 double lon = Double.parseDouble(bean.getLongitude());
                 markerOption.position(new LatLng(lat,lon));
                 markerOption.visible(true);
                 markerOption.draggable(false);//设置Marker可拖动
-                if(bean.getDeviceType() == 1){
-                    //0在线，1离线，2故障
-                    if("0".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.camera_normal)));
-                    }else if("1".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.camera_gray)));
-                    }else if("2".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.camera_red)));
-                    }
-                } else if(bean.getDeviceType() == 0){
-                    //0在线，1离线，2故障
-                    if("0".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.environment_blue)));
-                    }else if("1".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.environment_gray)));
-                    }else if("2".equals(bean.getDeviceStatus())){
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                .decodeResource(getResources(),R.drawable.environment_red)));
-                    }
+                //0在线，1离线，2故障
+                if("0".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_normal)));
+                }else if("1".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_gray)));
+                }else if("2".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.camera_red)));
+                }
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(true);//设置marker平贴地图效果
+
+                Marker marker = mAMap.addMarker(markerOption);
+
+                marker.setObject(bean);
+                markers.add(marker);
+            }
+
+            for (int i = 0;i<mEnvList.size();i++){
+                DataQueryVoBean bean = mEnvList.get(i);
+                MarkerOptions markerOption = new MarkerOptions();
+                double lat = Double.parseDouble(bean.getLatitude());
+                double lon = Double.parseDouble(bean.getLongitude());
+                markerOption.position(new LatLng(lat,lon));
+                markerOption.visible(true);
+                markerOption.draggable(false);//设置Marker可拖动
+
+                //0在线，1离线，2故障
+                if("0".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_blue)));
+                }else if("1".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_gray)));
+                }else if("2".equals(bean.getDeviceStatus())){
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(),R.drawable.environment_red)));
                 }
                 // 将Marker设置为贴地显示，可以双指下拉地图查看效果
                 markerOption.setFlat(true);//设置marker平贴地图效果
@@ -359,53 +466,229 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        DevicesBean bean = (DevicesBean) marker.getObject();
-        if(bean != null){
-            if(bean.getDeviceType() == 1){
+        if(marker.getObject() != null){
+            //视频设备
+            if(marker.getObject() instanceof DevicesBean){
+                DevicesBean bean = (DevicesBean) marker.getObject();
                 currentVideoBean = bean;
-                chooseCameraPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
-            }else if(bean.getDeviceType() == 0){
-                currentEvBean = bean;
-                //0在线，1离线，2故障
+                tv_deviceNumber.setText(bean.getDeviceId());
                 if("0".equals(bean.getDeviceStatus())){
-                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备在线");
-                    tvDeviceName.setTextColor(Color.BLACK);
-                    btnDeviceInfo.setClickable(true);
-                    btnDeviceInfo.setTextColor(Color.BLACK);
-                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                    tv_isOnline.setText("在线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
                 } else if("1".equals(bean.getDeviceStatus())){
-                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备离线");
-                    tvDeviceName.setTextColor(Color.GRAY);
-                    btnDeviceInfo.setClickable(false);
-                    btnDeviceInfo.setTextColor(Color.GRAY);
-                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                    tv_isOnline.setText("离线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
                 } else if("2".equals(bean.getDeviceStatus())){
-                    tvDeviceName.setText("设备名称：" + bean.getDeviceName() + " 设备故障");
-                    tvDeviceName.setTextColor(Color.RED);
-                    btnDeviceInfo.setClickable(false);
-                    btnDeviceInfo.setTextColor(Color.GRAY);
-                    deviceInfoPopWindow.showAtLocation(mMapView,Gravity.CENTER,0,0);
+                    tv_isOnline.setText("故障");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
-            }
+                tv_deviceTime.setText("安装日期：" + bean.getInstallTime().substring(0,10));
+                tv_deviceAddress.setText(bean.getArch().getName());
+                if("0".equals(bean.getDeviceStatus())){
+                    videoView.setClickable(true);
+                    videoView.setEnabled(true);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
+                    galleryView.setClickable(true);
+                    galleryView.setEnabled(true);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    videoView.setClickable(false);
+                    videoView.setEnabled(false);
+                    historyView.setClickable(false);
+                    historyView.setEnabled(false);
+                    galleryView.setClickable(false);
+                    galleryView.setEnabled(false);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
+                }
+                tv_video.setText("实时视频");
+                tv_history.setText("历史监控");
+                tv_gallery.setText("视频抓拍");
 
+                eviorment_view.setVisibility(View.GONE);
+                background_line.setVisibility(View.VISIBLE);
+                galleryView.setVisibility(View.VISIBLE);
+
+                //环境设备
+            }else if(marker.getObject() instanceof DataQueryVoBean){
+                DataQueryVoBean bean = (DataQueryVoBean) marker.getObject();
+                currentEnvirBean = bean;
+                tv_deviceNumber.setText(bean.getDeviceId() + "");
+                if("0".equals(bean.getDeviceStatus())){
+                    tv_isOnline.setText("在线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
+                } else if("1".equals(bean.getDeviceStatus())){
+                    tv_isOnline.setText("离线");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
+                } else if("2".equals(bean.getDeviceStatus())){
+                    tv_isOnline.setText("故障");
+                    tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
+                }
+                tv_deviceTime.setText("安装日期：" + bean.getInstallTime().substring(0,10));
+                tv_deviceAddress.setText(bean.getAddress());
+                if("0".equals(bean.getDeviceStatus())){
+                    videoView.setClickable(true);
+                    videoView.setEnabled(true);
+                    historyView.setClickable(true);
+                    historyView.setEnabled(true);
+                    galleryView.setClickable(true);
+                    galleryView.setEnabled(true);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_history.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    videoView.setClickable(false);
+                    videoView.setEnabled(false);
+                    historyView.setClickable(false);
+                    historyView.setEnabled(false);
+                    galleryView.setClickable(false);
+                    galleryView.setEnabled(false);
+                    iv_video.setImageResource(R.drawable.time);
+                    iv_history.setImageResource(R.drawable.history);
+                    iv_gallery.setImageResource(R.drawable.capture);
+                    tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
+                    tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
+                }
+                eviorment_view.setVisibility(View.VISIBLE);
+                background_line.setVisibility(View.GONE);
+                galleryView.setVisibility(View.GONE);
+                tv_video.setText("实时数据");
+                tv_history.setText("历史数据");
+
+                String pm10 = "";
+                double d_pm10 = bean.getPm10();
+                int pm_10 = (int) d_pm10;
+
+                double d_pm25 = bean.getPm2_5();
+                int pm_25 = (int) d_pm25;
+
+                double d_so2 = bean.getCo2();
+                int pm_so2 = (int) d_so2;
+
+                if(pm_10 < 50){
+                    pm10 = "PM10：<font color='" + COLOR_50 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 150){
+                    pm10 = "PM10：<font color='" + COLOR_150 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 250){
+                    pm10 = "PM10：<font color='" + COLOR_250 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 350){
+                    pm10 = "PM10：<font color='" + COLOR_350 + "'>" + pm_10 + "</font>";
+                } else if(pm_10 < 420){
+                    pm10 = "PM10：<font color='" + COLOR_420 + "'>" + pm_10 + "</font>";
+                } else {
+                    pm10 = "PM10：<font color='" + COLOR_600 + "'>" + pm_10 + "</font>";
+                }
+
+                tv_pm10.setText(Html.fromHtml(pm10));
+                String pm25 = "PM2.5：<font color='" + COLOR_0 + "'>" + pm_25 + "</font>";
+                tv_pm25.setText(Html.fromHtml(pm25));
+                String so2 = "SO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+                tv_pmso2.setText(Html.fromHtml(so2));
+                String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
+                tv_pmno2.setText(Html.fromHtml(no2));
+            }
+            addRoundMarker();
+            mPopWindow.showAtLocation(mMapView, Gravity.BOTTOM,0,DensityUtils.dip2px(App.getAppContext(),-8));
         }
 
         return true;
     }
 
+    private void addRoundMarker(){
+        MarkerOptions markerOption1 = new MarkerOptions();
+        if("实时视频".equals(tv_video.getText())){
+            markerOption1.position(new LatLng(Double.parseDouble(currentVideoBean.getLatitude()
+            ), Double.parseDouble(currentVideoBean.getLongitude())));
+        }else if("实时数据".equals(tv_video.getText())){
+            markerOption1.position(new LatLng(Double.parseDouble(currentEnvirBean.getLatitude()
+            ), Double.parseDouble(currentEnvirBean.getLongitude())));
+        }
+
+        markerOption1.visible(true);
+
+        markerOption1.draggable(false);//设置Marker可拖动
+        View centerView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_map_video_monitor_center,null);
+        markerOption1.icon(BitmapDescriptorFactory.fromView(centerView));
+
+        // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+        markerOption1.setFlat(true);//设置marker平贴地图效果
+
+        roundMarker = mAMap.addMarker(markerOption1);
+        roundMarker.setAnchor(0.5f,0.5f);
+
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.device_info:
-                //实时数据
-                Intent intent = new Intent();
-                intent.setClass(mContext, PMDataInfoActivity.class);
-                mContext.startActivity(intent);
-                deviceInfoPopWindow.dismiss();
+            case R.id.video:
+                if("实时视频".equals(tv_video.getText())){
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("resCode", currentVideoBean.getDeviceCoding());
+                    bundle.putInt("resSubType", currentVideoBean.getDeviceType());
+                    intent.putExtras(bundle);
+                    intent.setClass(getActivity(), VideoPlayActivity.class);
+                    startActivity(intent);
+                } else if("实时数据".equals(tv_video.getText())){
+                    //实时数据
+                    Intent intent = new Intent();
+                    intent.putExtra("id",currentEnvirBean.getDeviceId());
+                    intent.putExtra("address",currentEnvirBean.getAddress());
+                    intent.setClass(getActivity(), PMDataInfoActivity.class);
+                    this.startActivity(intent);
+                }
                 break;
-            case R.id.device_cancel:
-                deviceInfoPopWindow.dismiss();
+            case R.id.history:
+                if("历史监控".equals(tv_history.getText())){
+                    Date now = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String beginTime = formatter.format(now) + " 00:00:00";
+                    String endTime = formatter.format(now) + " 23:59:59";
+
+                    Intent intent1 = new Intent();
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("resCode", currentVideoBean.getDeviceCoding());
+                    bundle1.putInt("resSubType", currentVideoBean.getDeviceType());
+                    bundle1.putString("resName", currentVideoBean.getDeviceName());
+                    bundle1.putBoolean("isOnline", "0".equals(currentVideoBean.getDeviceStatus()));
+                    bundle1.putString("beginTime", beginTime);
+                    bundle1.putString("endTime", endTime);
+                    //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
+                    intent1.putExtras(bundle1);
+                    intent1.setClass(getActivity(), VideoRePlayListActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent1);
+                } else if("历史数据".equals(tv_history.getText())){
+                    //历史数据
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), PMHistoryInfoActivity.class);
+                    intent.putExtra("id",currentEnvirBean.getDeviceId());
+                    intent.putExtra("address",currentEnvirBean.getAddress());
+                    this.startActivity(intent);
+                }
                 break;
+            case R.id.gallery:
+                //打开系统相册浏览照片  
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent2);
+                break;
+
             case R.id.btn_back:
                 FragmentTabHost tabHost = (FragmentTabHost) getActivity().findViewById(R.id.tab_host);
                 tabHost.setCurrentTab(0);

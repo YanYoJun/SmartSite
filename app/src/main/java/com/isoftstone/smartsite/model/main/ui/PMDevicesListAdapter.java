@@ -64,6 +64,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
     public void setData(ArrayList<DataQueryVoBean> list){
         mData = list;
         for (int i = 0; i < list.size(); i++) {
+            LogUtils.i("zw : PMDevicesListAdapter : ",list.get(i).toString());
         }
     }
 

@@ -15,7 +15,7 @@ public class DataQueryVoBean implements Serializable{
     private String deviceName;//	 	设备名称
     private String deviceCoding;//		设备编码
     private String installTime;//	Date	安装时间
-    private String Longitude;//		经度
+    private String longitude;//		经度
     private String latitude;//		纬度
     private Integer deviceStatus;//		设备状态(0=在线  1=离线  2=故障)
     private String pushTime;//	Date 	格式：yyyy-MM-dd HH:mm:ss
@@ -38,6 +38,8 @@ public class DataQueryVoBean implements Serializable{
     private Double aqiAchieveDays;//	Double	AQI达标天数
     private Double aqiVaildDays;//	Double 	AQI有效天数
     private Double aqiAchieveRate;//	Double 	AQI达标率
+
+    private String address = "光谷一路（假数据）";
 
     public Integer getId() {
         return Id;
@@ -80,11 +82,11 @@ public class DataQueryVoBean implements Serializable{
     }
 
     public String getLongitude() {
-        return Longitude;
+        return longitude;
     }
 
     public void setLongitude(String longitude) {
-        Longitude = longitude;
+        this.longitude = longitude;
     }
 
     public String getLatitude() {
@@ -261,5 +263,47 @@ public class DataQueryVoBean implements Serializable{
 
     public void setAqiAchieveRate(Double aqiAchieveRate) {
         this.aqiAchieveRate = aqiAchieveRate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "DataQueryVoBean{" +
+                "Id=" + Id +
+                ", deviceId=" + deviceId +
+                ", deviceName='" + deviceName + '\'' +
+                ", deviceCoding='" + deviceCoding + '\'' +
+                ", installTime='" + installTime + '\'' +
+                ", Longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", deviceStatus=" + deviceStatus +
+                ", pushTime='" + pushTime + '\'' +
+                ", pushTimeMonth='" + pushTimeMonth + '\'' +
+                ", airTemperature=" + airTemperature +
+                ", airHumidity=" + airHumidity +
+                ", lightIntensity=" + lightIntensity +
+                ", atmosphericPressure=" + atmosphericPressure +
+                ", windSpeed=" + windSpeed +
+                ", windDirection='" + windDirection + '\'' +
+                ", rainfall=" + rainfall +
+                ", pm2_5=" + pm2_5 +
+                ", uv=" + uv +
+                ", soilTemperature=" + soilTemperature +
+                ", soilMoisture=" + soilMoisture +
+                ", co2=" + co2 +
+                ", radiation=" + radiation +
+                ", surfaceTemperature=" + surfaceTemperature +
+                ", pm10=" + pm10 +
+                ", aqiAchieveDays=" + aqiAchieveDays +
+                ", aqiVaildDays=" + aqiVaildDays +
+                ", aqiAchieveRate=" + aqiAchieveRate +
+                '}';
     }
 }

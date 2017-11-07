@@ -42,7 +42,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             return;
         }
         mData = data.getPatrolBean().getReports();
-        mReportCreator = data.getPatrolBean().getCreator();
+        mReportCreator = data.getPatrolBean().getCreator().getName();
         mReportData = data.getPatrolBean();
     }
 
@@ -60,7 +60,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             return;
         }
         mData = replyReportData.getPatrolBean().getReports();
-        mReportCreator = replyReportData.getPatrolBean().getCreator();
+        mReportCreator = replyReportData.getPatrolBean().getCreator().getName();
         mReportData = replyReportData.getPatrolBean();
         super.notifyDataSetChanged();
     }

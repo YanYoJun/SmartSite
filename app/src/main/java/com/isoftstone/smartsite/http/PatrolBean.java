@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class PatrolBean {
     private int id;	//	主键
-    private String creator;//	创建人
+    private UserBean creator;//	创建人
     private  int status;//	状态
     private String date;//	date(yyyy-MM-dd HH:mm:ss)	创建时间
     private String  address; //巡查地点
@@ -36,11 +36,11 @@ public class PatrolBean {
         this.id = id;
     }
 
-    public String getCreator() {
+    public UserBean getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(UserBean creator) {
         this.creator = creator;
     }
 

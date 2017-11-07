@@ -447,9 +447,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     historyView.setEnabled(false);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
-                    iv_video.setImageResource(R.drawable.time);
-                    iv_history.setImageResource(R.drawable.history);
-                    iv_gallery.setImageResource(R.drawable.capture);
+                    iv_video.setImageResource(R.drawable.timedisable);
+                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
@@ -491,9 +491,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     historyView.setEnabled(false);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
-                    iv_video.setImageResource(R.drawable.time);
-                    iv_history.setImageResource(R.drawable.history);
-                    iv_gallery.setImageResource(R.drawable.capture);
+                    iv_video.setImageResource(R.drawable.timedisable);
+                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));

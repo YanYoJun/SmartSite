@@ -117,9 +117,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
         }else{
             holder.isOnline.setBackground(mContext.getResources().getDrawable(R.drawable.offline));
         }
-        holder.installTime.setText("安装时间: "+devices.getInstallTime());
-        //TODO 数据要换
-        holder.address.setText("地址: "+"光谷1路");
+        holder.installTime.setText("安装时间: "+devices.getInstallTime().substring(0,10));
+        holder.address.setText("地址: "+ devices.getAddress());
 
         String pm10 = "";
 
@@ -165,8 +164,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     //实时数据
                     Intent intent = new Intent();
                     intent.putExtra("id",devices.getDeviceId());
-                    //TODO 数据要换
-                    intent.putExtra("address","光谷一路");
+                    intent.putExtra("address",devices.getAddress());
                     intent.setClass(mContext, PMDataInfoActivity.class);
                     mContext.startActivity(intent);
                 } else {
@@ -185,8 +183,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     Intent intent = new Intent();
                     intent.setClass(mContext, PMHistoryInfoActivity.class);
                     intent.putExtra("id",devices.getDeviceId());
-                    //TODO 数据要换
-                    intent.putExtra("address","光谷一路");
+                    intent.putExtra("address",devices.getAddress());
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();

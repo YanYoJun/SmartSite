@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
 import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity.TYPE_CAMERA;
 
 /**
  * Created by gone on 2017/10/16.
@@ -193,6 +196,32 @@ public class VideoMonitorAdapter extends BaseAdapter {
             public void onClick(View v) {
                 //跳转到地图
                 Intent intent = new Intent();
+
+                DevicesBean bean = new DevicesBean();
+                bean.setDeviceId("123");
+                bean.setDeviceStatus("0");
+                DevicesBean.DevicesArch arch = new DevicesBean.DevicesArch();
+                arch.setName("光谷一路（假数据）");
+                bean.setArch(arch);
+                bean.setInstallTime("2017-11-07");
+                bean.setLatitude("30.47");
+                bean.setLongitude("114.518672");
+
+                DevicesBean bean1 = new DevicesBean();
+                bean1.setDeviceId("123");
+                bean1.setDeviceStatus("1");
+                DevicesBean.DevicesArch arch1 = new DevicesBean.DevicesArch();
+                arch1.setName("光谷二路（假数据）");
+                bean1.setArch(arch1);
+                bean1.setInstallTime("2017-11-07");
+                bean1.setLatitude("30.47");
+                bean1.setLongitude("114.498072");
+                ArrayList<DevicesBean> beans = new ArrayList<DevicesBean>();
+                beans.add(bean);
+                beans.add(bean1);
+
+                intent.putExtra("type",TYPE_CAMERA);
+                intent.putExtra("devices",beans);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 mContext.startActivity(intent);
             }

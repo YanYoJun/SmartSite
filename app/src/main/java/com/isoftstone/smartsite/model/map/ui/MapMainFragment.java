@@ -329,8 +329,29 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     DevicesBean bean = new DevicesBean();
                     bean.setDeviceId("123");
                     bean.setDeviceStatus("0");
+                    DevicesBean.DevicesArch arch = new DevicesBean.DevicesArch();
+                    arch.setName("光谷一路（假数据）");
+                    bean.setArch(arch);
+                    bean.setInstallTime("2017-11-07");
+                    bean.setLatitude("30.47");
+                    bean.setLongitude("114.518672");
 
-                    mEnvList = mHttpPost.onePMDevicesDataList("","0","","");
+                    DevicesBean bean1 = new DevicesBean();
+                    bean1.setDeviceId("123");
+                    bean1.setDeviceStatus("1");
+                    DevicesBean.DevicesArch arch1 = new DevicesBean.DevicesArch();
+                    arch1.setName("光谷二路（假数据）");
+                    bean1.setArch(arch1);
+                    bean1.setInstallTime("2017-11-07");
+                    bean1.setLatitude("30.47");
+                    bean1.setLongitude("114.498072");
+
+                    mVideoList.add(bean);
+                    mVideoList.add(bean1);
+                    ArrayList<DataQueryVoBean> envList = mHttpPost.onePMDevicesDataList("","0","","");
+                    if(envList != null){
+                        mEnvList = envList;
+                    }
 
                     mHandler.sendEmptyMessage(ADD_MARKER);
                 }
@@ -405,15 +426,14 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 markerOption.position(new LatLng(lat,lon));
                 markerOption.visible(true);
                 markerOption.draggable(false);//设置Marker可拖动
-
                 //0在线，1离线，2故障
-                if("0".equals(bean.getDeviceStatus())){
+                if(0 == bean.getDeviceStatus()){
                     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),R.drawable.environment_blue)));
-                }else if("1".equals(bean.getDeviceStatus())){
+                }else if(1 == bean.getDeviceStatus()){
                     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),R.drawable.environment_gray)));
-                }else if("2".equals(bean.getDeviceStatus())){
+                }else if(2 == bean.getDeviceStatus()){
                     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),R.drawable.environment_red)));
                 }
@@ -504,9 +524,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     historyView.setEnabled(false);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
-                    iv_video.setImageResource(R.drawable.time);
-                    iv_history.setImageResource(R.drawable.history);
-                    iv_gallery.setImageResource(R.drawable.capture);
+                    iv_video.setImageResource(R.drawable.timedisable);
+                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
@@ -524,19 +544,19 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 DataQueryVoBean bean = (DataQueryVoBean) marker.getObject();
                 currentEnvirBean = bean;
                 tv_deviceNumber.setText(bean.getDeviceId() + "");
-                if("0".equals(bean.getDeviceStatus())){
+                if(0 == bean.getDeviceStatus()){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
-                } else if("1".equals(bean.getDeviceStatus())){
+                } else if(1 == bean.getDeviceStatus()){
                     tv_isOnline.setText("离线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_offline);
-                } else if("2".equals(bean.getDeviceStatus())){
+                } else if(2 == bean.getDeviceStatus()){
                     tv_isOnline.setText("故障");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
                 tv_deviceTime.setText("安装日期：" + bean.getInstallTime().substring(0,10));
                 tv_deviceAddress.setText(bean.getAddress());
-                if("0".equals(bean.getDeviceStatus())){
+                if(0 == bean.getDeviceStatus()){
                     videoView.setClickable(true);
                     videoView.setEnabled(true);
                     historyView.setClickable(true);
@@ -556,9 +576,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     historyView.setEnabled(false);
                     galleryView.setClickable(false);
                     galleryView.setEnabled(false);
-                    iv_video.setImageResource(R.drawable.time);
-                    iv_history.setImageResource(R.drawable.history);
-                    iv_gallery.setImageResource(R.drawable.capture);
+                    iv_video.setImageResource(R.drawable.timedisable);
+                    iv_history.setImageResource(R.drawable.historydisable);
+                    iv_gallery.setImageResource(R.drawable.capturedisable);
                     tv_video.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
@@ -695,6 +715,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 break;
             case R.id.btn_icon:
                 startActivity(new Intent(getActivity(),MapSearchActivity.class));
+                break;
+            case R.id.iv_dismiss:
+                mPopWindow.dismiss();
                 break;
         }
     }

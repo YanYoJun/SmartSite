@@ -31,6 +31,6 @@ public class MyGridView extends GridView {
                 MeasureSpec.AT_MOST);
         int expandSpecwidth = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
                 MeasureSpec.AT_MOST);
-        super.onMeasure(expandSpecwidth, expandSpec);
+        super.onMeasure(widthMeasureSpec, expandSpec);
     }
 }

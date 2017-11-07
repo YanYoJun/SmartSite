@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -17,9 +19,10 @@ import java.util.ArrayList;
  */
 
 public class AttachGridViewAdatper extends BaseAdapter {
-    private ArrayList<Object> mDatas = new ArrayList<>();
+    private ArrayList<Object> mDatas = null;
     private Context mContext = null;
     private Resources mRes = null;
+    private final static String TAG = "AttachGridViewAdapter";
 
     public AttachGridViewAdatper(Context context, ArrayList<Object> datas) {
         mDatas = datas;
@@ -44,14 +47,21 @@ public class AttachGridViewAdatper extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Object data = mDatas.get(position);
-        if (data instanceof ImageView) {
-            return (View) data;
-        }
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null);
         }
-        ((ImageView) convertView).setImageDrawable(mRes.getDrawable((Integer) data, null));
+        Object data = mDatas.get(position);
+        Log.e(TAG, "yanlog:position:" + position + "getView:" + data);
+        ImageView imgView = (ImageView) convertView.findViewById(R.id.image);
+        if (data instanceof String) {
+            ImageUtils.loadImage(imgView, (String) data);
+        } else {
+            imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
+        }
+
+//        if (position == mDatas.size() - 1) {
+//            imgView.setBackgroundResource(R.drawable.shape_report_sub_bg);
+//        }
         return convertView;
     }
 }

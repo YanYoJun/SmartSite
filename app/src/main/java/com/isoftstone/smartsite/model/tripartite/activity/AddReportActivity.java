@@ -299,7 +299,7 @@ public class AddReportActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_ACTIVITY_ATTACH: {
                 Log.e(TAG, "onactivityresult:" + data.getData());
-                mRevisitFrag.addAttachUri(data.getDataString());
+                //mRevisitFrag.addAttachUri(data.getDataString());
                 break;
             }
         }

@@ -27,6 +27,18 @@ public class FilesUtils {
 //        return res;
 //    }
 
+    public static String getFormatString(String path) {
+        if (path == null) {
+            return "";
+        }
+        int loc = path.lastIndexOf(".");
+        int loc2 = path.lastIndexOf("/");
+        if (loc < 0 || (loc <= loc2 && loc2 > 0)) {
+            return "";
+        }
+        return path.substring(loc);
+    }
+
     /**
      * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
      */
@@ -44,7 +56,7 @@ public class FilesUtils {
                 final String type = split[0];
 
                 //if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
                 //}
             }
             // DownloadsProvider
@@ -99,10 +111,10 @@ public class FilesUtils {
      * @return The value of the _data column, which is typically a file path.
      */
     public static String getDataColumn(Context context, Uri uri, String selection,
-                                String[] selectionArgs) {
+                                       String[] selectionArgs) {
 
         Cursor cursor = null;
-        final String column =  MediaStore.Images.Media.DATA;
+        final String column = MediaStore.Images.Media.DATA;
         final String[] projection = {column};
 
         try {

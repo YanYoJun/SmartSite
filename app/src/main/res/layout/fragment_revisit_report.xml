@@ -160,7 +160,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="192dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
@@ -168,7 +168,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="176dp"
+            android:layout_height="wrap_content"
             android:background="#f9f9f9"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
@@ -194,15 +194,16 @@
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/shape_listview_year_bg" />
 
-            <GridView
+            <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                 android:id="@+id/grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/img_edit_report"
+                android:listSelector="@android:color/transparent"
                 android:numColumns="4">
 
-            </GridView>
+            </com.isoftstone.smartsite.model.tripartite.view.MyGridView>
 
         </RelativeLayout>
     </LinearLayout>

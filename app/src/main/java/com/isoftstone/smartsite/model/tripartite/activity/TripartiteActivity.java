@@ -64,75 +64,75 @@ public class TripartiteActivity extends BaseActivity {
     public static final ArrayList<String> mXlsList = new ArrayList<>();
     public static final ArrayList<String> mImageList = new ArrayList<>();
     static {
-        mAttach.put("doc",R.drawable.doc);
-        mAttach.put("pdf",R.drawable.pdf);
-        mAttach.put("ppt",R.drawable.ppt);
-        mAttach.put("video",R.drawable.video);
-        mAttach.put("xls",R.drawable.xls);
-        mAttach.put("image",R.drawable.pic);
+        mAttach.put(".doc",R.drawable.doc);
+        mAttach.put(".pdf",R.drawable.pdf);
+        mAttach.put(".ppt",R.drawable.ppt);
+        mAttach.put(".video",R.drawable.video);
+        mAttach.put(".xls",R.drawable.xls);
+        mAttach.put(".image",R.drawable.pic);
 
-        mDocList.add("doc");
-        mDocList.add("docx");
+        mDocList.add(".doc");
+        mDocList.add(".docx");
 
-        mPdfList.add("pdf");
+        mPdfList.add(".pdf");
 
-        mPptList.add("ppt");
-        mPptList.add("pptx");
+        mPptList.add(".ppt");
+        mPptList.add(".pptx");
 
-        mVideoList.add("mpeg");
-        mVideoList.add("mpg");
-        mVideoList.add("dat");
-        mVideoList.add("avi");
-        mVideoList.add("mov");
-        mVideoList.add("asf");
-        mVideoList.add("wmv");
-        mVideoList.add("navi");
-        mVideoList.add("3gp");
-        mVideoList.add("ra");
-        mVideoList.add("ram");
-        mVideoList.add("mkv");
-        mVideoList.add("flv");
-        mVideoList.add("f4v");
-        mVideoList.add("rmvb");
-        mVideoList.add("webm");
-        mVideoList.add("hddvd");
-        mVideoList.add("qsv");
-        mVideoList.add("mp4");
-        mVideoList.add("mov");
-        mVideoList.add("asf");
-        mVideoList.add("rm");
-        mVideoList.add("vob");
+        mVideoList.add(".mpeg");
+        mVideoList.add(".mpg");
+        mVideoList.add(".dat");
+        mVideoList.add(".avi");
+        mVideoList.add(".mov");
+        mVideoList.add(".asf");
+        mVideoList.add(".wmv");
+        mVideoList.add(".navi");
+        mVideoList.add(".3gp");
+        mVideoList.add(".ra");
+        mVideoList.add(".ram");
+        mVideoList.add(".mkv");
+        mVideoList.add(".flv");
+        mVideoList.add(".f4v");
+        mVideoList.add(".rmvb");
+        mVideoList.add(".webm");
+        mVideoList.add(".hddvd");
+        mVideoList.add(".qsv");
+        mVideoList.add(".mp4");
+        mVideoList.add(".mov");
+        mVideoList.add(".asf");
+        mVideoList.add(".rm");
+        mVideoList.add(".vob");
 
-        mXlsList.add("txt");
-        mXlsList.add("csv");
-        mXlsList.add("xls");
-        mXlsList.add("xlsx");
+        mXlsList.add(".txt");
+        mXlsList.add(".csv");
+        mXlsList.add(".xls");
+        mXlsList.add(".xlsx");
 
-        mImageList.add("bmp");
-        mImageList.add("pcx");
-        mImageList.add("gif");
-        mImageList.add("tiff");
-        mImageList.add("jpeg");
-        mImageList.add("jpg");
-        mImageList.add("png");
-        mImageList.add("tga");
-        mImageList.add("exif");
-        mImageList.add("fpx");
-        mImageList.add("svg");
-        mImageList.add("psd");
-        mImageList.add("cdr");
-        mImageList.add("pcd");
-        mImageList.add("cdr");
-        mImageList.add("dxf");
-        mImageList.add("ufo");
-        mImageList.add("eps");
-        mImageList.add("ai");
-        mImageList.add("hdpi");
-        mImageList.add("raw");
-        mImageList.add("wmf");
-        mImageList.add("lic");
-        mImageList.add("fli");
-        mImageList.add("emf");
+        mImageList.add(".bmp");
+        mImageList.add(".pcx");
+        mImageList.add(".gif");
+        mImageList.add(".tiff");
+        mImageList.add(".jpeg");
+        mImageList.add(".jpg");
+        mImageList.add(".png");
+        mImageList.add(".tga");
+        mImageList.add(".exif");
+        mImageList.add(".fpx");
+        mImageList.add(".svg");
+        mImageList.add(".psd");
+        mImageList.add(".cdr");
+        mImageList.add(".pcd");
+        mImageList.add(".cdr");
+        mImageList.add(".dxf");
+        mImageList.add(".ufo");
+        mImageList.add(".eps");
+        mImageList.add(".ai");
+        mImageList.add(".hdpi");
+        mImageList.add(".raw");
+        mImageList.add(".wmf");
+        mImageList.add(".lic");
+        mImageList.add(".fli");
+        mImageList.add(".emf");
     }
 
 
@@ -232,7 +232,7 @@ public class TripartiteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new QueryMsgTask().execute();
+        //new QueryMsgTask().execute();
     }
 
     public ArrayList<ReportData> getDatas() {

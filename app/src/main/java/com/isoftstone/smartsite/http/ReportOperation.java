@@ -38,6 +38,7 @@ public class ReportOperation {
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
                 .add("status", ""+status)
+                .add("size", ""+500)
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)

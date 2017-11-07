@@ -13,7 +13,7 @@ public class ReportBean {
     private int status;//	状态，参考Patrol状态说明
     private String name;//	巡查名称
     private String reportImages;//	报告图片
-    private String reportFiles;	//	报告附件
+    private String files;	//	报告附件
     private String patrolUser; //	巡查人
     private String patrolDateStart;//	date(yyyy-MM-dd HH:mm)	巡查起始时间
     private String patrolDateEnd;//	date(yyyy-MM-dd HH:mm)	巡查结束时间
@@ -96,11 +96,11 @@ public class ReportBean {
     }
 
     public String getReportFiles() {
-        return reportFiles;
+        return files;
     }
 
     public void setReportFiles(String reportFiles) {
-        this.reportFiles = reportFiles;
+        this.files = reportFiles;
     }
 
     public String getPatrolUser() {

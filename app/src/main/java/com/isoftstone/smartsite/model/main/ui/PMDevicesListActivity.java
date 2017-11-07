@@ -73,6 +73,8 @@ public class PMDevicesListActivity extends Activity implements View.OnClickListe
 
 
         mListView = (ListView)findViewById(R.id.listview);
+
+        mImageView_serch.setVisibility(View.INVISIBLE);
     }
 
 

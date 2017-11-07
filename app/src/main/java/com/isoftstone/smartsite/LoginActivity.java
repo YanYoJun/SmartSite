@@ -348,6 +348,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			 */
 
 			//mHttpPost.imageUpload("/storage/emulated/0/test.png",39);
+			//mHttpPost.reportFileUpload("/storage/emulated/0/k.log",39);
 
             /*UserBean user_1 = new UserBean();
 			user_1.setId(1l);
@@ -376,12 +377,12 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				Log.i("Test",str);
 			}*/
 
-			/*
-			ArrayList<DictionaryBean> list = mHttpPost.getDictionaryList("zh",1);
+
+			/*ArrayList<DictionaryBean> list = mHttpPost.getDictionaryList("zh");
 			for (DictionaryBean str:list){
 				Log.i("Test",str.getContent()+" "+str.getValue());
-			}
-			*/
+			}*/
+
 
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
@@ -444,17 +445,18 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
         if(mHttpPost.getVideoConfig()){
             LoginParam params = new LoginParam();
 
-            params.setServer("111.47.21.51");
+            /*params.setServer("111.47.21.51");
             params.setPort(Integer.parseInt("52060"));
             params.setUserName("loadmin");
             params.setPassword("loadmin");
+            */
 
-			/*
+
 			params.setServer(mHttpPost.mLoginBean.getmVideoParameter().getIp());
 			params.setPort(Integer.parseInt(mHttpPost.mLoginBean.getmVideoParameter().getPort()));
 			params.setUserName(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
-			params.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginPass());
-			*/
+			params.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
+
             //调用登录接口
             ServiceManager.login(params, LoginActivity.this);
         }else{

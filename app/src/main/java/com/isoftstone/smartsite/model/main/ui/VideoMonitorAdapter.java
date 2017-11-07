@@ -38,7 +38,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    private ArrayList<VideoMonitorBean> mData = new ArrayList<VideoMonitorBean>();
+    private ArrayList<DevicesBean> mData = new ArrayList<DevicesBean>();
     private final String IMAGE_TYPE = "image/*";
     private Context mContext = null;
     private AdapterViewOnClickListener listener;
@@ -54,7 +54,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
         public void viewOnClickListener(ViewHolder viewHolder, boolean isFormOneType);
     }
 
-    public void setData(ArrayList<VideoMonitorBean> list){
+    public void setData(ArrayList<DevicesBean> list){
         mData = list;
     }
 
@@ -98,12 +98,14 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
         Paint paint = holder.resCodeTv.getPaint();
         paint.setFakeBoldText(true);
-        holder.resCodeTv.setText(mData.get(position).getResCode());
-        holder.resNameTv.setText(mData.get(position).getResName());
-        setCameraType(holder.resSubTypeTv, mData.get(position).getResSubType());
-        holder.resType = mData.get(position).getResType();
-        holder.resSubType = mData.get(position).getResSubType();
-        holder.isOnline = mData.get(position).isOnline();
+        holder.resCodeTv.setText(mData.get(position).getDeviceCoding());
+        holder.resNameTv.setText(mData.get(position).getArch().getName());
+        //setCameraType(holder.resSubTypeTv, mData.get(position).getResSubType());
+        String installTime = mData.get(position).getInstallTime();
+        holder.resSubTypeTv.setText(installTime.substring(0,installTime.indexOf(" ")));
+        //holder.resType = mData.get(position).getResType();
+        //holder.resSubType = mData.get(position).getResSubType();
+        holder.isOnline = mData.get(position).getDeviceStatus().equals("0");
         if(holder.isOnline){
             holder.isOnlineTv.setBackgroundResource(R.drawable.online);
             holder.button_1.setEnabled(true);
@@ -111,7 +113,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder.isOnlineTv.setBackgroundResource(R.drawable.offline);
             holder.button_1.setEnabled(false);
         }
-        holder.isShared = mData.get(position).isShared();
+        holder.isShared = false;
 
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
@@ -122,8 +124,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 if(null != viewHolder) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putString("resCode", viewHolder.resCodeTv.getText().toString());
-                    bundle.putInt("resSubType", viewHolder.resSubType);
+                    bundle.putString("resCode", "6682-02_1");
+                    bundle.putInt("resSubType", 4);
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoPlayActivity.class);

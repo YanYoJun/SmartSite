@@ -531,7 +531,6 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         }
         if (null !=  mUserCompanyView.getText()) {
            userBean.setDepartmentId(mUserCompanyView.getText().toString());
-           //userBean.setDepartmentId("234");
         }
         if (null !=  mUserAutographView.getText()) {
             userBean.setDescription(mUserAutographView.getText().toString());

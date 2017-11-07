@@ -59,6 +59,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     private String mResCode = null;
     private String mBeginTime = null;
     private String mEngTime = null;
+    private Boolean isCameraOnLine = false;
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_icon = null;
@@ -89,7 +90,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         String resCode = bundle.getString("resCode");
         int resSubType =  bundle.getInt("resSubType");
         String resName = bundle.getString("resName");
-        boolean isOnline = bundle.getBoolean("isOnline");
+        isCameraOnLine = bundle.getBoolean("isOnline");
         mBeginTime = bundle.getString("beginTime");
         mEngTime = bundle.getString("endTime");
 
@@ -97,7 +98,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mResCode = resCode;
         setCameraType(mResTypeTv, resSubType);
         mResNameTv.setText(resName);
-        if (isOnline) {
+        if (isCameraOnLine) {
             mIsOnlineIv.setImageResource(R.drawable.online);
         } else {
             mIsOnlineIv.setImageResource(R.drawable.offline);
@@ -298,6 +299,9 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         bundle.putString("resCode", resCode);
         bundle.putString("beginTime", beginTime);
         bundle.putString("endTime", endTime);
+        bundle.putString("resSubType", mResTypeTv.getText().toString());
+        bundle.putString("resName", mResNameTv.getText().toString());
+        bundle.putBoolean("isOnline", isCameraOnLine);
         bundle.putInt("position", 0);
         intent.putExtras(bundle);
         intent.setClass(mContext, VideoRePlayActivity.class);

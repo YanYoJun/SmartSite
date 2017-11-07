@@ -48,8 +48,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/dialogleft"
             android:orientation="vertical"
-            android:paddingBottom="20dp"
+            android:paddingBottom="4dp"
             android:paddingLeft="23dp"
+            android:id="@+id/linear_grid_view"
             android:paddingRight="16dp"
             android:paddingTop="20dp">
 
@@ -61,14 +62,16 @@
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp" />
 
-            <GridView
+            <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                 android:id="@+id/grid_view"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/img_edit_report"
                 android:layout_marginTop="16dp"
-                android:numColumns="4"></GridView>
+                android:listSelector="@android:color/transparent"
+                android:columnWidth="64dp"
+                ></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
 
         </LinearLayout>
     </LinearLayout>

@@ -2,7 +2,6 @@ package com.isoftstone.smartsite.model.tripartite.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,19 @@ public class AttachGridViewAdatper extends BaseAdapter {
     private Context mContext = null;
     private Resources mRes = null;
     private final static String TAG = "AttachGridViewAdapter";
+    private boolean mIsPath = false;
 
     public AttachGridViewAdatper(Context context, ArrayList<Object> datas) {
         mDatas = datas;
         mContext = context;
         mRes = mContext.getResources();
+    }
+
+    public AttachGridViewAdatper(Context context, ArrayList<Object> datas, boolean isPath) {
+        mDatas = datas;
+        mContext = context;
+        mRes = mContext.getResources();
+        mIsPath = isPath;
     }
 
     @Override
@@ -51,14 +58,17 @@ public class AttachGridViewAdatper extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.add_attach_grid_item, null);
         }
         Object data = mDatas.get(position);
-        Log.e(TAG, "yanlog:position:" + position + "getView:" + data +"convertview:"+convertView);
         ImageView imgView = (ImageView) convertView.findViewById(R.id.image);
         if (data instanceof Integer) {
-            Log.e(TAG,"yanlog load int view:"+data);
             imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
         } else {
-            Log.e(TAG,"yanlog load string view:"+data);
-            ImageUtils.loadImage(imgView, (String) data);
+            String str = (String) data;
+            if (mIsPath) {
+                ImageUtils.loadImageViewCache(mContext, str, imgView);
+            } else {
+                ImageUtils.loadImage(imgView, str);
+            }
+
         }
         return convertView;
     }

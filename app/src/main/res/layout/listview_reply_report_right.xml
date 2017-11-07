@@ -57,28 +57,31 @@
         android:layout_toLeftOf="@id/linear_head"
         android:background="@drawable/dialogright"
         android:orientation="vertical"
-        android:paddingBottom="20dp"
+        android:paddingBottom="4dp"
         android:paddingLeft="16dp"
         android:paddingRight="23dp"
+        android:id="@+id/linear_grid_view"
         android:paddingTop="20dp">
 
         <TextView
             android:id="@+id/lab_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="left"
             android:text="与事实不符，请知悉"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
 
         <com.isoftstone.smartsite.model.tripartite.view.MyGridView
             android:id="@+id/grid_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/img_edit_report"
             android:layout_marginTop="16dp"
-            android:numColumns="4"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
+            android:columnWidth="64dp"
+            android:listSelector="@android:color/transparent"
+            ></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
 
     </LinearLayout>
 

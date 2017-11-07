@@ -142,14 +142,14 @@
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp" />
 
-            <GridView
+            <com.isoftstone.smartsite.model.tripartite.view.MyGridView
                 android:id="@+id/grid_view_source_report_temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:visibility="gone"
                 android:layout_marginTop="16dp"
-                android:numColumns="4"></GridView>
+                android:listSelector="@android:color/transparent"
+                android:numColumns="4"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
 
             <TextView
                 android:id="@+id/lab_next_visit_time"

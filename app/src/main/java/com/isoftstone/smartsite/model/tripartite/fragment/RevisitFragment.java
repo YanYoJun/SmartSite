@@ -427,10 +427,10 @@ public class RevisitFragment extends BaseFragment {
             if (mIsAddReport) {
                 PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
                 mRevisitData.setPatrol(reponse);
-                mRevisitData.setCreator(reponse.getCreator().getName());
+                mRevisitData.setCreator(reponse.getCreator());
             } else {
                 mRevisitData.setPatrol(mReportData);
-                mRevisitData.setCreator(mReportData.getCreator().getName());
+                mRevisitData.setCreator(mReportData.getCreator());
             }
             mRevisitData.setDate(DateUtils.format2.format(new Date()));
             mRevisitData.setStatus(2);

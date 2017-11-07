@@ -79,14 +79,22 @@ public class ReplyReportAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = null;
         ReportBean data = mData.get(position);
-        if (mReportCreator.equals(data.getCreator())) {
-            if (data.getCategory() == 1) {
-                v = initVisitView(data);
-            } else {
-                v = initCreatorReplyView(data);
-            }
-        } else {
+//        if (mReportCreator.equals(data.getCreator())) {
+//            if (data.getCategory() == 1) {
+//                v = initVisitView(data);
+//            } else {
+//                v = initCreatorReplyView(data);
+//            }
+//        } else {
+//            v = initCheckerReplyView(data);
+//        }
+
+        if(data.getCategory() == 3){
             v = initCheckerReplyView(data);
+        }else if(data.getCategory() == 1){
+            v = initVisitView(data);
+        }else{
+            v = initCreatorReplyView(data);
         }
         return v;
     }
@@ -109,7 +117,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         time.setText(date);
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator());
+        lab_creator_name.setText(data.getCreator().getAccount());
 
         TextView checkpeople = (TextView) v.findViewById(R.id.inspect_report_check_people_read);
         checkpeople.setText(data.getPatrolUser());
@@ -161,7 +169,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         msg.setText(data.getContent());
 
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator());
+        lab_creator_name.setText(data.getCreator().getAccount());
 
         GridView gridView = (GridView) v.findViewById(R.id.grid_view);
         if (data.getReportFiles() == null || true) {
@@ -189,7 +197,7 @@ public class ReplyReportAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         TextView lab_creator_name = (TextView) v.findViewById(R.id.lab_creator_name);
-        lab_creator_name.setText(data.getCreator());
+        lab_creator_name.setText(data.getCreator().getAccount());
 
         time.setText(date);
         ImageView img = (ImageView) v.findViewById(R.id.img_status);

@@ -7,7 +7,7 @@ package com.isoftstone.smartsite.http;
 public class ReportBean {
     private int id;           //	主键
     private int category; //1:回访,2:回复,3:验收
-    private String creator;//创建人，即报告人
+    private UserBean creator;//创建人，即报告人
     private String date;	//date(yyyy-MM-dd HH:mm:ss)	创建时间
     private String content;//	string	内容
     private int status;//	状态，参考Patrol状态说明
@@ -18,7 +18,7 @@ public class ReportBean {
     private String patrolDateStart;//	date(yyyy-MM-dd HH:mm)	巡查起始时间
     private String patrolDateEnd;//	date(yyyy-MM-dd HH:mm)	巡查结束时间
     private String patrolContent;	//string	巡查内容
-    private boolean visit;
+    private boolean needVisit;;
     private String visitDate;
 
     private PatrolBean patrol;
@@ -47,11 +47,11 @@ public class ReportBean {
         this.category = category;
     }
 
-    public String getCreator() {
+    public UserBean getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(UserBean creator) {
         this.creator = creator;
     }
 
@@ -136,11 +136,11 @@ public class ReportBean {
     }
 
     public boolean isVisit() {
-        return visit;
+        return needVisit;
     }
 
     public void setVisit(boolean visit) {
-        this.visit = visit;
+        this.needVisit = visit;
     }
 
     public String getVisitDate() {

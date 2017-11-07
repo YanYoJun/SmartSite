@@ -205,7 +205,7 @@ public class CheckFragment extends BaseFragment {
     private ReportBean getReportBean() {
         ReportBean reportBean = new ReportBean();
         reportBean.setPatrol(mActivity.getReportData());
-        reportBean.setCreator(mHttpPost.mLoginBean.getmName());
+        //reportBean.setCreator(mHttpPost.mLoginBean.getmName());
         reportBean.setContent(mEditContent.getText().toString()); //TODO
         reportBean.setVisit(mRadioYes.isChecked());
         reportBean.setDate(DateUtils.format2.format(new Date()));

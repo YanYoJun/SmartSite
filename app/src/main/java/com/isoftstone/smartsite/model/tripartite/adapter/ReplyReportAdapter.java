@@ -229,10 +229,10 @@ public class ReplyReportAdapter extends BaseAdapter {
             ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) farent.getLayoutParams();
             switch (path.size()) {
                 case 1:
-                    params.width = 500 > params.width ? 500 : params.width;
+                    params.width = 400 > params.width ? 400 : params.width;
                     break;
                 case 2:
-                    params.width = 700 > params.width ? 700 : params.width;
+                    params.width = 600 > params.width ? 600 : params.width;
                     break;
                 case 3:
                     params.width = 800 > params.width ? 800 : params.width;

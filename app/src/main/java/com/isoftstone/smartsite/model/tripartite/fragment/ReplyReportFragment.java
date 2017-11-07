@@ -131,13 +131,14 @@ public class ReplyReportFragment extends BaseFragment {
         protected Boolean doInBackground(Void... voids) {
             Log.e(TAG, "deal task begin");
             try {
-                mHttpPost.addPatrolReply(mBean);
+                mHttpPost.addPatrolReply(mBean); //添加回复
                 if (mFilesPath != null && mFilesPath.size() >= 1) {
                     PatrolBean report = mHttpPost.getPatrolReport(mBean.getPatrol().getId() + "");
                     ArrayList<ReportBean> reports = report.getReports();
-                    int id = report.getReports().get(reports.size() - 1).getId();
+                    int id = report.getReports().get(reports.size() - 1).getId(); //查到刚才回复消息的id
                     for (String path : mFilesPath) {
-                        mHttpPost.reportFileUpload(path, id);
+                        Log.e(TAG,"yanlog update file:"+path);
+                        mHttpPost.reportFileUpload(path, id); //上传附件
                     }
                 }
                 return true;

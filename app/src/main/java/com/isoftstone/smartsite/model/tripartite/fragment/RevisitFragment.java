@@ -545,7 +545,5 @@ public class RevisitFragment extends BaseFragment {
         Log.e(TAG, "yanlog remove end size:" + mData.size());
         Log.e(TAG, "yanlog mData at 0:" + mData.get(0));
         mAttachAdapter.notifyDataSetChanged();
-        mAttachView.requestLayout();
-        mAttachView.setMinimumHeight(600);
     }
 }

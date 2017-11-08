@@ -9,10 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +60,9 @@ public class PMHistoryInfoActivity extends Activity {
     ArrayList<DataQueryVoBean> list = null;
     private int devicesId ;
     private String address;
+    private String[] data = {"5分钟","1小时","24小时","1个月"};
+    private Spinner mJiangeSpinner;
+    private String type = "1";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +99,20 @@ public class PMHistoryInfoActivity extends Activity {
         mMap = (TextView)findViewById(R.id.textView4);
         mMap.setText(address);
         mGotoMap = (LinearLayout)findViewById(R.id.gotomap);
+        mJiangeSpinner = (Spinner)findViewById(R.id.jiange_name);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,data);
+        mJiangeSpinner.setAdapter(adapter);
+        mJiangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setOnCliceked(){
@@ -130,7 +150,8 @@ public class PMHistoryInfoActivity extends Activity {
     };
 
     private void getDevices(){
-        list = mHttpPost.getOneDevicesHistoryData(devicesId+"");
+        int index = mJiangeSpinner.getSelectedItemPosition();
+        list = mHttpPost.onePMDevicesDataList("["+devicesId+"]",(index+1)+"","","");
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
     private void setmListViewData(){

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,7 +95,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.pmdeviceslist_adapter, parent,false);
             holder.resName = (TextView)convertView.findViewById(R.id.textView1);
-            holder.isOnline = (TextView)convertView.findViewById(R.id.textView2);
+            holder.isOnline = (ImageView)convertView.findViewById(R.id.textView2);
             holder.installTime = (TextView)convertView.findViewById(R.id.textView3);
             holder.address = (TextView)convertView.findViewById(R.id.textView4);
             holder.PM10 = (TextView)convertView.findViewById(R.id.text_pm10);
@@ -210,7 +211,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
 
     public final class ViewHolder{
         public TextView resName;//资源名称
-        public TextView isOnline;//是否在线
+        public ImageView isOnline;//是否在线
         public TextView  installTime;//安装日期
         public TextView  address;//安装日期
         public TextView  PM10;//PM10

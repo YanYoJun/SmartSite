@@ -27,7 +27,7 @@
             android:textSize="14dp"
             android:textColor="@color/main_text_color"/>
 
-        <TextView
+        <ImageView
             android:id="@+id/textView2"
             android:textSize="12dp"
             android:textColor="@color/des_text_color"

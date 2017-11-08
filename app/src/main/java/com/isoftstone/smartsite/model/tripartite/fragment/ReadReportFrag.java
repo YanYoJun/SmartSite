@@ -24,6 +24,7 @@ public class ReadReportFrag extends BaseFragment {
     private TextView mBuildCompany = null;
     private TextView mCosCompany = null;
     private TextView mSupCompany = null;
+    private TextView mLabVisit = null;
     private View mView = null;
 
     @Override
@@ -48,20 +49,24 @@ public class ReadReportFrag extends BaseFragment {
         mBuildCompany = (TextView) mView.findViewById(R.id.inspect_report_build_company_read);
         mCosCompany = (TextView) mView.findViewById(R.id.inspect_report_construction_company);
         mSupCompany = (TextView) mView.findViewById(R.id.inspect_report_supervision_company);
+        mLabVisit = (TextView) mView.findViewById(R.id.lab_inspect_report_revisit_time);
     }
 
     private void initViewData() {
         mLabAddress.setText(mData.getAddress());
         mLabCompany.setText(mData.getCompany());
         int status = mData.getStatus();
-        if(status > 1){
+        if (status > 1) {
             status--;
         }
         mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]); //TODO
-//        mLabTypes.setText(mData.get); //TODO
+        //mLabTypes.setText(mData.get()); //TODO
         mBuildCompany.setText(mData.getDevelopmentCompany());
         mCosCompany.setText(mData.getConstructionCompany());
         mSupCompany.setText(mData.getSupervisionCompany());
+        if(mData.isVisit()){
+            mLabVisit.setText(mData.getVisitDate());
+        }
     }
 
     public void notifyDataChanged() {

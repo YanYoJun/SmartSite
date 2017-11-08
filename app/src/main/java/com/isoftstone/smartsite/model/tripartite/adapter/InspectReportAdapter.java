@@ -80,23 +80,20 @@ public class InspectReportAdapter extends BaseAdapter {
                 });
             }
             View btnReply = view.findViewById(R.id.linear_reply_report);
-            if (reportData.getStatus() != ReportData.STATUS_CHECKED) {
-                btnReply.setClickable(true);
-                if (btnReply != null) {
-                    btnReply.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mContext, ReplyReportActivity.class);
-                            intent.putExtra("_id", mDatas.get(position).getId());
-                            mContext.startActivity(intent);
-                        }
-                    });
-                }
-            } else {
-                btnReply.setClickable(false);
+            btnReply.setClickable(true);
+            if (btnReply != null) {
+                btnReply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, ReplyReportActivity.class);
+                        intent.putExtra("_id", mDatas.get(position).getId());
+                        mContext.startActivity(intent);
+                    }
+                });
             }
+
             View btnRevisit = view.findViewById(R.id.linear_revisit_report);
-            if (reportData.getStatus() == ReportData.STATUS_WAITTING_REVISIT) {
+            if (reportData.getStatus() != ReportData.STATUS_WAITTING_CHECK) {
                 btnRevisit.setClickable(true);
                 btnRevisit.setOnClickListener(new View.OnClickListener() {
                     @Override

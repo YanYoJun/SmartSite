@@ -64,6 +64,7 @@ public class CheckReportActivity extends BaseActivity {
             super.onPostExecute(aVoid);
             mReadReportFrag.notifyDataChanged();
             mViewReplyReportFrag.notifyDataSetChanged();
+            mCheckFrag.notifyDataSetChanged();
         }
     }
 }

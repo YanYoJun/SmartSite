@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +30,6 @@ import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
-import com.isoftstone.smartsite.model.tripartite.data.ITime;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 
@@ -57,7 +57,6 @@ public class CheckFragment extends BaseFragment {
     private TextView mLabCreator = null;
     private Button mBtnYes = null;
     private Button mBtnNo = null;
-    private ITime mRevisitDate = null;
 
     private Calendar mCal = null;
     private BaseActivity mActivity = null;
@@ -66,6 +65,7 @@ public class CheckFragment extends BaseFragment {
     private RadioButton mRadioNo = null;
     public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
     private ArrayList<String> mFilesPath = new ArrayList<>();
+    private PatrolBean mReportData = null;
 
 
     @Override
@@ -156,7 +156,7 @@ public class CheckFragment extends BaseFragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                        mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
+                        //mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
                         mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
                         mLabRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
                     }
@@ -171,7 +171,6 @@ public class CheckFragment extends BaseFragment {
 
         mData = new ArrayList<Object>();
         mData.add(R.drawable.attachment);
-        //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
         mAttachAdapter = new AttachGridViewAdatper(getActivity(), mData);
         mAttachView.setAdapter(mAttachAdapter);
 
@@ -189,7 +188,11 @@ public class CheckFragment extends BaseFragment {
     }
 
     public void notifyDataSetChanged() {
-
+        mReportData = mActivity.getReportData();
+        if (mReportData.isVisit()) {
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_is_report);
+            linearLayout.setVisibility(View.GONE);
+        }
     }
 
     private boolean isAllMsgSetted() {

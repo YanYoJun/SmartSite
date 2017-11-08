@@ -151,15 +151,6 @@
                 android:listSelector="@android:color/transparent"
                 android:numColumns="4"></com.isoftstone.smartsite.model.tripartite.view.MyGridView>
 
-            <TextView
-                android:id="@+id/lab_next_visit_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="下次回访时间：2017年11月25日"
-                android:textColor="@color/des_text_color"
-                android:textSize="10dp" />
-
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

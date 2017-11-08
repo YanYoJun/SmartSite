@@ -107,7 +107,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="28dp"
         android:orientation="horizontal">
 
@@ -120,4 +119,22 @@
             style="@style/read_report_msg_lab"
             android:text="武汉监理有限公司" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/read_report_lab"
+            android:text="@string/report_revisit_time_temp" />
+
+        <TextView
+            android:id="@+id/lab_inspect_report_revisit_time"
+            style="@style/read_report_msg_lab"
+            android:text="无" />
+    </LinearLayout>
+
 </LinearLayout>

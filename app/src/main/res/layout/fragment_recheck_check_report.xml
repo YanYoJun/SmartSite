@@ -49,7 +49,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="208dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/white"
         android:paddingBottom="16dp"
@@ -59,7 +59,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="176dp"
+            android:layout_height="wrap_content"
             android:background="#f9f9f9"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
@@ -99,82 +99,89 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/white"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linear_is_report"
+        android:layout_height="wrap_content">
 
-        <TextView
-            style="@style/add_report_lab"
-            android:drawableLeft="@drawable/editcolumn"
-            android:text="@string/inspect_report_is_need_recheck" />>
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/radio_yes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@null"
-                android:checked="true"
-                android:drawableLeft="@drawable/selector_radio"
-                android:drawablePadding="2dp"
-                android:paddingLeft="10dp"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:id="@+id/radio_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@null"
-                android:drawableLeft="@drawable/selector_radio"
-                android:drawablePadding="2dp"
-                android:paddingLeft="10dp"
-                android:text="@string/no" />
-        </RadioGroup>
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:src="@drawable/shape_listview_year_bg" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@color/white"
-        android:paddingLeft="16dp"
-        android:id="@+id/relative_revisit_time"
-        android:paddingRight="16dp">
-
-        <TextView
-            android:id="@+id/lab_revisit_time"
-            style="@style/add_report_lab"
-            android:text="@string/report_revisit_time" />
-
-        <TextView
-            android:id="@+id/edit_lab_revisit_time"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:drawablePadding="2dp"
-            android:drawableRight="@drawable/data"
-            android:gravity="right|center_vertical"
-            android:text="@string/enter_time"
-            android:textColor="@color/des_text_color"
-            android:textSize="14sp" />
-    </RelativeLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                style="@style/add_report_lab"
+                android:drawableLeft="@drawable/editcolumn"
+                android:text="@string/inspect_report_is_need_recheck" />>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableLeft="@drawable/selector_radio"
+                    android:drawablePadding="2dp"
+                    android:paddingLeft="10dp"
+                    android:text="@string/yes" />
+
+                <RadioButton
+                    android:id="@+id/radio_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/selector_radio"
+                    android:drawablePadding="2dp"
+                    android:paddingLeft="10dp"
+                    android:text="@string/no" />
+            </RadioGroup>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/shape_listview_year_bg" />
+
+        <RelativeLayout
+            android:id="@+id/relative_revisit_time"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/lab_revisit_time"
+                style="@style/add_report_lab"
+                android:text="@string/report_revisit_time" />
+
+            <TextView
+                android:id="@+id/edit_lab_revisit_time"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:drawablePadding="2dp"
+                android:drawableRight="@drawable/data"
+                android:gravity="right|center_vertical"
+                android:text="@string/enter_time"
+                android:textColor="@color/des_text_color"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

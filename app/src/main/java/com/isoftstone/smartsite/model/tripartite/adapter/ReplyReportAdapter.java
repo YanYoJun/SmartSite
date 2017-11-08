@@ -140,14 +140,14 @@ public class ReplyReportAdapter extends BaseAdapter {
         GridView gridView = (GridView) v.findViewById(R.id.grid_view_source_report_temp);
         initGridView(null, data, gridView);
 
-        TextView lab_next_visit_time = (TextView) v.findViewById(R.id.lab_next_visit_time);
-        String visitTime = "下次回访时间：" + mReportData.getVisitDate();
-        try {
-            visitTime = "下次回访时间：" + DateUtils.format3.format(DateUtils.format2.parse(mReportData.getVisitDate()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        lab_next_visit_time.setText(visitTime);
+//        TextView lab_next_visit_time = (TextView) v.findViewById(R.id.lab_next_visit_time);
+//        String visitTime = "下次回访时间：" + mReportData.getVisitDate();
+//        try {
+//            visitTime = "下次回访时间：" + DateUtils.format3.format(DateUtils.format2.parse(mReportData.getVisitDate()));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        lab_next_visit_time.setText(visitTime);
 
 
         return v;

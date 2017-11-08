@@ -71,19 +71,24 @@ public class CheckReportAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ReadReportActivity.class);
-                    intent.putExtra("_id",mDatas.get(position).getId());
+                    intent.putExtra("_id", mDatas.get(position).getId());
                     mContext.startActivity(intent);
                 }
             });
             View v1 = view.findViewById(R.id.linear_check);
-            v1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, CheckReportActivity.class);
-                    intent.putExtra("_id",mDatas.get(position).getId());
-                    mContext.startActivity(intent);
-                }
-            });
+            if (reportData.getStatus() == ReportData.STATUS_WAITTING_CHECK) {
+                v1.setClickable(true);
+                v1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, CheckReportActivity.class);
+                        intent.putExtra("_id", mDatas.get(position).getId());
+                        mContext.startActivity(intent);
+                    }
+                });
+            } else {
+                v1.setClickable(false);
+            }
         }
         return view;
     }

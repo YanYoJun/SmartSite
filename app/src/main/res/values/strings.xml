@@ -100,6 +100,7 @@
     <string name="inspect_report_supervision_company_read">监理单位：</string>
     <string name="inspect_report_message">报告内容</string>
     <string name="report_revisit_time">回访时间</string>
+    <string name="report_revisit_time_temp">回访时间：</string>
     <string name="inspect_report_description">问题描述</string>
     <string name="inspect_report_is_need_recheck">是否回访</string>
     <string name="yes">同意</string>

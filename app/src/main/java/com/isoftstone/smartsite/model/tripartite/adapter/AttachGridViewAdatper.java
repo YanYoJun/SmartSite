@@ -65,7 +65,7 @@ public class AttachGridViewAdatper extends BaseAdapter {
         } else {
             String str = (String) data;
             if (mIsPath) {
-                ImageUtils.loadImageViewCache(mContext, str, imgView);
+                ImageUtils.loadImageViewDiskCache(mContext, str, imgView);
             } else {
                 ImageUtils.loadImage(imgView, str);
             }

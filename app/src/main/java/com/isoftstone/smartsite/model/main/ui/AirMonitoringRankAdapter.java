@@ -74,6 +74,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
             drawable.setAlpha(alpha);
             holder.tv_rank.setBackground(drawable);
             holder.tv_rank.setText(position+1 + "");
+
         }else {
             GradientDrawable drawable = new GradientDrawable();
             drawable.setColor(backgroundColor);

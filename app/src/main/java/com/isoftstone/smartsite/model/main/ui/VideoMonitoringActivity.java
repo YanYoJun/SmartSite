@@ -206,7 +206,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             break;
             case R.id.search_btn_search:{
                 String serch = search_edit_text.getText().toString();
-                Toast.makeText(getBaseContext(),"搜索内容为:"+serch,2000).show();
+                Toast.makeText(getBaseContext(),"搜索内容为:"+serch,Toast.LENGTH_LONG).show();
             }
             break;
         }

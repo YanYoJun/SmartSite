@@ -14,6 +14,7 @@ import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTabHost;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.isoftstone.smartsite.MainActivity;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseFragment;
@@ -55,6 +58,7 @@ import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -88,7 +92,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private HttpPost mHttpPost;
     private ArrayList<DevicesBean> mVideoList  = new ArrayList<>();
     private ArrayList<DataQueryVoBean> mEnvList  = new ArrayList<>();
-    private LatLng aotiLatLon = new LatLng(30.47,114.51);
+    private LatLng aotiLatLon;
 
     private DevicesBean currentVideoBean;
     private DataQueryVoBean currentEnvirBean;
@@ -123,6 +127,10 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private View background_line;
     private PopupWindow mPopWindow;
     private Marker roundMarker;
+
+    private float zoom = 12f;
+    private CameraPosition mCameraPosition;
+    private double mLat,mLon = 0;
 
 
     @Override
@@ -304,6 +312,12 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(mLat == 0){
+            mLat = 30.482348;
+            mLon = 114.514417;
+        }
+        aotiLatLon = new LatLng(mLat,mLon);
+
         mMapView = new TextureMapView(getActivity());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -313,20 +327,33 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
         mAMap.setOnMarkerClickListener(this);
+        mAMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+                zoom = cameraPosition.zoom;
+                mLat = cameraPosition.target.latitude;
+                mLon = cameraPosition.target.longitude;
+            }
+        });
 
         UiSettings settings = mAMap.getUiSettings();
         settings.setLogoBottomMargin(DensityUtils.dip2px(getActivity(),52));
         settings.setZoomControlsEnabled(false);
 
-        initLocation();
+        initLocation(aotiLatLon);
+        addRoundLine();
         if(markers.size() != 0){
             initMarker();
         } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-//                    mDeviceList = mHttpPost.getDevices("","","","");
-                    DevicesBean bean = new DevicesBean();
+                    /*DevicesBean bean = new DevicesBean();
                     bean.setDeviceId("123");
                     bean.setDeviceStatus("0");
                     DevicesBean.DevicesArch arch = new DevicesBean.DevicesArch();
@@ -344,10 +371,12 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     bean1.setArch(arch1);
                     bean1.setInstallTime("2017-11-07");
                     bean1.setLatitude("30.47");
-                    bean1.setLongitude("114.498072");
+                    bean1.setLongitude("114.498072");*/
 
-                    mVideoList.add(bean);
-                    mVideoList.add(bean1);
+                    ArrayList<DevicesBean> videoList = mHttpPost.getDevices("1","","","");
+                    if(videoList != null){
+                        mVideoList = videoList;
+                    }
                     ArrayList<DataQueryVoBean> envList = mHttpPost.onePMDevicesDataList("","0","","");
                     if(envList != null){
                         mEnvList = envList;
@@ -360,7 +389,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
 
     }
 
-    private void initLocation(){
+    private void initLocation(LatLng latLng){
         /*//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle = new MyLocationStyle();
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
@@ -381,8 +410,11 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             }
         });*/
 
-        CameraUpdate update = CameraUpdateFactory.newCameraPosition(new CameraPosition(aotiLatLon,12f,0,0));
-        mAMap.moveCamera(update);
+
+        mCameraPosition = new CameraPosition(latLng,zoom,0,0);
+
+        CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
+        mAMap.animateCamera(update);
 
     }
 
@@ -459,6 +491,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         mMapView.onDestroy();
         mapContentView.removeView(mMapView);
     }
@@ -474,6 +507,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     @Override
     public void onPause() {
         super.onPause();
+        zoom = mAMap.getCameraPosition().zoom;
         mMapView.onPause();
     }
 
@@ -538,6 +572,8 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 eviorment_view.setVisibility(View.GONE);
                 background_line.setVisibility(View.VISIBLE);
                 galleryView.setVisibility(View.VISIBLE);
+                initLocation(new LatLng(Double.parseDouble(bean.getLatitude()),
+                                Double.parseDouble(bean.getLongitude())));
 
                 //环境设备
             }else if(marker.getObject() instanceof DataQueryVoBean){
@@ -555,7 +591,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
                 tv_deviceTime.setText("安装日期：" + bean.getInstallTime().substring(0,10));
-                tv_deviceAddress.setText(bean.getAddress());
+                tv_deviceAddress.setText(bean.getDeviceName());
                 if(0 == bean.getDeviceStatus()){
                     videoView.setClickable(true);
                     videoView.setEnabled(true);
@@ -620,6 +656,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 tv_pmso2.setText(Html.fromHtml(so2));
                 String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
                 tv_pmno2.setText(Html.fromHtml(no2));
+
+                initLocation(new LatLng(Double.parseDouble(bean.getLatitude()),
+                        Double.parseDouble(bean.getLongitude())));
             }
             addRoundMarker();
             mPopWindow.showAtLocation(mMapView, Gravity.BOTTOM,0,DensityUtils.dip2px(App.getAppContext(),-8));
@@ -668,7 +707,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     //实时数据
                     Intent intent = new Intent();
                     intent.putExtra("id",currentEnvirBean.getDeviceId());
-                    intent.putExtra("address",currentEnvirBean.getAddress());
+                    intent.putExtra("address",currentEnvirBean.getDeviceName());
                     intent.setClass(getActivity(), PMDataInfoActivity.class);
                     this.startActivity(intent);
                 }
@@ -698,7 +737,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), PMHistoryInfoActivity.class);
                     intent.putExtra("id",currentEnvirBean.getDeviceId());
-                    intent.putExtra("address",currentEnvirBean.getAddress());
+                    intent.putExtra("address",currentEnvirBean.getDeviceName());
                     this.startActivity(intent);
                 }
                 break;
@@ -720,5 +759,11 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 mPopWindow.dismiss();
                 break;
         }
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = mAMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 }

@@ -7,14 +7,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -71,7 +81,7 @@ import java.util.Random;
  * modifed by zhangyinfu on 2017/10/19
  */
 
-public class AirMonitoringActivity extends Activity implements View.OnClickListener{
+public class AirMonitoringActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private HttpPost mHttpPost = new HttpPost();
     private String getEqiDataRankingTime;    //
     private String geteqiDataRankingarchid = "1";
@@ -120,6 +130,10 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
     private String quyutime;
     private TextView text_quyu_1;
     private TextView text_quyu_2;
+    private ListView checkBoxListView;
+    private MyCheckboxAdapter checkboxAdapter;
+    private PopupWindow mCheckBoxPopWindow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,7 +225,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
     }
     private void setOnCliceked(){
-       mImageView_back.setOnClickListener(new View.OnClickListener() {
+        mImageView_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -269,7 +283,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 }
                 break;
                 case HANDLER_GET_DAYS_PROPORTION_END:{
-                     setPieChart();
+                    setPieChart();
                 }
                 break;
                 case HANDLER_GET_COMPARISON_START:{
@@ -290,16 +304,16 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 }
                 break;
                 case HANDLER_GET_QUYUDUIBI_START:{
-                     Thread thread = new Thread(){
-                         @Override
-                         public void run() {
-                             quyutime = quyu_date.getText().toString();
-                             mMonthlyComparisonBean_1 = mHttpPost.carchMonthlyComparison(quyu_id_1+"",quyutime,0+"");
-                             mMonthlyComparisonBean_2 = mHttpPost.carchMonthlyComparison(quyu_id_2+"",quyutime,0+"");
-                             mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_END);
-                         }
-                     };
-                     thread.start();
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            quyutime = quyu_date.getText().toString();
+                            mMonthlyComparisonBean_1 = mHttpPost.carchMonthlyComparison(quyu_id_1+"",quyutime,0+"");
+                            mMonthlyComparisonBean_2 = mHttpPost.carchMonthlyComparison(quyu_id_2+"",quyutime,0+"");
+                            mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_END);
+                        }
+                    };
+                    thread.start();
                 }
                 break;
                 case HANDLER_GET_QUYUDUIBI_END:{
@@ -884,6 +898,8 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
     }
 
     private int mCheckCount = 2;
+    private int oldClickedId1 = 0;
+    private int newClickedId2 = 1;
     protected Dialog onCreateDialog(int id) {
         Dialog dialog = null;
         switch (id) {
@@ -909,22 +925,22 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                          if(mCheckCount != 2){
+                        if(mCheckCount != 2){
 
-                          }else{
-                              for (int i = 0 ; i < addressFlags.length ; i ++){
-                                  if(addressFlags[i] ){
-                                      quyu_id_1 = mEQIRankingBean.getAQI().get(i).getArchId();
-                                  }
-                              }
-                              for (int i = addressFlags.length -1; i >= 0  ; i --){
-                                  if(addressFlags[i] ){
-                                      quyu_id_2 = mEQIRankingBean.getAQI().get(i).getArchId();
-                                  }
-                              }
-                              mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
-                              dialog.dismiss();
-                          }
+                        }else{
+                            for (int i = 0 ; i < addressFlags.length ; i ++){
+                                if(addressFlags[i] ){
+                                    quyu_id_1 = mEQIRankingBean.getAQI().get(i).getArchId();
+                                }
+                            }
+                            for (int i = addressFlags.length -1; i >= 0  ; i --){
+                                if(addressFlags[i] ){
+                                    quyu_id_2 = mEQIRankingBean.getAQI().get(i).getArchId();
+                                }
+                            }
+                            mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
+                            dialog.dismiss();
+                        }
                     }
                 });
                 dialog = builder.create();
@@ -940,7 +956,11 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.quyu_name:{
-                onCreateDialog(1).show();
+//                onCreateDialog(1).show();
+                if(mCheckBoxPopWindow == null){
+                    initCheckPopWindow();
+                }
+                mCheckBoxPopWindow.showAtLocation(findViewById(R.id.scrollview), Gravity.CENTER,0,0);
             }
             break;
             case R.id.date:{
@@ -970,8 +990,59 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 //initDatePicker();
                 customDatePicker2.show(now);
             }
+            case R.id.sure:
+                for (int i = 0 ; i < addressFlags.length ; i ++){
+                    if(addressFlags[i] ){
+                        quyu_id_1 = mEQIRankingBean.getArchs().get(i).getArchId();
+                    }
+                }
+                for (int i = addressFlags.length -1; i >= 0  ; i --){
+                    if(addressFlags[i] ){
+                        quyu_id_2 = mEQIRankingBean.getArchs().get(i).getArchId();
+                    }
+                }
+                mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
+                mCheckBoxPopWindow.dismiss();
             break;
         }
+    }
+
+    private void initCheckPopWindow(){
+        LinearLayout view = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_main_checkbox,null);
+
+        TextView sure = (TextView) view.findViewById(R.id.sure);
+        sure.setOnClickListener(this);
+        checkBoxListView = (ListView) view.findViewById(R.id.lv);
+        checkboxAdapter = new MyCheckboxAdapter();
+        checkBoxListView.setAdapter(checkboxAdapter);
+
+        mCheckBoxPopWindow = new PopupWindow(this);
+//        mCheckBoxPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+//        mCheckBoxPopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mCheckBoxPopWindow.setWidth(this.getWindowManager().getDefaultDisplay().getWidth()/3 * 2);
+        mCheckBoxPopWindow.setHeight(this.getWindowManager().getDefaultDisplay().getHeight()/ 2);
+        mCheckBoxPopWindow.setContentView(view);
+        mCheckBoxPopWindow.setOutsideTouchable(false);
+        mCheckBoxPopWindow.setFocusable(true);
+        mCheckBoxPopWindow.setTouchable(true);
+        mCheckBoxPopWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mCheckBoxPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                for (int i = 0 ; i < addressFlags.length ; i ++){
+                    if(addressFlags[i] ){
+                        quyu_id_1 = mEQIRankingBean.getArchs().get(i).getArchId();
+                    }
+                }
+                for (int i = addressFlags.length -1; i >= 0  ; i --){
+                    if(addressFlags[i] ){
+                        quyu_id_2 = mEQIRankingBean.getArchs().get(i).getArchId();
+                    }
+                }
+                mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
+            }
+        });
+
     }
 
     private CustomDatePicker customDatePicker1,customDatePicker2,customDatePicker3,customDatePicker4;
@@ -981,7 +1052,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         customDatePicker1 = new CustomDatePicker(AirMonitoringActivity.this, new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-                 mRankTime.setText(time.substring(0,7));
+                mRankTime.setText(time.substring(0,7));
                 mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
             }
         }, "2010-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
@@ -1022,5 +1093,78 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         customDatePicker4.showYearMonth();
         customDatePicker4.setIsLoop(false); // 不允许循环滚动
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        String checkStr = (String) buttonView.getTag();
+        int checkId = Integer.parseInt(checkStr);
+        addressFlags[checkId] = isChecked;
+        /**
+         * 1.预制两个点击的ID，0、1
+         * 2.如果选择新的，就把1传给0，然后把新的传给1  保证被点击的按钮永远都是最新的
+         * 3.取消选择时，保证剩余的要么都是-1，要么剩下的一个是旧的
+         */
+        if(isChecked){
+            if(oldClickedId1 != -1 && newClickedId2 != -1){
+                oldClickedId1 = newClickedId2;
+                newClickedId2 = checkId;
+            } else if(oldClickedId1 != -1){
+                newClickedId2 = checkId;
+            } else {
+                oldClickedId1 = checkId;
+            }
+
+        }else {
+            if(checkId == oldClickedId1){
+                oldClickedId1 = newClickedId2;
+                newClickedId2 = -1;
+            } else if(checkId == newClickedId2){
+                newClickedId2 = -1;
+            }
+
+        }
+        checkboxAdapter.notifyDataSetChanged();
+    }
+
+
+    private class MyCheckboxAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return address.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                convertView = LayoutInflater.from(AirMonitoringActivity.this).inflate(R.layout.layout_main_checkbox_item,parent,false);
+            }
+
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.check_box);
+            checkBox.setTag("" + position);
+            if(oldClickedId1 == position || newClickedId2 == position){
+                checkBox.setChecked(true);
+            }else {
+                checkBox.setChecked(false);
+            }
+
+            checkBox.setOnCheckedChangeListener(AirMonitoringActivity.this);
+            TextView textView = (TextView) convertView.findViewById(R.id.tv);
+            textView.setText(address[position]);
+
+            return convertView;
+        }
     }
 }

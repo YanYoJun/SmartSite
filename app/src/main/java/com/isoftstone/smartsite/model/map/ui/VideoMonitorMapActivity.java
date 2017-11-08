@@ -31,6 +31,8 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DataQueryVoBean;
@@ -41,6 +43,7 @@ import com.isoftstone.smartsite.model.video.VideoPlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
+import com.isoftstone.smartsite.utils.MapUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +67,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     private MapView mMapView;
     private AMap aMap;
 
-    private LatLng aotiLatLon = new LatLng(30.479736,114.476322);
+    private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
     private PopupWindow mPopWindow;
     private List<DataQueryVoBean> envir_devices;
     private List<DevicesBean> camera_devices;
@@ -96,6 +99,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     private View background_line;
 
     private boolean isHasData = false;
+
+    private float zoom = 12f;
+    private CameraPosition mCameraPosition;
 
     @Override
     protected int getLayoutRes() {
@@ -154,18 +160,34 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
     private void initMapView(){
         aMap = mMapView.getMap();
         aMap.setOnMarkerClickListener(this);
+        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
 
-        CameraUpdate update = CameraUpdateFactory.newCameraPosition(new CameraPosition(aotiLatLon,12f,0,0));
-        aMap.moveCamera(update);
+            }
 
-        if((camera_devices != null && camera_devices.size() != 0)){
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+                zoom = cameraPosition.zoom;
+            }
+        });
 
-        }
+        initLocation(aotiLatLon);
+        addRoundLine();
 
         if(isHasData){
             initMarker();
         }
     }
+
+    private void initLocation(LatLng latLng){
+
+        mCameraPosition = new CameraPosition(latLng,zoom,0,0);
+
+        CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
+        aMap.animateCamera(update);
+    }
+
 
     private void initMarker(){
         if(type == TYPE_CAMERA){
@@ -229,8 +251,6 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 marker.setObject(device);
             }
         }
-
-
 
     }
 
@@ -363,7 +383,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         //实时数据
                         Intent intent = new Intent();
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
-                        intent.putExtra("address",currentEnvirDevice.getAddress());
+                        intent.putExtra("address",currentEnvirDevice.getDeviceName());
                         intent.setClass(this, PMDataInfoActivity.class);
                         this.startActivity(intent);
                 }
@@ -394,7 +414,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         Intent intent = new Intent();
                         intent.setClass(this, PMHistoryInfoActivity.class);
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
-                        intent.putExtra("address",currentEnvirDevice.getAddress());
+                        intent.putExtra("address",currentEnvirDevice.getDeviceName());
                         this.startActivity(intent);
                     }
 
@@ -454,7 +474,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     tv_history.setTextColor(getResources().getColor(R.color.gray_9999));
                     tv_gallery.setTextColor(getResources().getColor(R.color.gray_9999));
                 }
-
+                initLocation(new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude())));
             } else if(type == TYPE_ENVIRONMENT){
                 DataQueryVoBean device = (DataQueryVoBean) marker.getObject();
                 currentEnvirDevice = device;
@@ -470,7 +490,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
                 tv_deviceTime.setText("安装日期：" + device.getInstallTime().substring(0,10));
-                tv_deviceAddress.setText(device.getAddress());
+                tv_deviceAddress.setText(device.getDeviceName());
                 if(0 == device.getDeviceStatus()){
                     videoView.setClickable(true);
                     videoView.setEnabled(true);
@@ -530,12 +550,18 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 tv_pmso2.setText(Html.fromHtml(so2));
                 String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
                 tv_pmno2.setText(Html.fromHtml(no2));
+                initLocation(new LatLng(Double.parseDouble(device.getLatitude()),Double.parseDouble(device.getLongitude())));
             }
-
             addAndRemoveRoundMarker();
 
             mPopWindow.showAtLocation(mMapView, Gravity.BOTTOM,0,DensityUtils.dip2px(this,-8));
         }
         return true;
+    }
+
+    public void addRoundLine(){
+        List<LatLng> latLngs = MapUtils.getAroundLatlons();
+        Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
     }
 }

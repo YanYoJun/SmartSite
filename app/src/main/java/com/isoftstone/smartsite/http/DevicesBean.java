@@ -217,4 +217,20 @@ public class DevicesBean implements Serializable{
             this.createTime = createTime;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DevicesBean{" +
+                "deviceId='" + deviceId + '\'' +
+                ", deviceCoding='" + deviceCoding + '\'' +
+                ", deviceName='" + deviceName + '\'' +
+                ", deviceType=" + deviceType +
+                ", installTime='" + installTime + '\'' +
+                ", arch=" + arch +
+                ", deviceStatus='" + deviceStatus + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", cameraType=" + cameraType +
+                '}';
+    }
 }

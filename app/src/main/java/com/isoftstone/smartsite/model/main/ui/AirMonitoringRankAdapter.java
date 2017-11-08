@@ -73,7 +73,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
             int alpha  = (int) (((float)(10 - position))/10 * 255);
             drawable.setAlpha(alpha);
             holder.tv_rank.setBackground(drawable);
-            holder.tv_rank.setText(position + "");
+            holder.tv_rank.setText(position+1 + "");
         }else {
             GradientDrawable drawable = new GradientDrawable();
             drawable.setColor(backgroundColor);
@@ -81,7 +81,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
             int alpha  = (int) (0.3 * 255);
             drawable.setAlpha(alpha);
             holder.tv_rank.setBackground(drawable);
-            holder.tv_rank.setText(position + "");
+            holder.tv_rank.setText(position +1+ "");
         }
         holder.pb.setMax(max);
         holder.tv_address.setText(mList.get(position).getArchName());

@@ -6,7 +6,7 @@ package com.isoftstone.smartsite.http;
 
 public class LoginBean {
     private boolean isLoginSuccess = false;
-    private String mErrorInfo = "";
+    private String mErrorInfo ;
     private int mErrorCode = 0;   //1验证码超时   2验证码不正确  3用户不存在    4密码错误   5用户已锁定  6密码过期   7未知错误
     private String mName = "";    //用户登录姓名
     private String mPassword = "";  //用户登录密码

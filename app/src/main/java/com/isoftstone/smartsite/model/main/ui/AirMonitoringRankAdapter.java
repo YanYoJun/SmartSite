@@ -35,7 +35,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
 
     public void setList(ArrayList<EQIRankingBean.AQI> list){
         mList = list;
-        Collections.sort(mList, new SortByValue());
+        Collections.sort(list, new AirMonitoringRankAdapter.SortByValue());
         if(mList.size() > 0){
             max = doubleToInt(new Double(mList.get(0).getData()));
         }
@@ -85,7 +85,14 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
         }
         holder.pb.setMax(max);
         holder.tv_address.setText(mList.get(position).getArchName());
-        holder.tv_aqi.setText(mList.get(position).getData());
+        String data = mList.get(position).getData();
+        int index = data.indexOf(".");
+        if(data.length() > index+3){
+            holder.tv_aqi.setText(data.substring(0,data.indexOf(".")+3));
+        }else{
+            holder.tv_aqi.setText(data);
+        }
+
         holder.pb.setProgress(doubleToInt(new Double(mList.get(position).getData())));
 
         return convertView;
@@ -106,7 +113,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
         }
     }
 
-    public class  SortByValue  implements Comparator {
+    public static class  SortByValue  implements Comparator {
 
         public int compare(Object o1, Object o2) {
             EQIRankingBean.AQI s1 = (EQIRankingBean.AQI) o1;
@@ -117,7 +124,7 @@ public class AirMonitoringRankAdapter extends BaseAdapter {
         }
     }
 
-    private int doubleToInt(double d){
+    public static  int doubleToInt(double d){
         String s1 = String.valueOf(d);
         String s2 = s1.substring(0, s1.indexOf("."));
         return  Integer.parseInt(s2);

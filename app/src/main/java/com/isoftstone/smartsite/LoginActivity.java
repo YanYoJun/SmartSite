@@ -238,18 +238,33 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						@Override
 						public void run() {
 							loggin(mIdString,mPwdString);
-							logginVideo();
+							if(isLogin_1){
+								//logginVideo();
+								Intent intent = new Intent();
+								intent.setClass(LoginActivity.this,MainActivity.class);
+								LoginActivity.this.startActivity(intent);
+								mLoginResult = "登录成功";
+								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+								finish();
+							}
+
 						}
 					}.start();
 				}
 				break;
 				case HANDLER_LOGIN_END:{
 					closeLoginingDlg();// 关闭对话框
-					Toast.makeText(LoginActivity.this, mLoginResult, Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent();
-					intent.setClass(LoginActivity.this,MainActivity.class);
-					LoginActivity.this.startActivity(intent);
-					finish();
+					if(isLogin_1 && isLogin_2){
+						Intent intent = new Intent();
+						intent.setClass(LoginActivity.this,MainActivity.class);
+						LoginActivity.this.startActivity(intent);
+						mLoginResult = "登录成功";
+						Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+						finish();
+					}
+				}
+				case HANDLER_SHOW_TOAST:{
+					Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
 				}
 				break;
 			}
@@ -257,9 +272,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		}
 	};
 	private void loggin(String mIdString,String mPwdString){
-		// 启动登录
-		String strResult = "";
-		if((!mIdString.equals("test")) && (!mPwdString.equals("test"))){
+		     // 启动登录
 			 LoginBean loginBean = null;
 			 String mobileDeviceId = ((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 			 loginBean = mHttpPost.login(mIdString,mPwdString,mobileDeviceId);
@@ -382,8 +395,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			for (DictionaryBean str:list){
 				Log.i("Test",str.getContent()+" "+str.getValue());
 			}*/
-
-
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
 				 try {
@@ -404,59 +415,26 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				 } catch (Exception e) {
 					 e.printStackTrace();
 				 }
-				 mLoginResult="登录成功";
 				 isLogin_1 = true;
 			 }else{
 				 mLoginResult = loginBean.getmErrorInfo();
+				 if(mLoginResult == null){
+					 mLoginResult = "登录失败";
+				 }
 				 isLogin_1 = false;
+				mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
 			 }
-		}else if(mIdString.equals("test")&&mPwdString.equals("test")){
-			boolean mIsSave = true;
-			try {
-				Log.i(TAG, "保存用户列表");
-				for (User user : mUsers) { // 判断本地文档是否有此ID用户
-					if (user.getId().equals(mIdString)) {
-						mIsSave = false;
-						break;
-					}
-				}
-				/*if (mIsSave) { // 将新用户加入users
-					User user = new User(mIdString, mPwdString);
-					mUsers.add(user);
-				}*/
-				mUsers.clear();
-				User user = new User(mIdString, mPwdString);
-				mUsers.add(user);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			mLoginResult = "登录成功";
-			isLogin_1 = true;
-		}else{
-			mLoginResult = "用户名或者密码错误";
-			isLogin_1 = false;
-		}
-		mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 	}
 
 	private void logginVideo(){
 
         if(mHttpPost.getVideoConfig()){
             LoginParam params = new LoginParam();
-
-            /*params.setServer("111.47.21.51");
-            params.setPort(Integer.parseInt("52060"));
-            params.setUserName("loadmin");
-            params.setPassword("loadmin");
-            */
-
-
 			params.setServer(mHttpPost.mLoginBean.getmVideoParameter().getIp());
 			params.setPort(Integer.parseInt(mHttpPost.mLoginBean.getmVideoParameter().getPort()));
 			params.setUserName(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
-			params.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());
-
+			params.setPassword(mHttpPost.mLoginBean.getmVideoParameter().getLoginPass());
             //调用登录接口
             ServiceManager.login(params, LoginActivity.this);
         }else{

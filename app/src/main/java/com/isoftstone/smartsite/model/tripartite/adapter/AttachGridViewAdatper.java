@@ -60,7 +60,8 @@ public class AttachGridViewAdatper extends BaseAdapter {
         Object data = mDatas.get(position);
         ImageView imgView = (ImageView) convertView.findViewById(R.id.image);
         if (data instanceof Integer) {
-            imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
+            ImageUtils.loadImageWithPlaceHolder(mContext, imgView, null, (Integer) data);
+            //imgView.setImageDrawable(mRes.getDrawable((Integer) data, null));
         } else {
             String str = (String) data;
             if (mIsPath) {

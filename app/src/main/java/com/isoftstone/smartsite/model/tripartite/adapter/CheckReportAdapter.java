@@ -76,7 +76,7 @@ public class CheckReportAdapter extends BaseAdapter {
                 }
             });
             View v1 = view.findViewById(R.id.linear_check);
-            if (reportData.getStatus() == ReportData.STATUS_WAITTING_CHECK) {
+            if (reportData.getStatus() == ReportData.STATUS_WAITTING_CHECK || reportData.getStatus() == ReportData.STATUS_REJECT) {
                 v1.setClickable(true);
                 v1.setOnClickListener(new View.OnClickListener() {
                     @Override

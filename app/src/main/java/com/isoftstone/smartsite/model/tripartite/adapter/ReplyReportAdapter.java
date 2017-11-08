@@ -225,24 +225,28 @@ public class ReplyReportAdapter extends BaseAdapter {
         }
         final ArrayList<Object> datas = new ArrayList<Object>();
         final ArrayList<String> path = data.getReportFiles();
-        if (farent != null) {
-            ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) farent.getLayoutParams();
+       // if (farent != null) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
             switch (path.size()) {
                 case 1:
-                    params.width = 400 > params.width ? 400 : params.width;
+                    gridView.setNumColumns(1);
+                    params.width = 150;
                     break;
                 case 2:
-                    params.width = 600 > params.width ? 600 : params.width;
+                    gridView.setNumColumns(2);
+                    params.width = 360;
                     break;
                 case 3:
-                    params.width = 800 > params.width ? 800 : params.width;
+                    gridView.setNumColumns(3);
+                    params.width = 550;
                     break;
                 case 4:
-                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 default:
+                    gridView.setNumColumns(4);
+                    //params.width = 700;
             }
-            farent.setLayoutParams(params);
-        }
+            gridView.setLayoutParams(params);
+       // }
 
         for (String temp : path) {
             String formatPath = FilesUtils.getFormatString(temp);

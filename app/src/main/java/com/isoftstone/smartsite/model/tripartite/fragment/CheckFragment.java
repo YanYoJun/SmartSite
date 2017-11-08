@@ -199,6 +199,9 @@ public class CheckFragment extends BaseFragment {
         if (TextUtils.isEmpty(mEditContent.getText())) {
             return false;
         }
+        if(mReportData.isVisit()){
+            return true;
+        }
         if (mRadioYes.isChecked()) {
             try {
                 DateUtils.format2.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));

@@ -1,7 +1,14 @@
 package com.isoftstone.smartsite.utils;
 
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TimePicker;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -11,15 +18,21 @@ import java.util.TimeZone;
  */
 
 public class DateUtils {
-    public final static SimpleDateFormat format1= new SimpleDateFormat("yyyy-MM-dd");
+    public final static SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public final static SimpleDateFormat format3 = new SimpleDateFormat("yyyy年MM月dd日");
+    public final static SimpleDateFormat format_year= new SimpleDateFormat("yyyy");
+    public final static SimpleDateFormat format_month= new SimpleDateFormat("MM");
+    public final static SimpleDateFormat format_day= new SimpleDateFormat("dd");
+    public final static SimpleDateFormat format_hour= new SimpleDateFormat("HH");
+    public final static SimpleDateFormat format_min= new SimpleDateFormat("mm");
+
 
     public static String checkDataTime(String dataTime, boolean isBeginValue) {
         StringBuilder stringBuilder = new StringBuilder();
         Log.d("zyf", "===== checkDataTime =====" + dataTime.split(" ").length + "");
         String[] strs = dataTime.split(" ");
-        if(strs.length > 2) {
+        if (strs.length > 2) {
             stringBuilder.append(strs[0].trim());
             stringBuilder.append(" ");
             stringBuilder.append(strs[1]);
@@ -63,7 +76,7 @@ public class DateUtils {
             ex.printStackTrace();
         }
 
-        return  resultTime;
+        return resultTime;
     }
 
     /**
@@ -87,12 +100,12 @@ public class DateUtils {
         try {
             Date begin = dfs.parse(videoBeginDateTime);
             Date end = dfs.parse(videoEndDateTime);
-            position = (int) (diffTime/(end.getTime() - begin.getTime()));
+            position = (int) (diffTime / (end.getTime() - begin.getTime()));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return  position;
+        return position;
     }
 
     public static String getProgressTime(String videoBeginDateTime, String videoEndDateTime, int position) {
@@ -101,13 +114,94 @@ public class DateUtils {
         try {
             Date begin = dfs.parse(videoBeginDateTime);
             Date end = dfs.parse(videoEndDateTime);
-            long time = (long) ((end.getTime() - begin.getTime()) * (float)(position/100));
+            long time = (long) ((end.getTime() - begin.getTime()) * (float) (position / 100));
             Date date = new Date(begin.getTime() + time);
             resultTime = dfs.format(date);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return  resultTime;
+        return resultTime;
     }
+
+    public static void setDatePickerDividerColor(DatePicker datePicker) {
+        LinearLayout llFirst = (LinearLayout) datePicker.getChildAt(0);
+        // 获取 NumberPicker
+        LinearLayout mSpinners = (LinearLayout) llFirst.getChildAt(0);
+        for (int i = 0; i < mSpinners.getChildCount(); i++) {
+            NumberPicker picker = (NumberPicker) mSpinners.getChildAt(i);
+            Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+            for (Field pf : pickerFields) {
+                if (pf.getName().equals("mSelectionDivider")) {
+                    pf.setAccessible(true);
+                    try {
+                        pf.set(picker, new ColorDrawable());
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void setTimePickerDividerColor(TimePicker timePicker) {
+        // 获取 mSpinners
+        LinearLayout llFirst = (LinearLayout) timePicker.getChildAt(0);
+        // 获取 NumberPicker
+        LinearLayout mSpinners = (LinearLayout) llFirst.getChildAt(1);
+        for (int i = 0; i < mSpinners.getChildCount(); i++) {
+            if (mSpinners.getChildAt(i) instanceof NumberPicker) {
+                Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+                for (Field pf : pickerFields) {
+                    if (pf.getName().equals("mSelectionDivider")) {
+                        pf.setAccessible(true);
+                        try {
+                            pf.set(mSpinners.getChildAt(i), new ColorDrawable());
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void setNumberPickerDividerColor(NumberPicker timePicker) {
+//        // 获取 mSpinners
+//        LinearLayout llFirst = (LinearLayout) timePicker.getChildAt(0);
+//        // 获取 NumberPicker
+//        LinearLayout mSpinners = (LinearLayout) llFirst.getChildAt(1);
+//        for (int i = 0; i < mSpinners.getChildCount(); i++) {
+//            if (mSpinners.getChildAt(i) instanceof NumberPicker) {
+                Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+                for (Field pf : pickerFields) {
+                    if (pf.getName().equals("mSelectionDivider")) {
+                        pf.setAccessible(true);
+                        try {
+                            pf.set(timePicker, new ColorDrawable());
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+//            }
+//        }
+    }
+
+
 }

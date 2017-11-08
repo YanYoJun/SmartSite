@@ -1,7 +1,8 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -12,13 +13,14 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -77,8 +79,8 @@ public class RevisitFragment extends BaseFragment {
     private RadioButton mRadioYes = null;
     private RadioButton mRadioNo = null;
 
-    private ITime mBeginDate = null;
-    private ITime mEndDate = null;
+    private boolean mBeginDate = false;
+    private boolean mEndDate = false;
     private ITime mRevisitDate = null;
 
     private Calendar mCal = null;
@@ -136,7 +138,7 @@ public class RevisitFragment extends BaseFragment {
 
     private String parseTime(String time) {
         try {
-            Date date = DateUtils.format1.parse(time);
+            Date date = DateUtils.format2.parse(time);
             String result = DateUtils.format2.format(date);
             return result;
         } catch (Exception e) {
@@ -295,17 +297,23 @@ public class RevisitFragment extends BaseFragment {
         mBeginTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mBeginTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                        mBeginDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-                        mBeginTime.setTextColor(mRes.getColor(R.color.main_text_color));
-                        if (mBeginDate != null && mEndDate != null) {
-                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
-                        }
-                    }
-                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        mBeginTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+//                        mBeginDate = new ITime(year, monthOfYear + 1, dayOfMonth);
+//                        mBeginTime.setTextColor(mRes.getColor(R.color.main_text_color));
+//                        if (mBeginDate != null && mEndDate != null) {
+//                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
+//                        }
+//                    }
+//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+                //dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+                builder.setView(view);
+                AlertDialog dialog = builder.create();
+                initTimePicker(dialog, view, mBeginTime, mLabTime);
                 dialog.show();
             }
 
@@ -314,17 +322,23 @@ public class RevisitFragment extends BaseFragment {
         mEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mEndTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                        mEndDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-                        mEndTime.setTextColor(mRes.getColor(R.color.main_text_color));
-                        if (mBeginDate != null && mEndDate != null) {
-                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
-                        }
-                    }
-                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        mEndTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+//                        mEndDate = new ITime(year, monthOfYear + 1, dayOfMonth);
+//                        mEndTime.setTextColor(mRes.getColor(R.color.main_text_color));
+//                        if (mBeginDate != null && mEndDate != null) {
+//                            mLabTime.setCompoundDrawables(mWattingChanged, null, null, null);
+//                        }
+//                    }
+//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//                dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+                builder.setView(view);
+                AlertDialog dialog = builder.create();
+                initTimePicker(dialog, view, mEndTime, mLabTime);
                 dialog.show();
             }
 
@@ -334,15 +348,23 @@ public class RevisitFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 /*                final Calendar c = Calendar.getInstance();*/
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                        mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
-                        mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-                        mRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
-                    }
-                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+////                        mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+////                        mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
+////                        mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
+////                        mRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
+//
+//                    }
+//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//
+//                dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+                builder.setView(view);
+                AlertDialog dialog = builder.create();
+                initTimePicker(dialog, view, mEditRevisitTime, mRevisitTime);
                 dialog.show();
             }
 
@@ -405,6 +427,94 @@ public class RevisitFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+    }
+
+    private void initTimePicker(final Dialog dialog, final View view, final TextView editRight, final TextView labLeft) {
+        final NumberPicker year = (NumberPicker) view.findViewById(R.id.picker_year);
+        final NumberPicker month = (NumberPicker) view.findViewById(R.id.picker_month);
+        final NumberPicker day = (NumberPicker) view.findViewById(R.id.picker_day);
+        final NumberPicker hour = (NumberPicker) view.findViewById(R.id.picker_hour);
+        final NumberPicker min = (NumberPicker) view.findViewById(R.id.picker_min);
+        Date curData = new Date();
+        year.setMinValue(2016);
+        year.setMaxValue(2099);
+        year.setValue(Integer.parseInt(DateUtils.format_year.format(curData)));
+        month.setMaxValue(12);
+        month.setMinValue(1);
+        month.setValue(Integer.parseInt(DateUtils.format_month.format(curData)));
+        day.setMaxValue(31);
+        day.setMinValue(1);
+        day.setValue(Integer.parseInt(DateUtils.format_day.format(curData)));
+        month.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                if (newVal == 1 || newVal == 3 || newVal == 5 || newVal == 7 || newVal == 8 || newVal == 10 || newVal == 12) {
+                    day.setMaxValue(31);
+                } else {
+                    if (newVal == 2) {
+                        day.setMaxValue(28);
+                    } else {
+                        day.setMaxValue(30);
+                    }
+                }
+
+                int value = year.getValue();
+                if ((value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)) {
+                    if (newVal == 2) {
+                        day.setMaxValue(29);
+                    }
+                }
+            }
+        });
+        year.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                int value = year.getValue();
+                if (month.getValue() == 2) {
+                    if ((value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)) {
+                        day.setMaxValue(29);
+                    } else {
+                        day.setMaxValue(28);
+                    }
+                }
+            }
+        });
+        hour.setMaxValue(23);
+        hour.setMinValue(0);
+        hour.setValue(Integer.parseInt(DateUtils.format_hour.format(curData)));
+        min.setMaxValue(59);
+        min.setMinValue(0);
+        min.setValue(Integer.parseInt(DateUtils.format_min.format(curData)));
+        DateUtils.setNumberPickerDividerColor(year);
+        DateUtils.setNumberPickerDividerColor(month);
+        DateUtils.setNumberPickerDividerColor(day);
+        DateUtils.setNumberPickerDividerColor(hour);
+        DateUtils.setNumberPickerDividerColor(min);
+        view.findViewById(R.id.btn_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editRight == mBeginTime) {
+                    mBeginDate = true;
+                } else if (editRight == mEndTime) {
+                    mEndDate = true;
+
+                }
+                //editRight.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                String result = year.getValue() + "-" + month.getValue() + "-" + day.getValue() + " " + hour.getValue() + ":" + min.getValue() + ":00";
+                editRight.setText(result);
+                editRight.setTextColor(mRes.getColor(R.color.main_text_color));
+                if (mBeginDate && mEndDate) {
+                    labLeft.setCompoundDrawables(mWattingChanged, null, null, null);
+                }
+                dialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.btn_no).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }

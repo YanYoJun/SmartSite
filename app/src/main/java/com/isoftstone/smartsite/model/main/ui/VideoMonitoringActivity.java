@@ -55,7 +55,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     public HttpPost mHttpPost = new HttpPost();
     private ListView mListView = null;
     private Context mContext;
-    private VideoMonitorAdapter.ViewHolder mViewHolder;
+    private DevicesBean mDevicesBean;
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_serch = null;
@@ -140,8 +140,8 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     }
 
     @Override
-    public void viewOnClickListener(VideoMonitorAdapter.ViewHolder viewHolder, boolean isFormOneType) {
-        mViewHolder = viewHolder;
+    public void viewOnClickListener(DevicesBean devicesBean, boolean isFormOneType) {
+        mDevicesBean = devicesBean;
         if (isFormOneType) {
             //进入历史摄像界面
             startRePlayListActivity();
@@ -164,15 +164,12 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        /*bundle.putString("resCode", mViewHolder.resCodeTv.getText().toString());
-        bundle.putInt("resSubType", mViewHolder.resSubType);
-        bundle.putString("resName", mViewHolder.resNameTv.getText().toString());
-        bundle.putBoolean("isOnline", mViewHolder.isOnline);*/
 
-        bundle.putString("resCode", "6682-02_1");
-        bundle.putInt("resSubType", 4);
-        bundle.putString("resName", "测试数据");
-        bundle.putBoolean("isOnline", true);
+        bundle.putString("resCode", mDevicesBean.getDeviceCoding());
+        bundle.putInt("resSubType", mDevicesBean.getCameraType());
+        bundle.putString("resName", mDevicesBean.getDeviceName());
+        boolean isOnLine = mDevicesBean.getDeviceStatus().equals("0");
+        bundle.putBoolean("isOnline", isOnLine);
 
         bundle.putString("beginTime", beginTime);
         bundle.putString("endTime", endTime);

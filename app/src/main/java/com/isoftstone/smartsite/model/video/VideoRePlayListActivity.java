@@ -1,20 +1,25 @@
 package com.isoftstone.smartsite.model.video;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.R;
@@ -28,6 +33,8 @@ import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.obj.QueryCondition;
 import com.uniview.airimos.obj.RecordInfo;
 import com.uniview.airimos.parameter.QueryReplayParam;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,23 +56,24 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     private TextView mResNameTv;
     private ImageView mIsOnlineIv;
 
+    private TextView mBeginDateTv;
     private TextView mBeginTimeTv;
     private RelativeLayout mBeginTimeLayout;
+    private TextView mEndDateTv;
     private TextView mEndTimeTv;
     private RelativeLayout mEndTimeLayout;
     private TextView mQueryText;
     private RelativeLayout gotomap;
 
     private String mResCode = null;
-    private String mBeginTime = null;
-    private String mEngTime = null;
+    private String mBeginDate = null;
+    private String mEngDate = null;
     private Boolean isCameraOnLine = false;
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_icon = null;
     private TextView toolbar_title = null;
-
-
+    private AlertDialog mAlertDialog = null;
 
     @Override
     protected void onStart() {
@@ -91,8 +99,8 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         int resSubType =  bundle.getInt("resSubType");
         String resName = bundle.getString("resName");
         isCameraOnLine = bundle.getBoolean("isOnline");
-        mBeginTime = bundle.getString("beginTime");
-        mEngTime = bundle.getString("endTime");
+        mBeginDate = bundle.getString("beginTime");
+        mEngDate = bundle.getString("endTime");
 
         mResCodeTv.setText(resCode);
         mResCode = resCode;
@@ -104,10 +112,10 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
             mIsOnlineIv.setImageResource(R.drawable.offline);
         }
 
-        mBeginTimeTv.setText(mBeginTime.split(" ")[0]);
-        mEndTimeTv.setText(mEngTime.split(" ")[0]);
+        mBeginDateTv.setText(mBeginDate.split(" ")[0]);
+        mEndDateTv.setText(mEngDate.split(" ")[0]);
 
-        queryOrStartReplayVideo(mResCode, mBeginTime + " 00:00:00", mEngTime + " 23:59:59", false);
+        queryOrStartReplayVideo(mResCode, mBeginDate + " 00:00:00", mEngDate + " 23:59:59", false);
     }
 
     private void init(){
@@ -118,7 +126,9 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         mIsOnlineIv = (ImageView) findViewById(R.id.is_online_tv);
         gotomap = (RelativeLayout) findViewById(R.id.gotomap);
 
+        mBeginDateTv = (TextView) findViewById(R.id.begin_date_txt);
         mBeginTimeTv = (TextView) findViewById(R.id.begin_time_txt);
+        mEndDateTv = (TextView) findViewById(R.id.end_date_txt);
         mEndTimeTv = (TextView) findViewById(R.id.end_time_txt);
         mBeginTimeLayout = (RelativeLayout) findViewById(R.id.begin_date_time_layout);
         mEndTimeLayout = (RelativeLayout) findViewById(R.id.end_date_time_layout);
@@ -177,19 +187,19 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.begin_date_time_layout:
-                showDatePickerDialog(mBeginTimeTv);
+                showDatePickerDialog(mBeginDateTv, mBeginTimeTv, true);
                 break;
             case R.id.end_date_time_layout:
-                showDatePickerDialog(mEndTimeTv);
+                showDatePickerDialog(mEndDateTv, mEndTimeTv, false);
                 break;
             case R.id.query_txt:
-                String  beginTime = mBeginTimeTv.getText().toString();
-                String  endTime = mEndTimeTv.getText().toString();
-                if (isDateOneBigger(beginTime, endTime)) {
+                String  beginDateTime = mBeginDateTv.getText().toString() + " " + mBeginTimeTv.getText().toString();
+                String  endDateTime = mEndDateTv.getText().toString() + " " + mEndTimeTv.getText().toString();
+                if (isDateOneBigger(beginDateTime, endDateTime)) {
                     ToastUtils.showShort(getText(R.string.data_pick_dialog_error_msg2).toString());
                     return;
                 };
-                queryOrStartReplayVideo(mResCode, beginTime + " 00:00:00", endTime + " 23:59:59", true);
+                queryOrStartReplayVideo(mResCode, beginDateTime, endDateTime, true);
                 break;
             case R.id.gotomap:
                 Intent intent = new Intent();
@@ -201,23 +211,96 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         }
     }
 
-    public void showDatePickerDialog (final TextView editText) {
-        final Calendar sCalendar = Calendar.getInstance();
-        ToastUtils.showShort("showDatePickerDialog");
-        DatePickerDialog dialog = new DatePickerDialog(VideoRePlayListActivity.this, new DatePickerDialog.OnDateSetListener() {
+    public void showDatePickerDialog (final TextView dateText, final TextView timeText, final boolean isBeginDateTime) {
+        //final Calendar sCalendar = Calendar.getInstance();
+        /**DatePickerDialog dialog = new DatePickerDialog(VideoRePlayListActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 sCalendar.set(year, monthOfYear, dayOfMonth);
                 editText.setText(DateFormat.format("yyy-MM-dd", sCalendar).toString());
             }
         }, sCalendar.get(Calendar.YEAR), sCalendar.get(Calendar.MONTH), sCalendar.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
+        dialog.show();*/
+        //ToastUtils.showShort("showDatePickerDialog");
+
+        View rootView = null;
+        if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_PORTRAIT) {
+            rootView = View.inflate(mContext, R.layout.date_time_picker, null);
+        } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE) {
+            rootView = View.inflate(mContext, R.layout.date_time_picker_for_land, null);
+        }
+
+        final DatePicker datePicker = (DatePicker) rootView.findViewById(R.id.new_act_date_picker);
+        final TimePicker timePicker =  (TimePicker) rootView.findViewById(R.id.new_act_time_picker);
+
+        // Init DatePicker
+        int year;
+        int month;
+        int day;
+        if (StringUtils.isEmpty(dateText.getText().toString())) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+        } else {
+            year =  Integer.parseInt(dateText.getText().toString().split("-")[0]);
+            month = Integer.parseInt(dateText.getText().toString().split("-")[1]);
+            day = Integer.parseInt(dateText.getText().toString().split("-")[2]);
+        }
+        datePicker.init(year, month, day, null);
+
+        // Init TimePicker
+        int hour;
+        int minute;
+        if (StringUtils.isEmpty(timeText.getText().toString())) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            hour = c.get(Calendar.HOUR_OF_DAY);
+            minute = c.get(Calendar.MINUTE);
+        } else {
+            hour = Integer.parseInt(timeText.getText().toString().split(":")[0]);
+            minute = Integer.parseInt(timeText.getText().toString().split(":")[1]);
+        }
+        timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(hour);
+        timePicker.setCurrentMinute(minute);
+
+        // Build DateTimeDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(VideoRePlayListActivity.this);
+        builder.setView(rootView);
+        builder.setTitle(R.string.select_date_time);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /**arrive_year = datePicker.getYear();
+                arrive_month = datePicker.getMonth();
+                arrive_day = datePicker.getDayOfMonth();*/
+                String dateStr = DateUtils.formatDate(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                dateText.setText(dateStr);
+
+                //arrive_hour = timePicker.getCurrentHour();
+                //arrive_min = timePicker.getCurrentMinute();
+                String timeStr = DateUtils.formatTime(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+                timeText.setText(timeStr + (isBeginDateTime ? ":00" : ":59"));
+            }
+        });
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
-    public void queryOrStartReplayVideo(final String cameraCode, final String beginTime, final String endTime, final boolean isStartOptions) {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (null != mAlertDialog && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+        }
+    }
+
+    public void queryOrStartReplayVideo(final String cameraCode, final String beginDateTime, final String endDateTime, final boolean isStartOptions) {
 
         //查询回放记录参数
-        QueryReplayParam p = new QueryReplayParam(cameraCode, DateUtils.checkDataTime(beginTime,true), DateUtils.checkDataTime(endTime, false), new QueryCondition(0, 100, true));
+        QueryReplayParam p = new QueryReplayParam(cameraCode, beginDateTime, endDateTime, new QueryCondition(0, 100, true));
 
         //查询回放记录结果监听
         OnQueryReplayListener queryListener = new OnQueryReplayListener() {
@@ -235,14 +318,14 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
                 }
 
                 if (isStartOptions) {
-                    startReplayVideo(cameraCode, DateUtils.checkDataTime(beginTime,true), DateUtils.checkDataTime(endTime, false));
+                    startReplayVideo(cameraCode, beginDateTime, endDateTime);
                 } else {
                     int size = recordList.size();
                     ArrayList<VideoMonitorBean> sList = new ArrayList<VideoMonitorBean>();
                     VideoMonitorBean video;
 
                     for (int i = 0; i < size; i++) {
-                        video = new VideoMonitorBean(DateUtils.checkDataTime(beginTime,true),  DateUtils.checkDataTime(endTime, false)
+                        video = new VideoMonitorBean(beginDateTime,  endDateTime
                                 , recordList.get(i).getFileName(), cameraCode);
                         sList.add(video);
                     }

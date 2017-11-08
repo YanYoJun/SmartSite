@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.utils;
 
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -10,6 +11,7 @@ import android.widget.TimePicker;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -76,7 +78,7 @@ public class DateUtils {
             ex.printStackTrace();
         }
 
-        return resultTime;
+        return  resultTime;
     }
 
     /**
@@ -204,4 +206,15 @@ public class DateUtils {
     }
 
 
+    public static String formatDate(int year, int monthOfYear, int dayOfMonth) {
+        Calendar sCalendar = Calendar.getInstance();
+        sCalendar.set(year, monthOfYear, dayOfMonth);
+        return DateFormat.format("yyy-MM-dd", sCalendar).toString();
+    }
+
+    public static String formatTime(int year, int monthOfYear, int dayOfMonth,int hour, int min) {
+        Calendar sCalendar = Calendar.getInstance();
+        sCalendar.set(year,monthOfYear,dayOfMonth,hour,min);
+        return DateFormat.format("HH:mm", sCalendar).toString();
+    }
 }

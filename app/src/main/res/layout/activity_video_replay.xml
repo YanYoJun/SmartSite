@@ -316,7 +316,7 @@
                     android:layout_marginTop="20dp">
 
                     <TextView
-                        android:id="@+id/begin_time_txt"
+                        android:id="@+id/begin_date_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -324,9 +324,10 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/begin_time_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/begin_time_txt"
+                        android:layout_below="@id/begin_date_txt"
                         android:layout_marginTop="8dp"
                         android:text="00:00:00"
                         android:textColor="@color/main_text_color"
@@ -372,7 +373,7 @@
                     android:layout_marginTop="20dp">
 
                     <TextView
-                        android:id="@+id/end_time_txt"
+                        android:id="@+id/end_date_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -380,9 +381,10 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/end_time_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/end_time_txt"
+                        android:layout_below="@id/end_date_txt"
                         android:layout_marginTop="8dp"
                         android:text="23:59:59"
                         android:textColor="@color/main_text_color"

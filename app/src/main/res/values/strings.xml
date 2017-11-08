@@ -187,6 +187,8 @@
     <string name="user_company_3">湖北中地有限公司</string>
     <string name="settings_push_msg_switch_off">接收推送通知开关关闭中</string>
     <string name="settings_push_msg_switch_on">接收推送通知开关开启中</string>
+    <string name="clean_cache">已完成清空缓存操作</string>
+    <string name="select_date_time">请选择日期时间</string>
     <!--          system   end            -->
 
 

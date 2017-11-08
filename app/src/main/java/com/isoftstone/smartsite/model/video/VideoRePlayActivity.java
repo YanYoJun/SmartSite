@@ -98,7 +98,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private boolean isCameraOnLine = false;
     private ImageView mIsOnLineView;
     private TextView mBeginDateView;
+    private TextView mBeginTimeView;
     private TextView mEndDateView;
+    private TextView mEndTimeView;
     private TextView mStartPlayView;
 
     @Override
@@ -170,10 +172,17 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         } else {
             mIsOnLineView.setImageResource(R.drawable.offline);
         }
-        mBeginDateView = (TextView) findViewById(R.id.begin_time_txt);
-        mBeginDateView.setText(mBeginTime);
-        mEndDateView = (TextView) findViewById(R.id.end_time_txt);
-        mEndDateView.setText(mEndTime);
+        ToastUtils.showLong(mBeginTime.toString() + "/n" + mEndTime.toString());
+        mBeginDateView = (TextView) findViewById(R.id.begin_date_txt);
+        mBeginDateView.setText(mBeginTime.split(" ")[0]);
+        mEndDateView = (TextView) findViewById(R.id.end_date_txt);
+        mEndDateView.setText(mEndTime.split(" ")[0]);
+
+        mBeginTimeView = (TextView) findViewById(R.id.begin_time_txt);
+        mBeginTimeView.setText(mBeginTime.split(" ")[1]);
+        mEndTimeView = (TextView) findViewById(R.id.end_time_txt);
+        mEndTimeView.setText(mEndTime.split(" ")[1]);
+
         mStartPlayView = (TextView) findViewById(R.id.start_play_view);
         mStartPlayView.setOnClickListener(this);
 

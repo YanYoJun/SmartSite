@@ -106,6 +106,7 @@
         android:src="@color/dividing_line" />
 
     <RelativeLayout
+        android:id="@+id/clean_cache_view"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:background="@drawable/msg_item_press_bg"
@@ -118,6 +119,7 @@
             android:layout_centerVertical="true">
 
             <TextView
+                android:id="@+id/settings_cleanup_cache_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"

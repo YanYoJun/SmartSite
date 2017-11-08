@@ -73,7 +73,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
 
@@ -101,7 +101,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
         Paint paint = holder.resCodeTv.getPaint();
         paint.setFakeBoldText(true);
         if(devicesBean.getDeviceCoding().length() > 10){
-            holder.resCodeTv.setText(devicesBean.getDeviceCoding().substring(10));
+            holder.resCodeTv.setText(devicesBean.getDeviceCoding().substring(0,10));
         }else {
             holder.resCodeTv.setText(devicesBean.getDeviceCoding());
         }

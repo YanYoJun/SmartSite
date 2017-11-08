@@ -53,13 +53,16 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MonthlyComparisonBean;
 import com.isoftstone.smartsite.http.WeatherConditionBean;
 import com.isoftstone.smartsite.model.tripartite.view.MyListView;
+import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -123,11 +126,13 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         setContentView(R.layout.activity_airmonitoring);
         init();
         setOnCliceked();
+        initDatePicker();
         mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
     }
     private void init(){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
         mRankTime = (TextView)findViewById(R.id.date);
+        mRankTime.setOnClickListener(this);
         mRankTime.setText(df.format(new Date()));
         mRankSpinner = (Spinner)findViewById(R.id.name);
         ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,m);
@@ -146,12 +151,13 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
         mYouliangTime = (TextView)findViewById(R.id.youliang_datedate);
         mYouliangTime.setText(df.format(new Date()));
+        mYouliangTime.setOnClickListener(this);
         mYouliangSpinner = (Spinner)findViewById(R.id.youliang_name);
         mYouliangSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getWeatherDaysArchId = mEQIRankingBean.getArchs().get(position).getArchId();
+                getWeatherDaysArchId = mEQIRankingBean.getAQI().get(position).getArchId();
                 mHandler.sendEmptyMessage(HANDLER_GET_DAYS_PROPORTION_START);
             }
 
@@ -164,12 +170,13 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
         mTongqiTime = (TextView)findViewById(R.id.tongqi_date);
         mTongqiTime.setText(df.format(new Date()));
+        mTongqiTime.setOnClickListener(this);
         mTongqiSpinner = (Spinner)findViewById(R.id.tongqi_name);
         mTongqiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getComparisonarchid = mEQIRankingBean.getArchs().get(position).getArchId();
+                getComparisonarchid = mEQIRankingBean.getAQI().get(position).getArchId();
                 mHandler.sendEmptyMessage(HANDLER_GET_COMPARISON_START);
             }
 
@@ -198,6 +205,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         quyu_name.setOnClickListener(this);
         quyu_date = (TextView)findViewById(R.id.quyu_date);
         quyu_date.setText(df.format(new Date()));
+        quyu_date.setOnClickListener(this);
         text_quyu_1 = (TextView) findViewById(R.id.text_quyu_1);
         text_quyu_2 = (TextView) findViewById(R.id.text_quyu_2);
 
@@ -231,6 +239,11 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                             getEqiDataRankingTime = mRankTime.getText().toString();
                             Log.i("test",getEqiDataRankingTime+" "+geteqiDataRankingarchid);
                             mEQIRankingBean = mHttpPost.eqiDataRanking(geteqiDataRankingarchid,getEqiDataRankingTime);
+                            if(mEQIRankingBean != null){
+                                ArrayList<EQIRankingBean.AQI>  list = mEQIRankingBean.getAQI();
+                                Collections.sort(list, new AirMonitoringRankAdapter.SortByValue());
+                                mEQIRankingBean.setAQI(list);
+                            }
                             mHandler.sendEmptyMessage(HANDLER_GET_RANKING_END);
                         }
                     };
@@ -301,16 +314,16 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         if(mEQIRankingBean == null){
             return;
         }
-        address = new String[mEQIRankingBean.getArchs().size()];
-        for (int i = 0; i < mEQIRankingBean.getArchs().size() ;i ++){
-            address[i] = mEQIRankingBean.getArchs().get(i).getArchName();
+        address = new String[mEQIRankingBean.getAQI().size()];
+        for (int i = 0; i < mEQIRankingBean.getAQI().size() ;i ++){
+            address[i] = mEQIRankingBean.getAQI().get(i).getArchName();
             if(i == 0){
-                quyu_id_1 = mEQIRankingBean.getArchs().get(i).getArchId();
+                quyu_id_1 = mEQIRankingBean.getAQI().get(i).getArchId();
                 addressFlags[0] = true;
             }
 
             if(i == 1){
-                quyu_id_2 = mEQIRankingBean.getArchs().get(i).getArchId();
+                quyu_id_2 = mEQIRankingBean.getAQI().get(i).getArchId();
                 addressFlags[1] = true;
             }
         }
@@ -488,6 +501,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         if(mMonthlyComparisonBean == null){
             return;
         }
+
         mLineChart.setDrawGridBackground(false);
 
         // no description text
@@ -569,97 +583,101 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         l.setEnabled(false);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        int beforeMonthSize = mMonthlyComparisonBean.getBeforeMonth().size();
-        if(beforeMonthSize > 0){
-            ArrayList<Entry> values = new ArrayList<Entry>();
-            for (int i = 0; i < beforeMonthSize; i++) {
-                String value = mMonthlyComparisonBean.getBeforeMonth().get(i).getAqi();
-                Entry entry = new Entry(i,Float.parseFloat(value));
-                values.add(entry);
-            }
+        if(mMonthlyComparisonBean != null){
+            int beforeMonthSize = mMonthlyComparisonBean.getBeforeMonth().size();
+            if(beforeMonthSize > 0){
+                ArrayList<Entry> values = new ArrayList<Entry>();
+                for (int i = 0; i < beforeMonthSize; i++) {
+                    String value = mMonthlyComparisonBean.getBeforeMonth().get(i).getAqi();
+                    Entry entry = new Entry(i,Float.parseFloat(value));
+                    values.add(entry);
+                }
             /*for (int i = 0; i < 30; i++) {
                 double val = (Math.random() * 88) + 3;
                 Entry entry = new Entry(i,(float) val);
                 values.add(entry);
             }*/
 
-            LineDataSet set1 = new LineDataSet(values, "DataSet 1");
-            set1.setDrawIcons(false);
-            // set the line to be drawn like this "- - - - - -"
-            //set1.enableDashedLine(10f, 10f, 0f);
-            set1.setColor(Color.parseColor("#ff9e5d"));
-            set1.setCircleColor(Color.parseColor("#ff9e5d"));
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(4f);//设置焦点圆心的大小
-            set1.setDrawCircleHole(true);
-            set1.setCircleHoleRadius(2);
-            set1.setCircleColorHole(Color.WHITE);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(false);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-            set1.setFormSize(15.f);
-            set1.setDrawFilled(false);
-            set1.setHighlightEnabled(false);
-            set1.setDrawValues(false);
+                LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+                set1.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                //set1.enableDashedLine(10f, 10f, 0f);
+                set1.setColor(Color.parseColor("#ff9e5d"));
+                set1.setCircleColor(Color.parseColor("#ff9e5d"));
+                set1.setLineWidth(1f);
+                set1.setCircleRadius(4f);//设置焦点圆心的大小
+                set1.setDrawCircleHole(true);
+                set1.setCircleHoleRadius(2);
+                set1.setCircleColorHole(Color.WHITE);
+                set1.setValueTextSize(9f);
+                set1.setDrawFilled(false);
+                set1.setFormLineWidth(1f);
+                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set1.setFormSize(15.f);
+                set1.setDrawFilled(false);
+                set1.setHighlightEnabled(false);
+                set1.setDrawValues(false);
 
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                }
+                else {
+                    set1.setFillColor(Color.BLACK);
+                }
+                dataSets.add(set1); // add the datasets
             }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-            dataSets.add(set1); // add the datasets
         }
 
+        if(mMonthlyComparisonBean != null){
+            int pushtimeMonthSize = mMonthlyComparisonBean.getCurrentMonth().size();
+            if(pushtimeMonthSize > 0){
+                ArrayList<Entry> values_2 = new ArrayList<Entry>();
 
-        int pushtimeMonthSize = mMonthlyComparisonBean.getCurrentMonth().size();
-        if(pushtimeMonthSize > 0){
-            ArrayList<Entry> values_2 = new ArrayList<Entry>();
+                for (int i = 0; i < pushtimeMonthSize; i++) {
+                    String value = mMonthlyComparisonBean.getCurrentMonth().get(i).getAqi();
+                    Entry entry = new Entry(i,Float.parseFloat(value));
+                    values_2.add(entry);
+                }
 
-            for (int i = 0; i < pushtimeMonthSize; i++) {
-                String value = mMonthlyComparisonBean.getCurrentMonth().get(i).getAqi();
-                Entry entry = new Entry(i,Float.parseFloat(value));
-                values_2.add(entry);
+
+                LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+                set2.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
+                set2.setColor(Color.parseColor("#599fff"));
+                set2.setDrawCircleHole(false);
+                set2.setFormLineWidth(1f);
+                set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set2.setFormSize(15.f);
+                set2.setLineWidth(1f);//设置线宽
+                set2.setCircleColor(Color.parseColor("#599fff"));
+                set2.setCircleRadius(4f);//设置焦点圆心的大小
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+                set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+                set2.setHighlightEnabled(false);//是否禁用点击高亮线
+                set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+                set2.setValueTextSize(9f);//设置显示值的文字大小
+                set2.setDrawFilled(false);//设置禁用范围背景填充
+                set2.setDrawValues(false);
+
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                }
+                else {
+                    set2.setFillColor(Color.BLACK);
+                }
+
+                dataSets.add(set2); // add the datasets
             }
-
-
-            LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
-            set2.setDrawIcons(false);
-            // set the line to be drawn like this "- - - - - -"
-            set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
-            set2.setColor(Color.parseColor("#599fff"));
-            set2.setDrawCircleHole(false);
-            set2.setFormLineWidth(1f);
-            set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-            set2.setFormSize(15.f);
-            set2.setLineWidth(1f);//设置线宽
-            set2.setCircleColor(Color.parseColor("#599fff"));
-            set2.setCircleRadius(4f);//设置焦点圆心的大小
-            set2.setDrawCircleHole(true);
-            set2.setCircleHoleRadius(2);
-            set2.setCircleColorHole(Color.WHITE);
-            set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-            set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-            set2.setHighlightEnabled(false);//是否禁用点击高亮线
-            set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-            set2.setValueTextSize(9f);//设置显示值的文字大小
-            set2.setDrawFilled(false);//设置禁用范围背景填充
-            set2.setDrawValues(false);
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
-            }
-            else {
-                set2.setFillColor(Color.BLACK);
-            }
-
-            dataSets.add(set2); // add the datasets
         }
+
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
         // set data
@@ -671,12 +689,12 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         String quyu_archs_2 = "";
         for (int i = 0 ; i < addressFlags.length ; i ++){
             if(addressFlags[i] ){
-                quyu_archs_1 = mEQIRankingBean.getArchs().get(i).getArchName();
+                quyu_archs_1 = mEQIRankingBean.getAQI().get(i).getArchName();
             }
         }
         for (int i = addressFlags.length -1; i >= 0  ; i --){
             if(addressFlags[i] ){
-                quyu_archs_2 = mEQIRankingBean.getArchs().get(i).getArchName();
+                quyu_archs_2 = mEQIRankingBean.getAQI().get(i).getArchName();
             }
         }
         text_quyu_1.setText(quyu_archs_1);
@@ -765,96 +783,99 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         l.setEnabled(false);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        int beforeMonthSize = mMonthlyComparisonBean_1.getCurrentMonth().size();
-        if(beforeMonthSize > 0){
-            ArrayList<Entry> values = new ArrayList<Entry>();
-            for (int i = 0; i < beforeMonthSize; i++) {
-                String value = mMonthlyComparisonBean_1.getCurrentMonth().get(i).getAqi();
-                Entry entry = new Entry(i,Float.parseFloat(value));
-                values.add(entry);
-            }
+        if(mMonthlyComparisonBean_1 != null) {
+            int beforeMonthSize = mMonthlyComparisonBean_1.getCurrentMonth().size();
+            if (beforeMonthSize > 0) {
+                ArrayList<Entry> values = new ArrayList<Entry>();
+                for (int i = 0; i < beforeMonthSize; i++) {
+                    String value = mMonthlyComparisonBean_1.getCurrentMonth().get(i).getAqi();
+                    Entry entry = new Entry(i, Float.parseFloat(value));
+                    values.add(entry);
+                }
             /*for (int i = 0; i < 30; i++) {
                 double val = (Math.random() * 88) + 3;
                 Entry entry = new Entry(i,(float) val);
                 values.add(entry);
             }*/
 
-            LineDataSet set1 = new LineDataSet(values, "DataSet 1");
-            set1.setDrawIcons(false);
-            // set the line to be drawn like this "- - - - - -"
-            //set1.enableDashedLine(10f, 10f, 0f);
-            set1.setColor(Color.parseColor("#ff9e5d"));
-            set1.setCircleColor(Color.parseColor("#ff9e5d"));
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(4f);//设置焦点圆心的大小
-            set1.setDrawCircleHole(true);
-            set1.setCircleHoleRadius(2);
-            set1.setCircleColorHole(Color.WHITE);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(false);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-            set1.setFormSize(15.f);
-            set1.setDrawFilled(false);
-            set1.setHighlightEnabled(false);
-            set1.setDrawValues(false);
+                LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+                set1.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                //set1.enableDashedLine(10f, 10f, 0f);
+                set1.setColor(Color.parseColor("#ff9e5d"));
+                set1.setCircleColor(Color.parseColor("#ff9e5d"));
+                set1.setLineWidth(1f);
+                set1.setCircleRadius(4f);//设置焦点圆心的大小
+                set1.setDrawCircleHole(true);
+                set1.setCircleHoleRadius(2);
+                set1.setCircleColorHole(Color.WHITE);
+                set1.setValueTextSize(9f);
+                set1.setDrawFilled(false);
+                set1.setFormLineWidth(1f);
+                set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set1.setFormSize(15.f);
+                set1.setDrawFilled(false);
+                set1.setHighlightEnabled(false);
+                set1.setDrawValues(false);
 
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                } else {
+                    set1.setFillColor(Color.BLACK);
+                }
+                dataSets.add(set1); // add the datasets
             }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-            dataSets.add(set1); // add the datasets
         }
 
 
-        int pushtimeMonthSize = mMonthlyComparisonBean_2.getCurrentMonth().size();
-        if(pushtimeMonthSize > 0){
-            ArrayList<Entry> values_2 = new ArrayList<Entry>();
+        if(mMonthlyComparisonBean_2 != null) {
 
-            for (int i = 0; i < pushtimeMonthSize; i++) {
-                String value = mMonthlyComparisonBean_2.getCurrentMonth().get(i).getAqi();
-                Entry entry = new Entry(i,Float.parseFloat(value));
-                values_2.add(entry);
+            int pushtimeMonthSize = mMonthlyComparisonBean_2.getCurrentMonth().size();
+            if (pushtimeMonthSize > 0) {
+                ArrayList<Entry> values_2 = new ArrayList<Entry>();
+
+                for (int i = 0; i < pushtimeMonthSize; i++) {
+                    String value = mMonthlyComparisonBean_2.getCurrentMonth().get(i).getAqi();
+                    Entry entry = new Entry(i, Float.parseFloat(value));
+                    values_2.add(entry);
+                }
+
+
+                LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
+                set2.setDrawIcons(false);
+                // set the line to be drawn like this "- - - - - -"
+                set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
+                set2.setColor(Color.parseColor("#599fff"));
+                set2.setDrawCircleHole(false);
+                set2.setFormLineWidth(1f);
+                set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
+                set2.setFormSize(15.f);
+                set2.setLineWidth(1f);//设置线宽
+                set2.setCircleColor(Color.parseColor("#599fff"));
+                set2.setCircleRadius(4f);//设置焦点圆心的大小
+                set2.setDrawCircleHole(true);
+                set2.setCircleHoleRadius(2);
+                set2.setCircleColorHole(Color.WHITE);
+                set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
+                set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
+                set2.setHighlightEnabled(false);//是否禁用点击高亮线
+                set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
+                set2.setValueTextSize(9f);//设置显示值的文字大小
+                set2.setDrawFilled(false);//设置禁用范围背景填充
+                set2.setDrawValues(false);
+
+                if (Utils.getSDKInt() >= 18) {
+                    // fill drawable only supported on api level 18 and above
+                    //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                    //set1.setFillDrawable(drawable);
+                } else {
+                    set2.setFillColor(Color.BLACK);
+                }
+
+                dataSets.add(set2); // add the datasets
             }
-
-
-            LineDataSet set2 = new LineDataSet(values_2, "DataSet 2");
-            set2.setDrawIcons(false);
-            // set the line to be drawn like this "- - - - - -"
-            set2.enableDashedLine(10f, 0f, 0f);//设置连线样式
-            set2.setColor(Color.parseColor("#599fff"));
-            set2.setDrawCircleHole(false);
-            set2.setFormLineWidth(1f);
-            set2.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 10f}, 0f));
-            set2.setFormSize(15.f);
-            set2.setLineWidth(1f);//设置线宽
-            set2.setCircleColor(Color.parseColor("#599fff"));
-            set2.setCircleRadius(4f);//设置焦点圆心的大小
-            set2.setDrawCircleHole(true);
-            set2.setCircleHoleRadius(2);
-            set2.setCircleColorHole(Color.WHITE);
-            set2.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-            set2.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-            set2.setHighlightEnabled(false);//是否禁用点击高亮线
-            set2.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-            set2.setValueTextSize(9f);//设置显示值的文字大小
-            set2.setDrawFilled(false);//设置禁用范围背景填充
-            set2.setDrawValues(false);
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-                //set1.setFillDrawable(drawable);
-            }
-            else {
-                set2.setFillColor(Color.BLACK);
-            }
-
-            dataSets.add(set2); // add the datasets
         }
         // create a data object with the datasets
         LineData data = new LineData(dataSets);
@@ -893,12 +914,12 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                           }else{
                               for (int i = 0 ; i < addressFlags.length ; i ++){
                                   if(addressFlags[i] ){
-                                      quyu_id_1 = mEQIRankingBean.getArchs().get(i).getArchId();
+                                      quyu_id_1 = mEQIRankingBean.getAQI().get(i).getArchId();
                                   }
                               }
                               for (int i = addressFlags.length -1; i >= 0  ; i --){
                                   if(addressFlags[i] ){
-                                      quyu_id_2 = mEQIRankingBean.getArchs().get(i).getArchId();
+                                      quyu_id_2 = mEQIRankingBean.getAQI().get(i).getArchId();
                                   }
                               }
                               mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
@@ -922,6 +943,84 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 onCreateDialog(1).show();
             }
             break;
+            case R.id.date:{
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now = sdf.format(new Date());
+                //initDatePicker();
+                customDatePicker1.show(now);
+            }
+            break;
+            case R.id.tongqi_date:{
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now = sdf.format(new Date());
+                //initDatePicker();
+                customDatePicker3.show(now);
+            }
+            break;
+            case R.id.quyu_date:{
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now = sdf.format(new Date());
+                //initDatePicker();
+                customDatePicker4.show(now);
+            }
+            break;
+            case R.id.youliang_datedate:{
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                String now = sdf.format(new Date());
+                //initDatePicker();
+                customDatePicker2.show(now);
+            }
+            break;
         }
+    }
+
+    private CustomDatePicker customDatePicker1,customDatePicker2,customDatePicker3,customDatePicker4;
+    private void initDatePicker() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+        customDatePicker1 = new CustomDatePicker(AirMonitoringActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                 mRankTime.setText(time.substring(0,7));
+                mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
+            }
+        }, "2010-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        //customDatePicker1.showSpecificTime(true); // 不显示时和分
+        customDatePicker1.showYearMonth();
+        customDatePicker1.setIsLoop(false); // 不允许循环滚动
+
+        customDatePicker2 = new CustomDatePicker(AirMonitoringActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                mYouliangTime.setText(time.substring(0,7));
+                mHandler.sendEmptyMessage(HANDLER_GET_DAYS_PROPORTION_START);
+            }
+        }, "2010-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        //customDatePicker1.showSpecificTime(true); // 不显示时和分
+        customDatePicker2.showYearMonth();
+        customDatePicker2.setIsLoop(false); // 不允许循环滚动
+
+        customDatePicker3 = new CustomDatePicker(AirMonitoringActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                mTongqiTime.setText(time.substring(0,7));
+                mHandler.sendEmptyMessage(HANDLER_GET_COMPARISON_START);
+            }
+        }, "2010-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        //customDatePicker1.showSpecificTime(true); // 不显示时和分
+        customDatePicker3.showYearMonth();
+        customDatePicker3.setIsLoop(false); // 不允许循环滚动
+
+        customDatePicker4 = new CustomDatePicker(AirMonitoringActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                quyu_date.setText(time.substring(0,7));
+                mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
+            }
+        }, "2010-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        //customDatePicker1.showSpecificTime(true); // 不显示时和分
+        customDatePicker4.showYearMonth();
+        customDatePicker4.setIsLoop(false); // 不允许循环滚动
+
     }
 }

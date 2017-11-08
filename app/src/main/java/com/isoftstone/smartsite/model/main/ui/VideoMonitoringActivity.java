@@ -93,10 +93,12 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         }
     };
     private void setListViewData(){
+        if( list!=null ){
+            VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
+            adapter.setData(list);
+            mListView.setAdapter(adapter);
+        }
 
-        VideoMonitorAdapter adapter = new VideoMonitorAdapter(VideoMonitoringActivity.this);
-        adapter.setData(list);
-        mListView.setAdapter(adapter);
     }
 
     @Override

@@ -79,7 +79,6 @@ public class MainFragment extends BaseFragment{
     @Override
     protected void afterCreated(Bundle savedInstanceState) {
         initView();
-        mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_START);
     }
 
     private void initView(){
@@ -290,6 +289,7 @@ public class MainFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
+        mHandler.sendEmptyMessage(HANDLER_GET_HOME_DATA_START);
     }
 
     @Override

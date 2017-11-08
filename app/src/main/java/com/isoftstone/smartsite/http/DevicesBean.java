@@ -19,6 +19,19 @@ public class DevicesBean implements Serializable{
     private String  deviceStatus;
     private String  longitude;
     private String  latitude;
+    private int cameraType;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public int getCameraType() {
+        return cameraType;
+    }
+
+    public void setCameraType(int cameraType) {
+        this.cameraType = cameraType;
+    }
 
     public String getDeviceId() {
         return deviceId;

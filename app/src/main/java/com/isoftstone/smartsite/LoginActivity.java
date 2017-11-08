@@ -128,7 +128,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	private void initView() {
 		mIdView = (View) findViewById(R.id.view_1);
 		mPwdView = (View) findViewById(R.id.view_2);
-		mIdImageView = (ImageView) findViewById(R.id.imageView_2);
+		mIdImageView = (ImageView) findViewById(R.id.imageView_1);
 		mPwdImageView = (ImageView)findViewById(R.id.imageView_2);
 		mIdEditText = (EditText) findViewById(R.id.login_edtId);
 		mPwdEditText = (EditText) findViewById(R.id.login_edtPwd);

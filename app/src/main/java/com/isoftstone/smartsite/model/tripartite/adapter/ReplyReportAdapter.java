@@ -230,15 +230,15 @@ public class ReplyReportAdapter extends BaseAdapter {
             switch (path.size()) {
                 case 1:
                     gridView.setNumColumns(1);
-                    params.width = 150;
+                    params.width = 160;
                     break;
                 case 2:
                     gridView.setNumColumns(2);
-                    params.width = 360;
+                    params.width = 380;
                     break;
                 case 3:
                     gridView.setNumColumns(3);
-                    params.width = 550;
+                    params.width = 580;
                     break;
                 case 4:
                 default:
@@ -256,6 +256,7 @@ public class ReplyReportAdapter extends BaseAdapter {
                     Log.e(TAG, "yanlog file exists,no need to download");
                     datas.add(mHttpPost.getReportPath(data.getId(), temp));
                 } else {
+                    Log.e(TAG,"yanlog add image");
                     datas.add(TripartiteActivity.mAttach.get(".image"));
                 }
 
@@ -274,8 +275,8 @@ public class ReplyReportAdapter extends BaseAdapter {
             }
         }
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
-        final AttachGridViewAdatper mAttachAdapter = new AttachGridViewAdatper(mContext, datas, true);
-        gridView.setAdapter(mAttachAdapter);
+        final AttachGridViewAdatper attachAdapter = new AttachGridViewAdatper(mContext, datas, true);
+        gridView.setAdapter(attachAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -303,34 +304,36 @@ public class ReplyReportAdapter extends BaseAdapter {
                         if (aBoolean == null) {
                             Toast.makeText(mContext, "文件下载失败，请重试", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(mContext, "文件已下载至:" + aBoolean, Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "文件开始下载，路径为:" + aBoolean, Toast.LENGTH_LONG).show();
                         }
                     }
                 }.execute();
             }
         });
 
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                for (int i = 0; i < datas.size(); i++) {
-                    Object object = datas.get(i);
-                    if (object instanceof Integer) {
-                        if ((Integer) object == TripartiteActivity.mAttach.get(".image")) {
-                            mHttpPost.downloadReportFile(data.getId(), path.get(i));
-                            datas.remove(i);
-                            datas.add(i, mHttpPost.getReportPath(data.getId(), path.get(i)));
-                        }
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                super.onPostExecute(aBoolean);
-                mAttachAdapter.notifyDataSetChanged();
-            }
-        }.execute();
+//        new AsyncTask<Void, Void, Boolean>() {
+//            @Override
+//            protected Boolean doInBackground(Void... voids) {
+//                for (int i = 0; i < datas.size(); i++) {
+//                    Object object = datas.get(i);
+//                    if (object instanceof Integer) {
+//                        if ((Integer) object == TripartiteActivity.mAttach.get(".image")) {
+//                            Log.e(TAG,"yanlog begin to download image reportFile"+path.get(i) +" "+this);
+//                            mHttpPost.downloadReportFile(data.getId(), path.get(i));
+//                            datas.remove(i);
+//                            datas.add(i, mHttpPost.getReportPath(data.getId(), path.get(i)));
+//                        }
+//                    }
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Boolean aBoolean) {
+//                super.onPostExecute(aBoolean);
+//                Log.e(TAG,"notifyDatasetChanged "+this);
+//                attachAdapter.notifyDataSetChanged();
+//            }
+//        }.execute();
     }
 }

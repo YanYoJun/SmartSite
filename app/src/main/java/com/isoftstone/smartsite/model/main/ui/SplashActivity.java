@@ -85,7 +85,7 @@ public class SplashActivity extends BaseActivity{
                 if(installBean != null){
                     String versionName = installBean.getAndroid_version();
                     apk_url = installBean.getAndroid_url();
-                    apk_url = "http://download.sj.qq.com/upload/connAssitantDownload/upload/MobileAssistant_1.apk";
+                    //apk_url = "http://download.sj.qq.com/upload/connAssitantDownload/upload/MobileAssistant_1.apk";
                     androidType = installBean.getAndroid_type();
                     apk_version = installBean.getAndroid_version();
                     if(getAppVersionName() != null && !getAppVersionName().equals(versionName)){

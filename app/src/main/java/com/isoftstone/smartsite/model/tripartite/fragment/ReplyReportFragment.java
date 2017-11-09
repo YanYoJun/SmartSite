@@ -1,6 +1,7 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,6 +44,7 @@ public class ReplyReportFragment extends BaseFragment {
     private TextView mLabName = null;
     public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
     private ArrayList<String> mFilesPath = new ArrayList<>();
+    Dialog mLoginingDlg;
 
 
     @Override
@@ -120,8 +122,37 @@ public class ReplyReportFragment extends BaseFragment {
         return reportBean;
     }
 
+    /* 初始化正在登录对话框 */
+    private void initDlg() {
+
+        mLoginingDlg = new Dialog(getActivity(), R.style.loginingDlg);
+        mLoginingDlg.setContentView(R.layout.dialog_submit);
+
+        mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
+    }
+
+    /* 显示正在登录对话框 */
+    private void showDlg() {
+        if (mLoginingDlg != null)
+            mLoginingDlg.show();
+    }
+
+    /* 关闭正在登录对话框 */
+    private void closeDlg() {
+        if (mLoginingDlg != null && mLoginingDlg.isShowing())
+            mLoginingDlg.dismiss();
+    }
+
+
     private class DealTask extends AsyncTask<Void, Void, Boolean> {
         private ReportBean mBean = null;
+
+        @Override
+        protected void onPreExecute() {
+            initDlg();
+            showDlg();
+            super.onPreExecute();
+        }
 
         public DealTask(ReportBean reportBean) {
             mBean = reportBean;
@@ -151,6 +182,7 @@ public class ReplyReportFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean temp) {
             super.onPostExecute(temp);
+            closeDlg();
             if (temp == true) {
                 Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
                 getActivity().finish();

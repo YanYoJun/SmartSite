@@ -52,6 +52,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:text="@string/save"
+                android:visibility="invisible"
                 android:textColor="@color/title_save"
                 android:textSize="12sp" />
 

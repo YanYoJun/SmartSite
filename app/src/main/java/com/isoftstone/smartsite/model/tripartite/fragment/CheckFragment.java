@@ -2,6 +2,7 @@ package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -66,6 +67,7 @@ public class CheckFragment extends BaseFragment {
     public final static int REQUEST_ACTIVITY_ATTACH = 0;//请求图片的request code
     private ArrayList<String> mFilesPath = new ArrayList<>();
     private PatrolBean mReportData = null;
+    Dialog mLoginingDlg;
 
 
     @Override
@@ -236,7 +238,34 @@ public class CheckFragment extends BaseFragment {
         return reportBean;
     }
 
+    /* 初始化正在登录对话框 */
+    private void initDlg() {
+
+        mLoginingDlg = new Dialog(getActivity(), R.style.loginingDlg);
+        mLoginingDlg.setContentView(R.layout.dialog_submit);
+
+        mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
+    }
+
+    /* 显示正在登录对话框 */
+    private void showDlg() {
+        if (mLoginingDlg != null)
+            mLoginingDlg.show();
+    }
+
+    /* 关闭正在登录对话框 */
+    private void closeDlg() {
+        if (mLoginingDlg != null && mLoginingDlg.isShowing())
+            mLoginingDlg.dismiss();
+    }
     private class DealTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            initDlg();
+            showDlg();
+            super.onPreExecute();
+        }
+
         private ReportBean mBean = null;
 
         public DealTask(ReportBean reportBean) {
@@ -267,6 +296,7 @@ public class CheckFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean temp) {
             super.onPostExecute(temp);
+            closeDlg();
             if (temp == true) {
                 Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
                 getActivity().finish();

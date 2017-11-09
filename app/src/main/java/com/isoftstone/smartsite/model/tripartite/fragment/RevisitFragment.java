@@ -83,6 +83,8 @@ public class RevisitFragment extends BaseFragment {
     private boolean mEndDate = false;
     private ITime mRevisitDate = null;
 
+    private Dialog mLoginingDlg = null;
+
     private Calendar mCal = null;
 
     private ArrayList<String> mFilesPath = new ArrayList<>();
@@ -279,7 +281,6 @@ public class RevisitFragment extends BaseFragment {
                     reportBean.setVisitDate(parseTime(visitTime));
                 }
                 new SubReport(mAddReportActivity != null, reportData, reportBean).execute();
-                Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -431,6 +432,27 @@ public class RevisitFragment extends BaseFragment {
         });
     }
 
+    /* 初始化正在登录对话框 */
+    private void initDlg() {
+
+        mLoginingDlg = new Dialog(getActivity(), R.style.loginingDlg);
+        mLoginingDlg.setContentView(R.layout.dialog_submit);
+
+        mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
+    }
+
+    /* 显示正在登录对话框 */
+    private void showDlg() {
+        if (mLoginingDlg != null)
+            mLoginingDlg.show();
+    }
+
+    /* 关闭正在登录对话框 */
+    private void closeDlg() {
+        if (mLoginingDlg != null && mLoginingDlg.isShowing())
+            mLoginingDlg.dismiss();
+    }
+
     private void initTimePicker(final Dialog dialog, final View view, final TextView editRight, final TextView labLeft) {
         final NumberPicker year = (NumberPicker) view.findViewById(R.id.picker_year);
         final NumberPicker month = (NumberPicker) view.findViewById(R.id.picker_month);
@@ -531,6 +553,13 @@ public class RevisitFragment extends BaseFragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            initDlg();
+            showDlg();
+            super.onPreExecute();
+        }
+
+        @Override
         protected Boolean doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             Log.e(TAG, "yanlog addReport");
@@ -573,11 +602,12 @@ public class RevisitFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean s) {
             super.onPostExecute(s);
+            closeDlg();
             if (s == true) {
-                Toast.makeText(getActivity(), "添加回访报告成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else {
-                Toast.makeText(getActivity(), "添加回访报告失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "提交失败", Toast.LENGTH_SHORT).show();
             }
 
         }

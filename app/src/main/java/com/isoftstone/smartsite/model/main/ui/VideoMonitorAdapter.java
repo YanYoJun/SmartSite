@@ -137,6 +137,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
                     bundle.putInt("resSubType", devicesBean.getCameraType());
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoPlayActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -177,6 +178,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
                 intent.putExtra("type",TYPE_CAMERA);
                 intent.putExtra("devices",beans);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
         });

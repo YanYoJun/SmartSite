@@ -169,6 +169,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     intent.putExtra("id",devices.getDeviceId());
                     intent.putExtra("address","设备名称"+devices.getDeviceName());
                     intent.setClass(mContext, PMDataInfoActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -187,6 +188,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     intent.setClass(mContext, PMHistoryInfoActivity.class);
                     intent.putExtra("id",devices.getDeviceId());
                     intent.putExtra("address","设备名称"+devices.getDeviceName());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "errorException:  ViewHolder is null", Toast.LENGTH_SHORT).show();
@@ -202,6 +204,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 intent.putExtra("devices",mData);
                 intent.putExtra("type",VideoMonitorMapActivity.TYPE_ENVIRONMENT);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
         });

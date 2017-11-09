@@ -214,6 +214,7 @@ public class PMDataInfoActivity extends Activity {
                 //跳转到地图
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(),VideoMonitorMapActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
             }
         });

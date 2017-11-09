@@ -159,18 +159,21 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
     private void initMapView(){
         aMap = mMapView.getMap();
-        aMap.setOnMarkerClickListener(this);
-        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
+        if(aMap != null){
+            aMap.setOnMarkerClickListener(this);
+            aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+                @Override
+                public void onCameraChange(CameraPosition cameraPosition) {
 
-            }
+                }
 
-            @Override
-            public void onCameraChangeFinish(CameraPosition cameraPosition) {
-                zoom = cameraPosition.zoom;
-            }
-        });
+                @Override
+                public void onCameraChangeFinish(CameraPosition cameraPosition) {
+                    zoom = cameraPosition.zoom;
+                }
+            });
+        }
+
 
         initLocation(aotiLatLon);
         addRoundLine();
@@ -185,7 +188,10 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         mCameraPosition = new CameraPosition(latLng,zoom,0,0);
 
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(mCameraPosition);
-        aMap.animateCamera(update);
+        if(aMap != null){
+            aMap.animateCamera(update);
+        }
+
     }
 
 
@@ -245,10 +251,12 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 // 将Marker设置为贴地显示，可以双指下拉地图查看效果
                 markerOption.setFlat(true);//设置marker平贴地图效果
 
-                Marker marker = aMap.addMarker(markerOption);
-                marker.setAnchor(0.5f,1.2f);
+                if(aMap != null){
+                    Marker marker = aMap.addMarker(markerOption);
+                    marker.setAnchor(0.5f,1.2f);
 
-                marker.setObject(device);
+                    marker.setObject(device);
+                }
             }
         }
 
@@ -561,7 +569,9 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
     public void addRoundLine(){
         List<LatLng> latLngs = MapUtils.getAroundLatlons();
-        Polyline polyline = aMap.addPolyline(new PolylineOptions().
-                addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
+        if(aMap != null){
+            Polyline polyline = aMap.addPolyline(new PolylineOptions().
+                    addAll(latLngs).width(10).color(Color.parseColor("#3464dd")));
+        }
     }
 }

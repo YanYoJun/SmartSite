@@ -107,4 +107,6 @@ public class LoginBean {
             this.loginPass = loginPass;
         }
     }
+
+
 }

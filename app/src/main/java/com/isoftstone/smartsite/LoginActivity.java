@@ -239,13 +239,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						public void run() {
 							loggin(mIdString,mPwdString);
 							if(isLogin_1){
-								//logginVideo();
-								Intent intent = new Intent();
-								intent.setClass(LoginActivity.this,MainActivity.class);
-								LoginActivity.this.startActivity(intent);
-								mLoginResult = "登录成功";
-								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								finish();
+								logginVideo();
 							}
 
 						}
@@ -395,6 +389,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			for (DictionaryBean str:list){
 				Log.i("Test",str.getContent()+" "+str.getValue());
 			}*/
+
+			//mHttpPost.getSystemConifg();
+            //Log.i("test",mHttpPost.getSystemConifg().getAndroid_url());
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = true;
 				 try {
@@ -431,6 +428,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
         if(mHttpPost.getVideoConfig()){
             LoginParam params = new LoginParam();
+            //111.47.21.94
+			//params.setServer("111.47.21.94");
 			params.setServer(mHttpPost.mLoginBean.getmVideoParameter().getIp());
 			params.setPort(Integer.parseInt(mHttpPost.mLoginBean.getmVideoParameter().getPort()));
 			params.setUserName(mHttpPost.mLoginBean.getmVideoParameter().getLoginName());

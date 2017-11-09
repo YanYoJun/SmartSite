@@ -72,11 +72,13 @@ public class InstantMessageAdapter extends BaseAdapter {
         holder.info.setText(messageBean.getContent());
         holder.map.setText(messageBean.getTitle());
         holder.time.setText(messageBean.getUpdateTime());
-        //if(messageBean.getInfoType()){
+        if(messageBean.getInfoType().getInfoTypeCode().startsWith("1")){
             holder.type.setBackground(mContext.getDrawable(R.drawable.main_huanjing_icon));
-        //}else{
+        }else if(messageBean.getInfoType().getInfoTypeCode().startsWith("2")){
+            holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
+        }else if(messageBean.getInfoType().getInfoTypeCode().startsWith("3")){
             //holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
-        //}
+        }
         return convertView;
     }
 

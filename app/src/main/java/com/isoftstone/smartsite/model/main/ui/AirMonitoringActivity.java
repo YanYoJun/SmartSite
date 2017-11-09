@@ -119,6 +119,9 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
     private  TextView text_pushtime = null;
     private  TextView text_before = null;
+    private  TextView text_pushtime_0 = null;
+    private  TextView text_before_0 = null;
+
 
     private TextView quyu_name = null;
     private TextView quyu_date = null;
@@ -212,6 +215,8 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
         text_before = (TextView) findViewById(R.id.text_before);
         text_pushtime = (TextView) findViewById(R.id.text_pushtime);
+        text_before_0 = (TextView) findViewById(R.id.text_before_0);
+        text_pushtime_0 = (TextView) findViewById(R.id.text_pushtime_0);
 
 
         mLineChart_quyu = (LineChart) findViewById(R.id.chart4);
@@ -509,9 +514,12 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
 
     private void setLineChart(){
         String time = mTongqiTime.getText().toString();
-        String beforetime = time.replace("2017","2016");
-        text_before.setText(beforetime);
-        text_pushtime.setText(time);
+
+        text_before.setVisibility(View.GONE);
+        text_before_0.setVisibility(View.GONE);
+        text_pushtime.setVisibility(View.GONE);
+        text_pushtime_0.setVisibility(View.GONE);
+
         if(mMonthlyComparisonBean == null){
             return;
         }
@@ -600,6 +608,11 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         if(mMonthlyComparisonBean != null){
             int beforeMonthSize = mMonthlyComparisonBean.getBeforeMonth().size();
             if(beforeMonthSize > 0){
+                text_before.setVisibility(View.VISIBLE);
+                text_before_0.setVisibility(View.VISIBLE);
+                String beforetime =mMonthlyComparisonBean.getBeforeMonth().get(0).getPushTimeMonth();
+                text_before.setText(beforetime);
+
                 ArrayList<Entry> values = new ArrayList<Entry>();
                 for (int i = 0; i < beforeMonthSize; i++) {
                     String value = mMonthlyComparisonBean.getBeforeMonth().get(i).getAqi();
@@ -647,6 +660,9 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         if(mMonthlyComparisonBean != null){
             int pushtimeMonthSize = mMonthlyComparisonBean.getCurrentMonth().size();
             if(pushtimeMonthSize > 0){
+                text_pushtime.setVisibility(View.VISIBLE);
+                text_pushtime_0.setVisibility(View.VISIBLE);
+                text_pushtime.setText(time);
                 ArrayList<Entry> values_2 = new ArrayList<Entry>();
 
                 for (int i = 0; i < pushtimeMonthSize; i++) {
@@ -990,6 +1006,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 //initDatePicker();
                 customDatePicker2.show(now);
             }
+            break;
             case R.id.sure:
                 for (int i = 0 ; i < addressFlags.length ; i ++){
                     if(addressFlags[i] ){

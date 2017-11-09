@@ -231,7 +231,8 @@
                     android:text="O"
                     android:textSize="14dp"
                     android:layout_marginRight="8dp"
-                    android:textColor="#599fff"/>
+                    android:textColor="#599fff"
+                    android:id="@+id/text_pushtime_0"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -245,7 +246,8 @@
                     android:text="O"
                     android:textSize="14dp"
                     android:textColor="#ff9e5d"
-                    android:layout_marginRight="8dp"/>
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/text_before_0"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

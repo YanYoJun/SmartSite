@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.utils.LogUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -197,4 +198,44 @@ public class UserLogin {
             e.printStackTrace();
         }
     }
+
+    public static InstallBean getSystemConifg(String strurl, OkHttpClient mClient){
+
+        InstallBean installBean = null;
+        String funName = "getSystemConifg";
+        try{
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .get()
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                JSONArray jsonArray = new JSONArray(responsebody);
+                installBean = new InstallBean();
+                for (int i = 0; i <jsonArray.length(); i ++){
+                      JSONObject object = (JSONObject) jsonArray.get(i);
+                      String key = object.getString("key");
+                      if(key.equals("android_type")){
+                          installBean.setAndroid_type(object.getInt("value"));
+                      }
+                     if(key.equals("android_url")){
+                          installBean.setAndroid_url(object.getString("value"));
+                     }
+                    if(key.equals("android_version")){
+                        installBean.setAndroid_version(object.getString("value"));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return installBean;
+}
 }

@@ -31,12 +31,14 @@ import okhttp3.OkHttpClient;
 public class HttpPost {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient  mClient = null;
+    //public static String URL = "http://61.160.82.83:19090/ctess";
     public static String URL = "http://61.160.82.83:19090/ctess";
 
     private String LOGIN_URL = URL + "/login";                        //登录
     private String  GET_LOGIN_USER = URL + "/user/getLoginUser";      //获取登录用户信息
     private String   USER_UPDATE = URL + "/user/update";              //用户信息更改
     private String   USER_UPLOAD = URL + "/user/upload";              //用户头像修改
+    private String  GET_SYSTEM_CONFIG = URL + "/systemConfig/4";
 
     private String GET_VIDEO_CONFIG = URL + "/mobile/video/config";   //获取视频服务器参数
     private String MOBILE_HOME = URL + "/mobile/home";                //获取首页数据
@@ -370,5 +372,9 @@ public class HttpPost {
      */
     public ArrayList<String>   getPatrolAddress(){
         return  ReportOperation.getPatrolAddress(GET_PATROL_ADDRESS,mClient);
+    }
+
+    public InstallBean getSystemConifg(){
+        return  UserLogin.getSystemConifg(GET_SYSTEM_CONFIG,mClient);
     }
 }

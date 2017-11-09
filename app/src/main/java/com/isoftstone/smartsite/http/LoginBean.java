@@ -106,6 +106,16 @@ public class LoginBean {
         public void setLoginPass(String loginPass) {
             this.loginPass = loginPass;
         }
+
+        @Override
+        public String toString() {
+            return "VideoParameter{" +
+                    "port='" + port + '\'' +
+                    ", ip='" + ip + '\'' +
+                    ", loginName='" + loginName + '\'' +
+                    ", loginPass='" + loginPass + '\'' +
+                    '}';
+        }
     }
 
 

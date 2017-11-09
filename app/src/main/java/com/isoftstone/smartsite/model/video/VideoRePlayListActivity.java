@@ -13,9 +13,12 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import com.isoftstone.smartsite.model.map.ui.VideoMonitorMapActivity;
 import com.isoftstone.smartsite.model.video.Adapter.VideoRePlayAdapter;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.uniview.airimos.listener.OnQueryReplayListener;
 import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.obj.QueryCondition;
@@ -42,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by zhangyinfu on 2017/10/22.
@@ -69,6 +74,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
     private String mBeginDate = null;
     private String mEngDate = null;
     private Boolean isCameraOnLine = false;
+    private int mResSubType;
 
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_icon = null;
@@ -96,7 +102,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         }
 
         String resCode = bundle.getString("resCode");
-        int resSubType =  bundle.getInt("resSubType");
+        mResSubType =  bundle.getInt("resSubType");
         String resName = bundle.getString("resName");
         isCameraOnLine = bundle.getBoolean("isOnline");
         mBeginDate = bundle.getString("beginTime");
@@ -104,7 +110,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
 
         mResCodeTv.setText(resCode);
         mResCode = resCode;
-        setCameraType(mResTypeTv, resSubType);
+        setCameraType(mResTypeTv, mResSubType);
         mResNameTv.setText(resName);
         if (isCameraOnLine) {
             mIsOnlineIv.setImageResource(R.drawable.online);
@@ -114,8 +120,9 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
 
         mBeginDateTv.setText(mBeginDate.split(" ")[0]);
         mEndDateTv.setText(mEngDate.split(" ")[0]);
+        mEndTimeTv.setText(mEngDate.split(" ")[1]);
 
-        queryOrStartReplayVideo(mResCode, mBeginDate + " 00:00:00", mEngDate + " 23:59:59", false);
+        queryOrStartReplayVideo(mResCode, mBeginDate + " 00:00:00", mEngDate, false);
     }
 
     private void init(){
@@ -223,7 +230,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         dialog.show();*/
         //ToastUtils.showShort("showDatePickerDialog");
 
-        View rootView = null;
+        /**View rootView = null;
         if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_PORTRAIT) {
             rootView = View.inflate(mContext, R.layout.date_time_picker, null);
         } else if (this.getResources().getConfiguration().orientation ==Configuration.ORIENTATION_LANDSCAPE) {
@@ -273,20 +280,31 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /**arrive_year = datePicker.getYear();
-                arrive_month = datePicker.getMonth();
-                arrive_day = datePicker.getDayOfMonth();*/
                 String dateStr = DateUtils.formatDate(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
                 dateText.setText(dateStr);
-
-                //arrive_hour = timePicker.getCurrentHour();
-                //arrive_min = timePicker.getCurrentMinute();
                 String timeStr = DateUtils.formatTime(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
                 timeText.setText(timeStr + (isBeginDateTime ? ":00" : ":59"));
             }
         });
         mAlertDialog = builder.create();
-        mAlertDialog.show();
+        mAlertDialog.show();*/
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+
+        CustomDatePicker customDatePicker = new CustomDatePicker(VideoRePlayListActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                //quyu_date.setText(time.substring(0,7));
+                ToastUtils.showShort(time.toString());
+                dateText.setText(time.split(" ")[0]);
+                timeText.setText(time.split(" ")[1] + (isBeginDateTime ? ":00" : ":59"));
+            }
+        }, "1970-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker.showSpecificTime(true); // 不显示时和分
+        //customDatePicker.showYearMonth();
+        customDatePicker.setIsLoop(false); // 不允许循环滚动
+        customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
     }
 
     @Override
@@ -326,7 +344,7 @@ public class VideoRePlayListActivity extends Activity implements  View.OnClickLi
 
                     for (int i = 0; i < size; i++) {
                         video = new VideoMonitorBean(beginDateTime,  endDateTime
-                                , recordList.get(i).getFileName(), cameraCode);
+                                , recordList.get(i).getFileName(), cameraCode, mResSubType, mResNameTv.getText().toString(), isCameraOnLine);
                         sList.add(video);
                     }
                     //刷新ListView

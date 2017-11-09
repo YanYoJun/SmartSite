@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -388,6 +390,10 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             case R.id.btn_icon_right:
                 //toolbar right view click
                 //保存用戶數據 上傳到服务器..... zyf modifed.....
+                if (!isNetworkConnected(mContext)) {
+                    ToastUtils.showShort("当前无网络环境，无法完成用户信息更改操作");
+                    break;
+                }
                 new Thread(){
                     @Override
                     public void run() {
@@ -462,6 +468,9 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
     }
 
     private void initUserInfo(UserBean userBean) {
+        if (null == userBean) {
+            return;
+        }
         mUserId = userBean.getId();
         mUserNameView.setText(userBean.getName());
         mUserRoleView.setText(userBean.getEmployeeCode());
@@ -517,7 +526,12 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
             userBean.setName(mUserNameView.getText().toString());
         }
         if (null !=  mUserSexView.getText()) {
-            userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
+            try {
+                userBean.setSex(Integer.parseInt(mUserSexView.getText().toString()));
+            }catch (Exception e) {
+                Log.i(TAG, "throws an excption : " + e.getMessage());
+            }
+
         }
         //if (null != mUserAccountView.getText()) {
         //    userBean.setAccount(mUserAccountView.getText().toString());
@@ -716,4 +730,19 @@ public class IndividualCenterFragment extends BaseFragment implements UploadUtil
         });
     }
 
+    /**
+     * 判断是否有网络连接
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
 }

@@ -180,6 +180,9 @@ public class SystemFragment extends BaseFragment{
     }
 
     private void initUserInfo(UserBean userBean) {
+        if (null == userBean) {
+            return;
+        }
         Log.i("zyf", userBean.toString());
         String userName = userBean.getName();
         mUserNameView.setText(userName);

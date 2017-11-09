@@ -161,8 +161,9 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
     private void  startRePlayListActivity () {
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String beginTime = formatter.format(now) + " 00:00:00";
-        String endTime = formatter.format(now) + " 23:59:59";
+        String endTime = formatter2.format(now);
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();

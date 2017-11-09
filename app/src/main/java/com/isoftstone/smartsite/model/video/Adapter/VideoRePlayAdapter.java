@@ -109,6 +109,9 @@ public class VideoRePlayAdapter extends BaseAdapter {
         holder.beginTime = mData.get(position).getBeginData();
         holder.endTime = mData.get(position).getEndData();
         holder.resCode = mData.get(position).getResCode();
+        holder.resSubType = mData.get(position).getResSubType();
+        holder.isOnLine = mData.get(position).isOnline();
+        holder.resName = mData.get(position).getResName();
         holder.mediaPreviewIv1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
@@ -121,6 +124,9 @@ public class VideoRePlayAdapter extends BaseAdapter {
                     bundle.putString("beginTime", viewHolder.beginTime);
                     bundle.putString("endTime", viewHolder.endTime);
                     bundle.putString("fileName", viewHolder.mediaPreviewTv1.getText().toString());
+                    bundle.putString("resSubType",viewHolder.resSubType + "");
+                    bundle.putString("resName", viewHolder.resName);
+                    bundle.putBoolean("isOnline", viewHolder.isOnLine);
                     bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     intent.setClass(mContext, VideoRePlayActivity.class);
@@ -169,6 +175,33 @@ public class VideoRePlayAdapter extends BaseAdapter {
         public String resCode;
         public String beginTime;
         public String endTime;
+        public String resName;
+        public boolean isOnLine;
+        public int resSubType;
+
+        public String getResName() {
+            return resName;
+        }
+
+        public void setResName(String resName) {
+            this.resName = resName;
+        }
+
+        public boolean isOnLine() {
+            return isOnLine;
+        }
+
+        public void setOnLine(boolean onLine) {
+            isOnLine = onLine;
+        }
+
+        public int getResSubType() {
+            return resSubType;
+        }
+
+        public void setResSubType(int resSubType) {
+            this.resSubType = resSubType;
+        }
 
         public String getResCode() {
             return resCode;

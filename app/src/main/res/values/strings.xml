@@ -38,6 +38,10 @@
     <string name="chose_date_title">请选择时间段播放</string>
     <string name="date_start_title">开始</string>
     <string name="date_end_title">结束</string>
+    <string name="zoom_tele">放大</string>
+    <string name="zoom_tele_stop">放大停止</string>
+    <string name="zoom_wide">缩小</string>
+    <string name="zoom_wide_stop">缩小停止</string>
 
     <string name="title">请选择时间</string>
     <string name="commit">确定</string>

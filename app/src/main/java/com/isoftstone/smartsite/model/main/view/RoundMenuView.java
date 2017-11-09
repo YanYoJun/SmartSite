@@ -35,6 +35,7 @@ public class RoundMenuView extends View {
     private int coreMenuSelectColor;//中心按钮选中时的背景颜色
     private Bitmap coreBitmap;//OK图片
     private OnClickListener onCoreClickListener;//中心按钮的点击回调
+    private OnTouchListener onCoreTouchListener;
 
     private float deviationDegree;//偏移角度
     private int onClickState = -2;//-2是无点击，-1是点击中心圆，其他是点击菜单
@@ -123,6 +124,9 @@ public class RoundMenuView extends View {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
+
+        registOnTouchEvent(event.getX(), event.getY(), event);
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchTime = new Date().getTime();
@@ -165,6 +169,37 @@ public class RoundMenuView extends View {
         return true;
     }
 
+    private void registOnTouchEvent(float x, float y, MotionEvent event) {
+        float textX = event.getX();
+        float textY = event.getY();
+        int distanceLine2 = (int) getDisForTwoSpot(coreX, coreY, textX, textY);//距离中心点之间的直线距离
+        if (distanceLine2 <= roundRadius) {
+            //点击的是中心圆；按下点到中心点的距离小于中心园半径，那就是点击中心园了
+            onClickState = -1;
+        } else if (distanceLine2 <= getWidth() / 2) {
+            //点击的是某个扇形；按下点到中心点的距离大于中心圆半径小于大圆半径，那就是点击某个扇形了
+            float sweepAngle = 360 / roundMenus.size();//每个弧形的角度
+            int angle = getRotationBetweenLines(coreX, coreY, textX, textY);
+            //这个angle的角度是从正Y轴开始，而我们的扇形是从正X轴开始，再加上偏移角度，所以需要计算一下
+            angle = (angle + 360 - 90 - (int) deviationDegree) % 360;
+            onClickState = (int) (angle / sweepAngle);//根据角度得出点击的是那个扇形
+        } else {
+            //点击了外面
+            onClickState = -2;
+        }
+        invalidate();
+
+        OnTouchListener onTouchListener = null;
+        if (onClickState == -1) {
+            onTouchListener = onCoreTouchListener;
+        } else if (onClickState >= 0 && onClickState < roundMenus.size()) {
+            onTouchListener = roundMenus.get(onClickState).onTouchListener;
+        }
+        if (onTouchListener != null) {
+            onTouchListener.onTouch(this,event);
+        }
+    }
+
     /**
      * 添加菜单
      *
@@ -189,7 +224,7 @@ public class RoundMenuView extends View {
      * @param onClickListener
      */
     public void setCoreMenu(int coreMenuColor, int coreMenuSelectColor, int coreMenuStrokeColor,
-                            int coreMenuStrokeSize, double radiusDistance,Bitmap bitmap, OnClickListener onClickListener) {
+                            int coreMenuStrokeSize, double radiusDistance,Bitmap bitmap, OnClickListener onClickListener, OnTouchListener onTouchListener) {
         isCoreMenu = true;
         this.coreMenuColor = coreMenuColor;
         this.radiusDistance = radiusDistance;
@@ -198,6 +233,7 @@ public class RoundMenuView extends View {
         this.coreMenuStrokeSize = coreMenuStrokeSize;
         coreBitmap = bitmap;
         this.onCoreClickListener = onClickListener;
+        this.onCoreTouchListener = onTouchListener;
         invalidate();
     }
 
@@ -267,5 +303,6 @@ public class RoundMenuView extends View {
         public Bitmap icon;//菜单的图片
         public OnClickListener onClickListener;//点击监听
         public double iconDistance = 0.63;//图标距离中心点的距离
+        public OnTouchListener onTouchListener;//touch事件回调
     }
 }

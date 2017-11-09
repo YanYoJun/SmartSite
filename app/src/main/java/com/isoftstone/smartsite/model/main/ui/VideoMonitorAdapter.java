@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,8 @@ public class VideoMonitorAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.videomonitor_adapter, null);
             holder.resCodeTv = (TextView)convertView.findViewById(R.id.textView_1);
-            holder.resSubTypeTv = (TextView)convertView.findViewById(R.id.textView_2);
+            holder.installTime = (TextView)convertView.findViewById(R.id.textView_2);
+            holder.resSubTypeTv = (TextView)convertView.findViewById(R.id.textView_subType);
             holder.resNameTv = (TextView)convertView.findViewById(R.id.textView_3);
             holder.isOnlineTv = (ImageView)convertView.findViewById(R.id.textView_4);
             holder.button_1 = (LinearLayout)convertView.findViewById(R.id.button1);
@@ -108,8 +110,10 @@ public class VideoMonitorAdapter extends BaseAdapter {
         holder.resNameTv.setText(devicesBean.getDeviceName());
         //setCameraType(holder.resSubTypeTv, mData.get(position).getResSubType());
         String installTime = devicesBean.getInstallTime();
-        holder.resSubTypeTv.setText(installTime.substring(0,installTime.indexOf(" ")));
-        holder.resType = devicesBean.getCameraType();
+        holder.installTime.setText(installTime.split(" ")[0]);
+        Log.i("zzzzz",  devicesBean.getDeviceName() +  "  &   " + devicesBean.getCameraType()  +  "  &  "  + devicesBean.getDeviceType());
+        setCameraType(holder.resSubTypeTv, devicesBean.getCameraType());
+        holder.resType = devicesBean.getDeviceType();
         //holder.resSubType = mData.get(position).getResSubType();
         holder.isOnline = devicesBean.getDeviceStatus().equals("0");
         if(devicesBean.getDeviceStatus().equals("0")){
@@ -214,6 +218,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
     public final class ViewHolder{
         public TextView resCodeTv;//资源编码
+        public TextView installTime;//资源子类型
         public TextView resSubTypeTv;//资源子类型
         public TextView resNameTv;//资源名称
         public ImageView isOnlineTv;//是否在线

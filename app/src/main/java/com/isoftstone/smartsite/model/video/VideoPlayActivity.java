@@ -13,12 +13,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -51,6 +54,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private String mCameraCode;
     private static  final int SELECT_SOLID_COLOR = 0x00000000;
     private static  final int STROKR_COKOR = 0x00000000;
+    private boolean isTouched = false;
 
     private int mSurfaceViewWidth;
     private int mSurfaceViewHeight;
@@ -61,6 +65,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private ImageView mBackView;
     private ImageView mChangePositionView;
     private boolean isNormalShow = true;//true 标识正常显示, false 标识反向显示
+    private Button mZoomTeleView;
+    private Button mZoomWideView;
 
 
     @Override
@@ -95,6 +101,10 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mBackView.setOnClickListener(this);
         mChangePositionView = (ImageView) findViewById(R.id.iv_change_position);
         mChangePositionView.setOnClickListener(this);
+        mZoomTeleView = (Button) findViewById(R.id.zoom_tele);
+        mZoomWideView = (Button) findViewById(R.id.zoom_wide);
+        mZoomTeleView.setOnClickListener(this);
+        mZoomWideView.setOnClickListener(this);
 
 
         /*获取Intent中的Bundle对象*/
@@ -227,52 +237,132 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(Color.GRAY));
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(Color.GRAY));//ColorUtils.getColor(mContext, R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);
-        roundMenu.onClickListener=new View.OnClickListener() {
+        /**roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ToastUtils.showShort("点击了down");
                 ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTDOWN);
             }
+        };*/
+        roundMenu.onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(!isTouched) {
+                            ToastUtils.showShort("touch down to the down");
+                            ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTDOWN);
+                            isTouched = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTDOWNSTOP);
+                        isTouched = false;
+                        break;
+                }
+                return false;
+            }
         };
+
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
-        roundMenu.onClickListener=new View.OnClickListener() {
+        /**roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ToastUtils.showShort("点击了left");
                 ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANLEFT);
             }
+        };*/
+        roundMenu.onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(!isTouched) {
+                            ToastUtils.showShort("touch down to the left");
+                            ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANLEFT);
+                            isTouched = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANLEFTSTOP);
+                        isTouched = false;
+                        break;
+                }
+                return false;
+            }
         };
+
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
-        roundMenu.onClickListener=new View.OnClickListener() {
+        /**roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ToastUtils.showShort("点击了up");
                 ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTUP);
             }
+        };*/
+        roundMenu.onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(!isTouched) {
+                            ToastUtils.showShort("touch down to the up");
+                            ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTUP);
+                            isTouched = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTUPSTOP);
+                        isTouched = false;
+                        break;
+                }
+                return false;
+            }
         };
+
         mRoundMenuView.addRoundMenu(roundMenu);
 
         roundMenu = new RoundMenuView.RoundMenu();
         roundMenu.selectSolidColor = SELECT_SOLID_COLOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.strokeColor = STROKR_COKOR;//Integer.parseInt(toHexEncoding(R.color.gray_9999));//ColorUtils.getColor(getActivity(), R.color.gray_9999);
         roundMenu.icon= drawableToBitmap(mContext,R.drawable.videoright);//ImageUtils.drawable2Bitmap(getActivity(),R.drawable.ic_right);
-        roundMenu.onClickListener=new View.OnClickListener() {
+        /**roundMenu.onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ToastUtils.showShort("点击了right");
                 ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANRIGHT);
             }
+        };*/
+        roundMenu.onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(!isTouched) {
+                            ToastUtils.showShort("touch down to the right");
+                            ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANRIGHT);
+                            isTouched = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANRIGHTSTOP);
+                        isTouched = false;
+                        break;
+                }
+                return false;
+            }
         };
+
         mRoundMenuView.addRoundMenu(roundMenu);
 
         mRoundMenuView.setCoreMenu(STROKR_COKOR, SELECT_SOLID_COLOR, STROKR_COKOR
@@ -280,11 +370,15 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ToastUtils.showShort("点击了中心圆圈");
-                        ptzCommand(mCameraCode,PtzCommandParam.PTZ_CMD.ALLSTOP);
-                        //ptzCommand(mCameraCode,PtzCommandParam.PTZ_CMD.ZOOMTELE);
+                        ToastUtils.showShort("onClick the centre of a circle");
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ALLSTOP);
                     }
-        });
+                }, new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return false;
+                    }
+                });
     }
 
     /**
@@ -384,6 +478,26 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             case R.id.iv_change_position:
                 isNormalShow = !isNormalShow;
                 //反向显示操作
+                break;
+            case R.id.zoom_tele:
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELE);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELESTOP);
+                    }
+                }, 300);
+                break;
+            case R.id.zoom_wide:
+                ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDE);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDESTOP);
+                    }
+                }, 300);
                 break;
             default:
                 break;

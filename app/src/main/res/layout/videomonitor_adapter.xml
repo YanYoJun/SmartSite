@@ -71,6 +71,16 @@
                     android:textColor="#222222"
                     android:textSize="14dp"/>
 
+                <TextView
+                    android:id="@+id/textView_subType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="TextView"
+                    android:textColor="#222222"
+                    android:textSize="14dp"/>
+
             </LinearLayout>
 
         </LinearLayout>

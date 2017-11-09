@@ -199,6 +199,7 @@ public class HttpPost {
         LoginBean.VideoParameter videoParameter = UserLogin.getVideoConfig(GET_VIDEO_CONFIG,mClient);
         if(videoParameter != null){
             mLoginBean.setmVideoParameter(videoParameter);
+            Log.i("zyf", videoParameter.toString());
             flag = true;
         }
         return flag;

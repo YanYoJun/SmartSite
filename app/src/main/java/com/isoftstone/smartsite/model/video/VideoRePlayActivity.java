@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnDragReplayListener;
 import com.uniview.airimos.listener.OnQueryReplayListener;
@@ -44,6 +45,7 @@ import com.uniview.airimos.thread.RecvStreamThread;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by zhangyinfu on 2017/10/20.
@@ -69,6 +71,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private static final int SEEKBAR_TOUCHED = 0x114;   //滑动进度条被手动滑动后(快进快退)
     private static final int SYSTEM_TIME_CHANED = 0x115;   //系统时间发生改变时
     private static final int START_REPLAY_VIDEO = 0x116;   //开始播放历史视频
+    private static final int STOP_REPLAY_VIDEO = 0x117;    //停止播放视频
 
     private static final int PLAY = 0;
     //private static final int PAUSE = 1;
@@ -101,6 +104,8 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private TextView mBeginTimeView;
     private TextView mEndDateView;
     private TextView mEndTimeView;
+    private RelativeLayout mBeginDateTimeLayout;
+    private RelativeLayout mEndDateTimeLayout;
     private TextView mStartPlayView;
 
     @Override
@@ -172,7 +177,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         } else {
             mIsOnLineView.setImageResource(R.drawable.offline);
         }
-        ToastUtils.showLong(mBeginTime.toString() + "/n" + mEndTime.toString());
+        //ToastUtils.showLong(mBeginTime.toString() + "/n" + mEndTime.toString());
         mBeginDateView = (TextView) findViewById(R.id.begin_date_txt);
         mBeginDateView.setText(mBeginTime.split(" ")[0]);
         mEndDateView = (TextView) findViewById(R.id.end_date_txt);
@@ -182,6 +187,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         mBeginTimeView.setText(mBeginTime.split(" ")[1]);
         mEndTimeView = (TextView) findViewById(R.id.end_time_txt);
         mEndTimeView.setText(mEndTime.split(" ")[1]);
+        mBeginDateTimeLayout = (RelativeLayout) findViewById(R.id.begin_date_time_layout);
+        mEndDateTimeLayout = (RelativeLayout) findViewById(R.id.end_date_time_layout);
+        mBeginDateTimeLayout.setOnClickListener(this);
+        mEndDateTimeLayout.setOnClickListener(this);
 
         mStartPlayView = (TextView) findViewById(R.id.start_play_view);
         mStartPlayView.setOnClickListener(this);
@@ -214,7 +223,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+                        if (null != mPlayer && mPlayer.AVIsPlaying()) {
+                            mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
+                        } else {
+                            mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
+                        }
+
                         break;
                 }
                 return false;
@@ -401,6 +415,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
                 }
                 break;
+            case R.id.begin_date_time_layout:
+                showDatePickerDialog(mBeginDateView, mBeginTimeView, true);
+                break;
+            case R.id.end_date_time_layout:
+                showDatePickerDialog(mEndDateView, mEndTimeView, false);
+                break;
             default:
                 break;
         }
@@ -549,8 +569,15 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     mSurfaceView.setBackground(drawable);
                     if (mPlayer != null && !mPlayer.AVIsPlaying()) {
                         mStartPlayView.setEnabled(false);
-                        startReplay(mResCode, mBeginTime, mEndTime, mFileName, mPosition);
+                        String beginDateTime = mBeginDateView.getText().toString() + " " + mBeginTimeView.getText().toString();
+                        String endDateTime = mEndDateView.getText().toString() + " " + mEndTimeView.getText().toString();
+                        ToastUtils.showShort(beginDateTime + " /n " + endDateTime );
+                        startReplay(mResCode, beginDateTime, endDateTime, mFileName, mPosition);
                     }
+                    break;
+                case STOP_REPLAY_VIDEO:
+                    mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
+                    stopReplay();
                     break;
             }
         }
@@ -636,4 +663,21 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
+    public void showDatePickerDialog (final TextView dateText, final TextView timeText, final boolean isBeginDateTime) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+
+        CustomDatePicker customDatePicker = new CustomDatePicker(VideoRePlayActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                dateText.setText(time.split(" ")[0]);
+                timeText.setText(time.split(" ")[1] + (isBeginDateTime ? ":00" : ":59"));
+            }
+        }, "1970-01-01 00:00", now); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker.showSpecificTime(true); // 不显示时和分
+        //customDatePicker.showYearMonth();
+        customDatePicker.setIsLoop(false); // 不允许循环滚动
+        customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
+    }
 }

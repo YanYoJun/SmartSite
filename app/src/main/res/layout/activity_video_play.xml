@@ -54,8 +54,8 @@
 
     </android.support.v7.widget.Toolbar>
 
-
     <LinearLayout
+        android:id="@+id/round_menu_layout"
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:orientation="horizontal"
@@ -83,5 +83,26 @@
             android:src="@drawable/bigscreenshot"
             android:layout_gravity="center"
             android:layout_marginRight="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/zoom_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/round_menu_layout"
+        android:layout_alignLeft="@id/round_menu_layout"
+        android:layout_alignStart="@id/round_menu_layout"
+        android:layout_marginBottom="22dp">
+        <Button
+            android:id="@+id/zoom_tele"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zoom_tele"/>
+
+        <Button
+            android:id="@+id/zoom_wide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zoom_wide"/>
     </LinearLayout>
 </RelativeLayout>

@@ -24,6 +24,16 @@ public class VideoMonitorBean {
         this.resCode = resCode;
     }
 
+    public VideoMonitorBean(String beginData, String endData, String flieName, String resCode, int resSubType, String resName, boolean isOnline ) {
+        this.beginData = beginData;
+        this.endData = endData;
+        this.flieName =flieName;
+        this.resCode = resCode;
+        this.resName = resName;
+        this.resType = resSubType;
+        this.isOnline = isOnline;
+    }
+
     public VideoMonitorBean(String resCode, int resType, String resName, boolean isOnline) {
         this.resCode = resCode;
         this.resName = resName;

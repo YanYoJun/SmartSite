@@ -268,10 +268,10 @@ public class CheckFragment extends BaseFragment {
         protected void onPostExecute(Boolean temp) {
             super.onPostExecute(temp);
             if (temp == true) {
-                //Toast.makeText(getActivity(), "验收报告成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else {
-                //Toast.makeText(getActivity(), "验收报告失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "提交失败", Toast.LENGTH_SHORT).show();
             }
         }
     }

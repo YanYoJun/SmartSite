@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="@string/inspect_report_report_people"
+                android:text="验收人员"
                 android:textColor="@color/hit_text_color"
                 android:textSize="10dp" />
         </LinearLayout>

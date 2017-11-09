@@ -279,7 +279,7 @@ public class RevisitFragment extends BaseFragment {
                     reportBean.setVisitDate(parseTime(visitTime));
                 }
                 new SubReport(mAddReportActivity != null, reportData, reportBean).execute();
-                Toast.makeText(getActivity(), "提交巡查报告成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "提交成功", Toast.LENGTH_SHORT).show();
             }
         });
 

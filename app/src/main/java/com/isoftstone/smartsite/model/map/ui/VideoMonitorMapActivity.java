@@ -150,6 +150,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
         ImageButton btn_search = (ImageButton) findViewById(R.id.btn_icon);
         btn_search.setImageResource(R.drawable.search);
+        btn_search.setVisibility(View.GONE);
 
         mMapView = (MapView) findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);

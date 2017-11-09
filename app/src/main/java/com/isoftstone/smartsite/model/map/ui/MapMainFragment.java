@@ -167,6 +167,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
         ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.btn_icon);
         imageButton.setImageResource(R.drawable.search);
 //        imageButton.setOnClickListener(this);
+        imageButton.setVisibility(View.GONE);
     }
 
     private void initPopWindow(){

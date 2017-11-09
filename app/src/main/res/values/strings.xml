@@ -116,12 +116,12 @@
     <string name="report_revisit_time_temp">回访时间：</string>
     <string name="inspect_report_description">问题描述</string>
     <string name="inspect_report_is_need_recheck">是否回访</string>
-    <string name="yes">同意</string>
+    <string name="yes">是</string>
     <string name="inspect_report_status">报告状态</string>
     <string name="inspect_report_status_read">报告状态：</string>
     <string name="inspect_report_types">报告类型</string>
     <string name="inspect_report_types_read">报告类型：</string>
-    <string name="no">拒绝</string>
+    <string name="no">否</string>
     <string name="pls_choose">请选择</string>
     <string name="begin_time">开始时间</string>
     <string name="enter_time">填写时间</string>

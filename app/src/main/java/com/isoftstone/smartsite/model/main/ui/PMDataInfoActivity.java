@@ -80,13 +80,23 @@ public class PMDataInfoActivity extends Activity {
 
     private Spinner shujuSpinner = null;
     private String[] name = {"PM2.5","PM10","co2"};
+    private String begintime = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_pmdatainfo);
-        devicesId = getIntent().getIntExtra("id",0);
-        address = getIntent().getStringExtra("address");
+        DataQueryVoBean dataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
+        if(dataQueryVoBean != null){
+            devicesId = dataQueryVoBean.getDeviceId();
+            address = dataQueryVoBean.getDeviceName();
+            begintime = dataQueryVoBean.getPushTime();
+        }else{
+            devicesId = getIntent().getIntExtra("id",0);
+            address = getIntent().getStringExtra("address");
+            begintime = "";
+        }
+
         init();
         setOnCliceked();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
@@ -192,18 +202,25 @@ public class PMDataInfoActivity extends Activity {
     };
 
     private void getDataInfo(){
-        list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","0","","");
+        if(begintime.equals("")){
+            list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","0","","");
+        }else{
+            list =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","4",begintime,"");
+        }
+
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_END);
     }
 
     private void get24DataInfo(){
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        Calendar calendar = Calendar.getInstance();
-        String startTime = df.format(calendar.getTime());
-        calendar.add(Calendar.DATE, -1);
-        String endTime = df.format(calendar.getTime());
-        //list_24 =  mHttpPsot.onePMDevicesDataList("["+devicesId+"]","2",startTime,endTime);
-        list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,startTime);
+        if(begintime.equals("")){
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            Calendar calendar = Calendar.getInstance();
+            String startTime = df.format(calendar.getTime());
+            list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,startTime);
+        }else{
+            list_24 = mHttpPsot.onePMDevices24Data(""+devicesId,begintime);
+        }
+
         mHandler.sendEmptyMessage(HANDLER_GET_24DATA_END);
     }
 
@@ -232,22 +249,41 @@ public class PMDataInfoActivity extends Activity {
             return;
         }
         mDevicesName.setText(dataQueryVoBean.getDeviceName());
-        text_pm10.setText("PM10:"+dataQueryVoBean.getPm10()+"");
-        text_pm25.setText("PM2.5:"+dataQueryVoBean.getPm2_5()+"");
-        text_so2.setText("O2:"); ;
-        text_no2.setText("no2:"); ;
-        text_o3.setText("O3:"); ;
-        text_co.setText("CO2:"+ dataQueryVoBean.getCo2()); ;
+        String pm10 = dataQueryVoBean.getPm10().toString();
+
+        text_pm10.setText("PM10:"+doubleToString(dataQueryVoBean.getPm10()));
+        text_pm25.setText("PM2.5:"+doubleToString(dataQueryVoBean.getPm2_5()));
+        text_so2.setText("O2:");
+        text_so2.setVisibility(View.GONE);
+        text_no2.setText("no2:");
+        text_no2.setVisibility(View.GONE);
+        text_o3.setText("O3:");
+        text_o3.setVisibility(View.GONE);
+        text_co.setText("CO2:"+ doubleToString(dataQueryVoBean.getCo2()));
 
         DecimalFormat df = new DecimalFormat("#.0");
-        text_indoortemp.setText("室内:");
-        text_windspeed.setText("风速:"+String.format("%.2f",(dataQueryVoBean.getWindSpeed())));
-        text_winddirection.setText("风向:"+dataQueryVoBean.getWindDirection());
-        text_airpressure.setText("气压:"+String.format("%.1f",(dataQueryVoBean.getAtmosphericPressure())));
-        text_temp.setText("温度:"+String.format("%.1f",(dataQueryVoBean.getAirTemperature())));
-        text_humidity.setText("气压:"+String.format("%.1f",(dataQueryVoBean.getAirHumidity())));
-        text_precipitation.setText("雨量:"+String.format("%.2f",(dataQueryVoBean.getRainfall())));
+        text_indoortemp.setText("风速:"+doubleToString(dataQueryVoBean.getWindSpeed()));
+        text_windspeed.setText("风向:"+dataQueryVoBean.getWindDirection());
+        text_winddirection.setText("气压:"+doubleToString(dataQueryVoBean.getAtmosphericPressure()));
+        text_airpressure.setVisibility(View.INVISIBLE);
 
+        text_temp.setText("温度:"+doubleToString(dataQueryVoBean.getAirTemperature()));
+        text_humidity.setText("气压:"+doubleToString(dataQueryVoBean.getAirHumidity()));
+        text_precipitation.setText("雨量:"+doubleToString(dataQueryVoBean.getRainfall()));
+
+    }
+
+    private String doubleToString( Double dl){
+        String value = dl+"";
+        if(value.indexOf(".") == -1){
+            return  value;
+        }else{
+            if(value.indexOf(".") +3 < value.length()){
+                return  value.substring(0,value.indexOf(".")+3);
+            }else{
+                return  value;
+            }
+        }
     }
 
     private void setLineChart(){

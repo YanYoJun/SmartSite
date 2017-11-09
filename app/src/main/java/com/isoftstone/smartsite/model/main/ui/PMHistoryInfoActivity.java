@@ -113,6 +113,19 @@ public class PMHistoryInfoActivity extends Activity {
 
             }
         });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(list != null){
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(),PMDataInfoActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("devicesbean",list.get(position));
+                    getApplicationContext().startActivity(intent);
+                }
+            }
+        });
     }
 
     private void setOnCliceked(){

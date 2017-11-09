@@ -131,7 +131,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="PM10:356"
@@ -140,7 +140,7 @@
                         android:id="@+id/text_pm10"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="PM2.5:125"
@@ -149,7 +149,7 @@
                         android:id="@+id/text_pm25"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="SO2:125"
@@ -158,7 +158,7 @@
                         android:id="@+id/text_so2"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="NO2:56"
@@ -180,7 +180,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="03:125"
@@ -189,7 +189,7 @@
                         android:id="@+id/text_o3"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="CO:125"
@@ -198,7 +198,7 @@
                         android:id="@+id/text_co"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""
@@ -207,7 +207,7 @@
                         android:textSize="14dp"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""
@@ -250,7 +250,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="室内：26"
@@ -259,7 +259,7 @@
                         android:id="@+id/text_indoortemp"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="风速：25"
@@ -268,7 +268,7 @@
                         android:id="@+id/text_windspeed"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="风向：东风"
@@ -277,7 +277,7 @@
                         android:id="@+id/text_winddirection"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="气压：256"
@@ -299,7 +299,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="温度：25"
@@ -308,7 +308,7 @@
                         android:id="@+id/text_temp"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="湿度：58"
@@ -317,7 +317,7 @@
                         android:id="@+id/text_humidity"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="降水：125"
@@ -326,7 +326,7 @@
                         android:id="@+id/text_precipitation"
                         android:textColor="@color/main_text_color"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""

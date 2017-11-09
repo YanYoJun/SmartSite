@@ -41,6 +41,7 @@ import com.isoftstone.smartsite.model.tripartite.data.ReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -631,6 +632,11 @@ public class RevisitFragment extends BaseFragment {
                     Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                     i.setType("*/*");
                     startActivityForResult(i, REQUEST_ACTIVITY_ATTACH);
+                } else {
+                    mFilesPath.remove(position);
+                    mData.remove(position);
+                    mAttachAdapter.notifyDataSetChanged();
+                    ToastUtils.showShort("附件删除成功");
                 }
             }
         });

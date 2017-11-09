@@ -55,39 +55,47 @@ public class CheckReportAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.listview_check_report_item, null);
         }
         if (view != null) {
-            TextView time = (TextView) view.findViewById(R.id.lab_time);
-            TextView title = (TextView) view.findViewById(R.id.lab_title);
-            ImageView imageStatus = (ImageView) view.findViewById(R.id.img_status);
-            TextView name = (TextView) view.findViewById(R.id.lab_name);
-            TextView company = (TextView) view.findViewById(R.id.lab_company);
-            ReportData reportData = mDatas.get(position);
-            time.setText(MsgData.format3.format(reportData.getFormatDate()));
-            title.setText(reportData.getAddress());
-            name.setText(reportData.getCreator().getName());
-            company.setText(reportData.getCompany());
-            imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[reportData.getStatus() - 1]));
-            View v = view.findViewById(R.id.linear_read);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ReadReportActivity.class);
-                    intent.putExtra("_id", mDatas.get(position).getId());
-                    mContext.startActivity(intent);
+            try {
+                TextView time = (TextView) view.findViewById(R.id.lab_time);
+                TextView title = (TextView) view.findViewById(R.id.lab_title);
+                ImageView imageStatus = (ImageView) view.findViewById(R.id.img_status);
+                TextView name = (TextView) view.findViewById(R.id.lab_name);
+                TextView company = (TextView) view.findViewById(R.id.lab_company);
+                ReportData reportData = mDatas.get(position);
+                time.setText(MsgData.format3.format(reportData.getFormatDate()));
+                title.setText(reportData.getAddress());
+                name.setText(reportData.getCreator().getName());
+                company.setText(reportData.getCompany());
+                int status = reportData.getStatus();
+                if (status >= 1) {
+                    status--;
                 }
-            });
-            View v1 = view.findViewById(R.id.linear_check);
-            if (reportData.getStatus() == ReportData.STATUS_WAITTING_CHECK || reportData.getStatus() == ReportData.STATUS_REJECT) {
-                v1.setClickable(true);
-                v1.setOnClickListener(new View.OnClickListener() {
+                imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[status]));
+                View v = view.findViewById(R.id.linear_read);
+                v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, CheckReportActivity.class);
+                        Intent intent = new Intent(mContext, ReadReportActivity.class);
                         intent.putExtra("_id", mDatas.get(position).getId());
                         mContext.startActivity(intent);
                     }
                 });
-            } else {
-                v1.setClickable(false);
+                View v1 = view.findViewById(R.id.linear_check);
+                if (reportData.getStatus() == ReportData.STATUS_WAITTING_CHECK || reportData.getStatus() == ReportData.STATUS_REJECT) {
+                    v1.setClickable(true);
+                    v1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, CheckReportActivity.class);
+                            intent.putExtra("_id", mDatas.get(position).getId());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                } else {
+                    v1.setClickable(false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return view;

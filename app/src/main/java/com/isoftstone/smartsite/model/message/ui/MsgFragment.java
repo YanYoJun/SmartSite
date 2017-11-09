@@ -46,9 +46,9 @@ public class MsgFragment extends BaseFragment {
     private HttpPost mHttpPost = null;
     private SparseArray<Object> mVcrmsg = new SparseArray<Object>();
 
-    private int[] unReadMsgCountView = new int[]{R.id.lab_vcr_unread_num, R.id.lab_environ_unread_num, R.id.lab_threeparty_unread_num};
-    private int[] dateView = new int[]{R.id.lab_vcr_time, R.id.lab_environ_time, R.id.lab_thirpartite_time};
-    private int[] titleView = new int[]{R.id.lab_vcr_msg, R.id.lab_environ_msg, R.id.lab_threeparty_msg};
+    private int[] unReadMsgCountView = new int[]{R.id.lab_environ_unread_num,R.id.lab_vcr_unread_num,  R.id.lab_threeparty_unread_num};
+    private int[] dateView = new int[]{R.id.lab_environ_time,R.id.lab_vcr_time,  R.id.lab_thirpartite_time};
+    private int[] titleView = new int[]{R.id.lab_environ_msg,R.id.lab_vcr_msg,  R.id.lab_threeparty_msg};
 
     private boolean mInForgourd = false;
 

@@ -56,55 +56,63 @@ public class InspectReportAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.listview_inspect_report_item, null);
         }
         if (view != null) {
-            TextView time = (TextView) view.findViewById(R.id.lab_time);
-            TextView title = (TextView) view.findViewById(R.id.lab_title);
-            ImageView imageStatus = (ImageView) view.findViewById(R.id.img_status);
-            TextView name = (TextView) view.findViewById(R.id.lab_name);
-            TextView company = (TextView) view.findViewById(R.id.lab_company);
-            ReportData reportData = mDatas.get(position);
-            time.setText(MsgData.format3.format(reportData.getFormatDate()));
-            title.setText(reportData.getAddress());
-            name.setText(reportData.getCreator().getName());
-            company.setText(reportData.getCompany());
-            imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[reportData.getStatus() - 1]));
+            try {
+                TextView time = (TextView) view.findViewById(R.id.lab_time);
+                TextView title = (TextView) view.findViewById(R.id.lab_title);
+                ImageView imageStatus = (ImageView) view.findViewById(R.id.img_status);
+                TextView name = (TextView) view.findViewById(R.id.lab_name);
+                TextView company = (TextView) view.findViewById(R.id.lab_company);
+                ReportData reportData = mDatas.get(position);
+                time.setText(MsgData.format3.format(reportData.getFormatDate()));
+                title.setText(reportData.getAddress());
+                name.setText(reportData.getCreator().getName());
+                company.setText(reportData.getCompany());
+                int status = reportData.getStatus();
+                if (status >= 1) {
+                    status--;
+                }
+                imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[status]));
 
-            View btnView = view.findViewById(R.id.linear_read_report);
-            if (btnView != null) {
-                btnView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, ReadReportActivity.class);
-                        intent.putExtra("_id", mDatas.get(position).getId());
-                        mContext.startActivity(intent);
-                    }
-                });
-            }
-            View btnReply = view.findViewById(R.id.linear_reply_report);
-            btnReply.setClickable(true);
-            if (btnReply != null) {
-                btnReply.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, ReplyReportActivity.class);
-                        intent.putExtra("_id", mDatas.get(position).getId());
-                        mContext.startActivity(intent);
-                    }
-                });
-            }
+                View btnView = view.findViewById(R.id.linear_read_report);
+                if (btnView != null) {
+                    btnView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, ReadReportActivity.class);
+                            intent.putExtra("_id", mDatas.get(position).getId());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                }
+                View btnReply = view.findViewById(R.id.linear_reply_report);
+                btnReply.setClickable(true);
+                if (btnReply != null) {
+                    btnReply.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, ReplyReportActivity.class);
+                            intent.putExtra("_id", mDatas.get(position).getId());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                }
 
-            View btnRevisit = view.findViewById(R.id.linear_revisit_report);
-            if (reportData.getStatus() != ReportData.STATUS_WAITTING_CHECK) {
-                btnRevisit.setClickable(true);
-                btnRevisit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, RevistReportActivity.class);
-                        intent.putExtra("_id", mDatas.get(position).getId());
-                        mContext.startActivity(intent);
-                    }
-                });
-            } else {
-                btnRevisit.setClickable(false);
+                View btnRevisit = view.findViewById(R.id.linear_revisit_report);
+                if (reportData.getStatus() != ReportData.STATUS_WAITTING_CHECK) {
+                    btnRevisit.setClickable(true);
+                    btnRevisit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, RevistReportActivity.class);
+                            intent.putExtra("_id", mDatas.get(position).getId());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                } else {
+                    btnRevisit.setClickable(false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }

@@ -69,7 +69,7 @@ public class VcrActivity extends BaseActivity {
     private class QueryMsgTask extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... params) {
-            ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", "1");
+            ArrayList<MessageBean> msgs = mHttpPost.getMessage("", "", "", "2");
             if (isDebug) {
                 insertDebugData(msgs);
             }

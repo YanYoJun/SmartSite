@@ -28,6 +28,7 @@ import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
@@ -111,6 +112,11 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        if(!HttpPost.mVideoIsLogin){
+            Toast.makeText(this,"观看视频需要联网，请确认网络是否连接成功",2000).show();
+            finish();
+        }
 
         setContentView(R.layout.activity_video_replay);
         mContext = this;

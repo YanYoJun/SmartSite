@@ -443,7 +443,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             if(type == TYPE_CAMERA){
                 DevicesBean device = (DevicesBean) marker.getObject();
                 currentCameraDevice = device;
-                tv_deviceNumber.setText(device.getDeviceId());
+                tv_deviceNumber.setText(device.getDeviceCoding());
                 if("0".equals(device.getDeviceStatus())){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
@@ -487,7 +487,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
             } else if(type == TYPE_ENVIRONMENT){
                 DataQueryVoBean device = (DataQueryVoBean) marker.getObject();
                 currentEnvirDevice = device;
-                tv_deviceNumber.setText(device.getDeviceId() + "");
+                tv_deviceNumber.setText(device.getDeviceCoding() + "");
                 if(0 == device.getDeviceStatus()){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);

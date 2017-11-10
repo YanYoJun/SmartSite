@@ -27,6 +27,7 @@ import com.isoftstone.smartsite.common.widget.AlertView;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
+import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.listener.OnQueryReplayListener;
@@ -165,7 +166,7 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         String beginTime = formatter.format(now) + " 00:00:00";
         String endTime = formatter2.format(now);
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         Bundle bundle = new Bundle();
 
         bundle.putString("resCode", mDevicesBean.getDeviceCoding());
@@ -179,6 +180,19 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
         intent.putExtras(bundle);
         intent.setClass(mContext, VideoRePlayListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);*/
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("resCode", mDevicesBean.getDeviceCoding());
+        bundle.putString("beginTime", beginTime);
+        bundle.putString("endTime", endTime);
+        bundle.putString("resSubType", mDevicesBean.getCameraType()+"");
+        bundle.putString("resName", mDevicesBean.getDeviceName());
+        bundle.putBoolean("isOnline", mDevicesBean.getDeviceStatus().equals("0"));
+        bundle.putInt("position", 0);
+        intent.putExtras(bundle);
+        intent.setClass(mContext, VideoRePlayActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }

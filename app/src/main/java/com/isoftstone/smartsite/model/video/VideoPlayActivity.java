@@ -26,13 +26,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.http.HttpPost;
+import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
+import com.uniview.airimos.listener.OnLoginListener;
 import com.uniview.airimos.listener.OnPtzCommandListener;
 import com.uniview.airimos.listener.OnStartLiveListener;
 import com.uniview.airimos.listener.OnStopLiveListener;
 import com.uniview.airimos.manager.ServiceManager;
+import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.parameter.PtzCommandParam;
 import com.uniview.airimos.parameter.StartLiveParam;
 import com.uniview.airimos.thread.RecvStreamThread;
@@ -72,7 +76,10 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        if(!HttpPost.mVideoIsLogin){
+            Toast.makeText(this,"观看视频需要联网，请确认网络是否连接成功",2000).show();
+            finish();
+        }
         setContentView(R.layout.activity_video_play);
         mContext = this;
         //SurfaceView用于渲染
@@ -84,6 +91,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mSurfaceView.setZOrderOnTop(true);
         mSurfaceView.setZOrderMediaOverlay(true);
         //初始化一个Player对象
+
         mPlayer = new Player();
         mPlayer.AVInitialize(mSurfaceView.getHolder());
 
@@ -104,7 +112,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mZoomTeleView = (Button) findViewById(R.id.zoom_tele);
         mZoomWideView = (Button) findViewById(R.id.zoom_wide);
         mZoomTeleView.setOnClickListener(this);
+        mZoomTeleView.setVisibility(View.GONE);
         mZoomWideView.setOnClickListener(this);
+        mZoomWideView.setVisibility(View.GONE);
 
 
         /*获取Intent中的Bundle对象*/

@@ -85,9 +85,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			Log.i("test","mUsers.get(0).getId() ="+mUsers.get(0).getId());
 			mIdEditText.setText(mUsers.get(0).getId());
 			mPwdEditText.setText(mUsers.get(0).getPwd());
-			Message message = new Message();
-			message.what = HANDLER_LOGIN_START;
-			mHandler.sendMessage(message);
+			//Message message = new Message();
+			//message.what = HANDLER_LOGIN_START;
+			//mHandler.sendMessage(message);
 		}*/
 		mHttpPost = new HttpPost();
 	}
@@ -239,13 +239,13 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						public void run() {
 							loggin(mIdString,mPwdString);
 							if(isLogin_1){
-								logginVideo();
-								//Intent intent = new Intent();
-								//intent.setClass(LoginActivity.this,MainActivity.class);
-								//LoginActivity.this.startActivity(intent);
-								//mLoginResult = "登录成功";
-								//Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								//finish();
+								//logginVideo();
+								Intent intent = new Intent();
+								intent.setClass(LoginActivity.this,MainActivity.class);
+								LoginActivity.this.startActivity(intent);
+								mLoginResult = "登录成功";
+								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+								finish();
 							}
 
 						}
@@ -258,13 +258,14 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						Intent intent = new Intent();
 						intent.setClass(LoginActivity.this,MainActivity.class);
 						LoginActivity.this.startActivity(intent);
-						mLoginResult = "登录成功";
-						Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+						//mLoginResult = "登录成功";
+						//Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				}
+				break;
 				case HANDLER_SHOW_TOAST:{
-					Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
 				}
 				break;
 			}
@@ -396,19 +397,19 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				Log.i("Test",str.getContent()+" "+str.getValue());
 			}*/
 			if(loginBean.isLoginSuccess()){
-				 boolean mIsSave = true;
+				 boolean mIsSave = false;
 				 try {
 					 Log.i(TAG, "保存用户列表");
-					 for (User user : mUsers) { // 判断本地文档是否有此ID用户
+					 /*for (User user : mUsers) { // 判断本地文档是否有此ID用户
 						 if (user.getId().equals(mIdString)) {
 							 mIsSave = false;
 							 break;
 						 }
-					 }
-				/*if (mIsSave) { // 将新用户加入users
-					User user = new User(mIdString, mPwdString);
-					mUsers.add(user);
-				}*/
+					 }*/
+				//if (mIsSave) { // 将新用户加入users
+				//	User user = new User(mIdString, mPwdString);
+				//	mUsers.add(user);
+				//}
 					 mUsers.clear();
 					 User user = new User(mIdString, mPwdString);
 					 mUsers.add(user);
@@ -427,7 +428,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	}
 
-	private void logginVideo(){
+	public void logginVideo(){
 
         if(mHttpPost.getVideoConfig()){
             LoginParam params = new LoginParam();
@@ -458,13 +459,17 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		{
 			startKeepaliveService();
 			isLogin_2 = true;
+			HttpPost.mVideoIsLogin = true;
 		}
 		else
 		{
 			mLoginResult = "登录失败：" + errorCode + "," + errorDesc;
 			isLogin_2 = false;
+			HttpPost.mVideoIsLogin = false;
+			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+
+
 		}
-		mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 		Message message = new Message();
 		message.what = HANDLER_LOGIN_END;
 		mHandler.sendMessage(message);
@@ -481,7 +486,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	protected void onDestroy() {
 		super.onDestroy();
 
-		stopKeepaliveService();
+		//stopKeepaliveService();
 	}
 
 	public void stopKeepaliveService(){
@@ -507,6 +512,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	@Override
 	public void onKeepaliveFailed() {
-		Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
+		//Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
 	}
 }

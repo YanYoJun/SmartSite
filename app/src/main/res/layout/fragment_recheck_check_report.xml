@@ -201,7 +201,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_submit_bg"
             android:elevation="0dp"
-            android:text="@string/yes"
+            android:text="通过"
             android:textColor="@color/white"
             android:textSize="16sp"></Button>
 
@@ -217,7 +217,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_submit_bg"
             android:elevation="0dp"
-            android:text="@string/no"
+            android:text="退回"
             android:textColor="@color/white"
             android:textSize="16sp"></Button>
     </LinearLayout>

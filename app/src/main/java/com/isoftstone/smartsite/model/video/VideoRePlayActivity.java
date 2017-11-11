@@ -629,9 +629,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Log.d(TAG, "===== surfaceChanged =====");
-            if (mPlayer != null) {
-                mPlayer.changeDisplaySize(width, height);
-            }
+            //if (mPlayer != null) {
+            //    mPlayer.changeDisplaySize(width, height);
+            //}
         }
 
         @Override
@@ -655,11 +655,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     break;
                 case SEEKBAR_TOUCHED:
                     final String dragTimeStr = DateUtils.getProgressTime(mVideoBeginTime, mVideoEndTime, msg.getData().getInt("seekBarProgress"));
-                    ToastUtils.showShort(dragTimeStr + "      &    " + msg.getData().getInt("seekBarProgress"));
+                    //ToastUtils.showShort(dragTimeStr + "      &    " + msg.getData().getInt("seekBarProgress"));
+                    Log.d(TAG, "===== "+  dragTimeStr + "      &    " + msg.getData().getInt("seekBarProgress") + " =====");
                     ServiceManager.dragReplay(mPlayer.getPlaySession(), dragTimeStr, new OnDragReplayListener() {
                         @Override
                         public void onDragReplayResult(long errorCode, String errorDesc) {
-                            ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                            //ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
                             if (errorCode == 0) {
                                 mStartDateTime = getNowDateTime();
                                 isDraged = true;

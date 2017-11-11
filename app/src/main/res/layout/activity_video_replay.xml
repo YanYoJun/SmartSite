@@ -23,10 +23,11 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:src="@drawable/bigarrow"
-                android:scaleType="centerCrop"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:layout_centerVertical="true"
                 android:background="@drawable/selector_pressed"
                 android:id="@+id/iv_back"/>
@@ -79,6 +80,12 @@
             android:layout_marginTop="@dimen/play_seekbar_layout_margin"
             android:layout_gravity="center_vertical">
 
+            <ImageView
+                android:id="@+id/video_stop_for_land"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/video_stop"/>
+
             <SeekBar
                 android:id="@+id/play_seekbar_for_land"
                 android:layout_width="match_parent"
@@ -86,7 +93,7 @@
                 android:layout_centerVertical="true"
                 android:maxHeight="2dp"
                 android:minHeight="2dp"
-                android:visibility="invisible"
+                android:layout_toRightOf="@id/video_stop_for_land"
                 android:layout_toLeftOf="@+id/show_small_screen_view"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/slidicon" />
@@ -117,6 +124,12 @@
         android:layout_centerHorizontal="true">
 
         <ImageView
+            android:id="@+id/video_stop_for_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/video_stop"/>
+
+        <ImageView
             android:id="@+id/show_full_screen_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,8 +143,8 @@
             android:layout_centerVertical="true"
             android:maxHeight="2dp"
             android:minHeight="2dp"
+            android:layout_toRightOf="@id/video_stop_for_port"
             android:layout_toLeftOf="@id/show_full_screen_view"
-            android:visibility="gone"
             android:progressDrawable="@drawable/seekbar_style"
             android:thumb="@drawable/slidicon" />
     </RelativeLayout>
@@ -203,7 +216,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="湖北怡瑞有限公司"
                 android:visibility="gone"
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp" />
@@ -272,6 +284,8 @@
                 android:textColor="@color/mainColor"
                 android:textSize="14sp"
                 android:text="@string/video_start"
+                android:gravity="center"
+                android:background="@drawable/bg_edittext"
                 android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/textView9"
                 android:layout_alignTop="@+id/textView9"

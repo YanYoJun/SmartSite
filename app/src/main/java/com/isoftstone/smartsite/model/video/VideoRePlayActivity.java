@@ -43,6 +43,7 @@ import com.uniview.airimos.parameter.QueryReplayParam;
 import com.uniview.airimos.parameter.StartReplayParam;
 import com.uniview.airimos.thread.RecvStreamThread;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -82,10 +83,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private boolean isTopBottomVisible = true;  //视频顶部，底部布局显隐标识
     private long mStartDateTime;
     private long mEndDateTime;
+    private String mCurrentTime;
     private String mVideoBeginTime;
     private String mVideoEndTime;
 
-    private SeekBar  mBottomSeekBar;
+    private SeekBar  mLandSeekBar;
+    private SeekBar  mPortSeekBar;
     private ImageView mCaptureView;
     private ImageView mShowFullScreenView;
     private ImageView mShowSmallScreenView;
@@ -108,13 +111,16 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
     private RelativeLayout mBeginDateTimeLayout;
     private RelativeLayout mEndDateTimeLayout;
     private TextView mStartPlayView;
+    private ImageView mPortStopPlayView;
+    private ImageView mLandStopPlayView;
+    private boolean isDraged = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
         if(!HttpPost.mVideoIsLogin){
-            Toast.makeText(this,"观看视频需要联网，请确认网络是否连接成功",2000).show();
+            Toast.makeText(this,"观看视频需要联网，请确认网络是否连接成功",Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -147,17 +153,6 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         mCameraType= bundle.getString("resSubType");
         isCameraOnLine = bundle.getBoolean("isOnline");
 
-        /**mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mHandler.sendEmptyMessage(VISIBLE_TOP_BOTTOM);
-                        break;
-                }
-                return false;
-            }
-        });*/
 
         mBackView = (ImageView) findViewById(R.id.iv_back);
         mBackView.setOnClickListener(this);
@@ -183,7 +178,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
         } else {
             mIsOnLineView.setImageResource(R.drawable.offline);
         }
-        //ToastUtils.showLong(mBeginTime.toString() + "/n" + mEndTime.toString());
+
         mBeginDateView = (TextView) findViewById(R.id.begin_date_txt);
         mBeginDateView.setText(mBeginTime.split(" ")[0]);
         mEndDateView = (TextView) findViewById(R.id.end_date_txt);
@@ -200,11 +195,16 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
         mStartPlayView = (TextView) findViewById(R.id.start_play_view);
         mStartPlayView.setOnClickListener(this);
+        mPortStopPlayView = (ImageView) findViewById(R.id.video_stop_for_port);
+        mLandStopPlayView = (ImageView) findViewById(R.id.video_stop_for_land);
+        mPortStopPlayView.setOnClickListener(this);
+        mLandStopPlayView.setOnClickListener(this);
 
 
 
-        mBottomSeekBar = (SeekBar) findViewById(R.id.play_seekbar_for_land);
-        mBottomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+        mLandSeekBar = (SeekBar) findViewById(R.id.play_seekbar_for_land);
+        mLandSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -217,8 +217,35 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ToastUtils.showShort(seekBar.getProgress() + "");
-                mHandler.sendEmptyMessage(SEEKBAR_TOUCHED);
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putInt("seekBarProgress", seekBar.getProgress());
+                message.setData(bundle);
+                message.what = SEEKBAR_TOUCHED;
+                mHandler.sendMessage(message);
+            }
+        });
+
+        mPortSeekBar = (SeekBar) findViewById(R.id.play_seekbar_for_port);
+        mPortSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Message message = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putInt("seekBarProgress", seekBar.getProgress());
+                message.setData(bundle);
+                message.what = SEEKBAR_TOUCHED;
+                mHandler.sendMessage(message);
             }
         });
 
@@ -230,7 +257,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (null != mPlayer && mPlayer.AVIsPlaying()) {
-                            mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
+                            //mHandler.sendEmptyMessage(STOP_REPLAY_VIDEO);
                         } else {
                             mHandler.sendEmptyMessage(START_REPLAY_VIDEO);
                         }
@@ -313,11 +340,12 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
                         //启动播放解码
                         mPlayer.AVStartPlay();
-                        mStartDateTime = getNowDateTime();
 
                         //启动收流线程
                         mRecvStreamThread = new RecvStreamThread(mPlayer, playSession);
                         mRecvStreamThread.start();
+
+                        mStartDateTime = getNowDateTime();
                         changeState(PLAY);
                     }
                 };
@@ -366,7 +394,7 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
     @Override
     protected void onPause() {
-        stopReplay();
+        //stopReplay();
         super.onPause();
     }
 
@@ -427,6 +455,10 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             case R.id.end_date_time_layout:
                 showDatePickerDialog(mEndDateView, mEndTimeView, false);
                 break;
+            case R.id.video_stop_for_land:
+            case R.id.video_stop_for_port:
+                stopReplay();
+                break;
             default:
                 break;
         }
@@ -452,11 +484,13 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
      */
     private void visiblePlayerSeekbarLayout(boolean isLand0rientation) {
         if (isLand0rientation) {
+            mLandSeekBar.setProgress(mPortSeekBar.getProgress());
             mPortLayout.setVisibility(View.GONE);
             mPlaySeekbarLandLayout.setVisibility(View.VISIBLE);
             mPlaySeekbarPortLayout.setVisibility(View.GONE);
             mTitleToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         } else {
+            mPortSeekBar.setProgress(mLandSeekBar.getProgress());
             mPortLayout.setVisibility(View.VISIBLE);
             mPlaySeekbarLandLayout.setVisibility(View.GONE);
             mPlaySeekbarPortLayout.setVisibility(View.VISIBLE);
@@ -558,12 +592,26 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     }
                     break;
                 case SEEKBAR_TOUCHED:
-                    String dragTimeStr = DateUtils.getProgressTime(mVideoBeginTime, mVideoEndTime, mBottomSeekBar.getProgress());
-                    ToastUtils.showShort(dragTimeStr);
+                    final String dragTimeStr = DateUtils.getProgressTime(mVideoBeginTime, mVideoEndTime, msg.getData().getInt("seekBarProgress"));
+                    ToastUtils.showShort(dragTimeStr + "      &    " + msg.getData().getInt("seekBarProgress"));
                     ServiceManager.dragReplay(mPlayer.getPlaySession(), dragTimeStr, new OnDragReplayListener() {
                         @Override
                         public void onDragReplayResult(long errorCode, String errorDesc) {
-                            //ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                            ToastUtils.showShort("errorCode: " + errorCode + " &errorDesc : " + errorDesc);
+                            if (errorCode == 0) {
+                                mStartDateTime = getNowDateTime();
+                                isDraged = true;
+                                try {
+                                    SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    long endTime = dfs.parse(dragTimeStr).getTime();
+                                    long stratTime = dfs.parse(mVideoBeginTime).getTime();
+                                    int progress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(endTime, stratTime));
+                                    mLandSeekBar.setProgress(progress);
+                                    mPortSeekBar.setProgress(progress);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     });
                     break;
@@ -571,18 +619,17 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
 
                     break;
                 case START_REPLAY_VIDEO:
-                    Drawable drawable = null;
-                    mSurfaceView.setBackground(drawable);
+                    //mSurfaceView.setBackground(null);
                     if (mPlayer != null && !mPlayer.AVIsPlaying()) {
                         mStartPlayView.setEnabled(false);
                         String beginDateTime = mBeginDateView.getText().toString() + " " + mBeginTimeView.getText().toString();
                         String endDateTime = mEndDateView.getText().toString() + " " + mEndTimeView.getText().toString();
-                        ToastUtils.showShort(beginDateTime + " /n " + endDateTime );
+
                         startReplay(mResCode, beginDateTime, endDateTime, mFileName, mPosition);
                     }
                     break;
                 case STOP_REPLAY_VIDEO:
-                    mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
+                    //mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
                     stopReplay();
                     break;
             }
@@ -606,10 +653,24 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     if (mPlayer == null) {
                         return;
                     }
-                    int position = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(mEndDateTime, mStartDateTime));
-                    //mBottomSeekBar.setProgress(position);
+
+                    int progress = DateUtils.getProgress(mVideoBeginTime, mVideoEndTime, DateUtils.getTimeDifference(getNowDateTime(), mStartDateTime));
+                    Log.i("zzz", "progress : "  + progress + "");
+
+                    //if (isDraged && (mLandSeekBar.getProgress()!=0 || mPortSeekBar.getProgress()!=0)) {
+                    //    mLandSeekBar.setProgress((mLandSeekBar.getProgress()!=0 ? mLandSeekBar.getProgress() : mPortSeekBar.getProgress()) + progress);
+                    //    mPortSeekBar.setProgress((mLandSeekBar.getProgress()!=0 ? mLandSeekBar.getProgress() : mPortSeekBar.getProgress()) + progress);
+                    //} else {
+                        mLandSeekBar.setProgress(progress);
+                        mPortSeekBar.setProgress(progress);
+                    //}
                     if (mPlayer.AVIsPlaying()) {
-                        mHandler.postDelayed(this, 1000);
+                        if (progress <= 100) {
+                            mHandler.postDelayed(this, 1000);
+                        }
+                        if(progress == 100) {
+                            isDraged = false;
+                        }
                     }
                 }
             });
@@ -624,6 +685,8 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             case PLAY:
                 //mPlayPlayIV.setImageResource(R.drawable.pause);
                 //mPlayPlayIV.invalidate();
+                mSurfaceView.setBackground(null);
+                mSurfaceView.invalidate();
                 break;
             /**case PAUSE:
                 mPlayPlayIV.setImageResource(R.drawable.litplay);
@@ -631,6 +694,8 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
             case STOP:
                 //mPlayPlayIV.setImageResource(R.drawable.litplay);
                 //mPlayPlayIV.invalidate();
+                mSurfaceView.setBackground(getResources().getDrawable(R.drawable.media_preview));
+                mSurfaceView.invalidate();
                 break;
         }
     }

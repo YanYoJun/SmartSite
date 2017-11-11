@@ -526,7 +526,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             if(marker.getObject() instanceof DevicesBean){
                 DevicesBean bean = (DevicesBean) marker.getObject();
                 currentVideoBean = bean;
-                tv_deviceNumber.setText(bean.getDeviceId());
+                tv_deviceNumber.setText(bean.getDeviceCoding());
                 if("0".equals(bean.getDeviceStatus())){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
@@ -580,7 +580,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             }else if(marker.getObject() instanceof DataQueryVoBean){
                 DataQueryVoBean bean = (DataQueryVoBean) marker.getObject();
                 currentEnvirBean = bean;
-                tv_deviceNumber.setText(bean.getDeviceId() + "");
+                tv_deviceNumber.setText(bean.getDeviceCoding() + "");
                 if(0 == bean.getDeviceStatus()){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);

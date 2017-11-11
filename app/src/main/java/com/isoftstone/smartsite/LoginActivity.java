@@ -42,6 +42,8 @@ import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.service.KeepaliveService;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class LoginActivity extends Activity implements OnClickListener,OnLoginListener ,KeepaliveService.OnKeepaliveListener{
 	protected static final String TAG = "LoginActivity";
 	private LinearLayout mLoginLinearLayout; // 登录内容的容器
@@ -80,16 +82,17 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		/* 获取已经保存好的用户密码 */
 		mUsers = UserUtils.getUserList(LoginActivity.this);
 
-		/*if (mUsers.size() > 0) {
+		if (mUsers.size() > 0) {
 			//将列表中的第一个user显示在编辑框
 			Log.i("test","mUsers.get(0).getId() ="+mUsers.get(0).getId());
 			mIdEditText.setText(mUsers.get(0).getId());
 			mPwdEditText.setText(mUsers.get(0).getPwd());
-			Message message = new Message();
-			message.what = HANDLER_LOGIN_START;
-			mHandler.sendMessage(message);
-		}*/
+			//Message message = new Message();
+			//message.what = HANDLER_LOGIN_START;
+			//mHandler.sendMessage(message);
+		}
 		mHttpPost = new HttpPost();
+		String rid = JPushInterface.getRegistrationID(getApplicationContext());
 	}
 
 
@@ -140,8 +143,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		mLoginButton.setOnClickListener(this);
 		setListener();
 
-		mIdEditText.setText("admin");
-		mPwdEditText.setText("bmeB4000");
+		//mIdEditText.setText("admin");
+		//mPwdEditText.setText("bmeB4000");
 
 		mIdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
@@ -240,12 +243,12 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 							loggin(mIdString,mPwdString);
 							if(isLogin_1){
 								logginVideo();
-								//Intent intent = new Intent();
-								//intent.setClass(LoginActivity.this,MainActivity.class);
-								//LoginActivity.this.startActivity(intent);
-								//mLoginResult = "登录成功";
-								//Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								//finish();
+								/*Intent intent = new Intent();
+								intent.setClass(LoginActivity.this,MainActivity.class);
+								LoginActivity.this.startActivity(intent);
+								mLoginResult = "登录成功";
+								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+								finish();*/
 							}
 
 						}
@@ -258,13 +261,14 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						Intent intent = new Intent();
 						intent.setClass(LoginActivity.this,MainActivity.class);
 						LoginActivity.this.startActivity(intent);
-						mLoginResult = "登录成功";
-						Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+						//mLoginResult = "登录成功";
+						//Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				}
+				break;
 				case HANDLER_SHOW_TOAST:{
-					Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_SHORT).show();
 				}
 				break;
 			}
@@ -396,22 +400,23 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 				Log.i("Test",str.getContent()+" "+str.getValue());
 			}*/
 			if(loginBean.isLoginSuccess()){
-				 boolean mIsSave = true;
+				 boolean mIsSave = false;
 				 try {
 					 Log.i(TAG, "保存用户列表");
-					 for (User user : mUsers) { // 判断本地文档是否有此ID用户
+					 /*for (User user : mUsers) { // 判断本地文档是否有此ID用户
 						 if (user.getId().equals(mIdString)) {
 							 mIsSave = false;
 							 break;
 						 }
-					 }
-				/*if (mIsSave) { // 将新用户加入users
-					User user = new User(mIdString, mPwdString);
-					mUsers.add(user);
-				}*/
+					 }*/
+				//if (mIsSave) { // 将新用户加入users
+				//	User user = new User(mIdString, mPwdString);
+				//	mUsers.add(user);
+				//}
 					 mUsers.clear();
 					 User user = new User(mIdString, mPwdString);
 					 mUsers.add(user);
+					 UserUtils.saveUserList(getBaseContext(),mUsers);
 				 } catch (Exception e) {
 					 e.printStackTrace();
 				 }
@@ -427,7 +432,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	}
 
-	private void logginVideo(){
+	public void logginVideo(){
 
         if(mHttpPost.getVideoConfig()){
             LoginParam params = new LoginParam();
@@ -458,13 +463,17 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		{
 			startKeepaliveService();
 			isLogin_2 = true;
+			HttpPost.mVideoIsLogin = true;
 		}
 		else
 		{
 			mLoginResult = "登录失败：" + errorCode + "," + errorDesc;
 			isLogin_2 = false;
+			HttpPost.mVideoIsLogin = false;
+			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+
+
 		}
-		mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
 		Message message = new Message();
 		message.what = HANDLER_LOGIN_END;
 		mHandler.sendMessage(message);
@@ -481,7 +490,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	protected void onDestroy() {
 		super.onDestroy();
 
-		stopKeepaliveService();
+		//stopKeepaliveService();
 	}
 
 	public void stopKeepaliveService(){
@@ -507,6 +516,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 	@Override
 	public void onKeepaliveFailed() {
-		Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
+		//Toast.makeText(LoginActivity.this, "保活失败，请重新登录", Toast.LENGTH_LONG).show();
 	}
 }

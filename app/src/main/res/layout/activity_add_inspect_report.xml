@@ -89,7 +89,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/droparrow" />
+                    android:src="@drawable/droparrow"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/edit_address"
@@ -98,8 +99,16 @@
                     android:layout_toLeftOf="@id/img_address_down"
                     android:background="@null"
                     android:gravity="right|center_vertical"
-                    android:text="请选择"
-                    android:textColor="@color/des_text_color" />
+                    android:textColor="@color/des_text_color"
+                    android:visibility="gone"/>
+                <EditText
+                    android:layout_toRightOf="@id/lab_address"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:textSize="14dp"
+                    android:id="@+id/address_edittext"/>
 
             </RelativeLayout>
 

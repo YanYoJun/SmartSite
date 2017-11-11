@@ -31,8 +31,8 @@ import okhttp3.OkHttpClient;
 public class HttpPost {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient  mClient = null;
-    //public static String URL = "http://120.202.182.59:19090/ctess";//生产
-    public static String URL = "http://61.160.82.83:19090/ctess";//龙云
+    public static String URL = "http://111.47.21.51:19090";//生产
+    //public static String URL = "http://61.160.82.83:19090/ctess";//龙云
 
     private String LOGIN_URL = URL + "/login";                        //登录
     private String  GET_LOGIN_USER = URL + "/user/getLoginUser";      //获取登录用户信息
@@ -67,6 +67,8 @@ public class HttpPost {
     private String GET_PATROL_ADDRESS  = URL+"/patrol/addresses";//获取巡查报告地点
 
 
+    public static  boolean mVideoIsLogin = false;
+
 
 
     public static  LoginBean mLoginBean = null;
@@ -90,7 +92,7 @@ public class HttpPost {
     }
 
 
-    public boolean isConnected(){
+    public static  boolean isConnected(){
         return NetworkUtils.isConnected();
     }
 

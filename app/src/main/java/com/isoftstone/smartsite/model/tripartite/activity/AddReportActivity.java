@@ -45,6 +45,7 @@ public class AddReportActivity extends BaseActivity {
     private ArrayList<String> mQueryTypes = new ArrayList<>();
 
     //the view in this activity
+    public EditText mAddressEdittext = null;
     public TextView mEditAddress = null;
     public TextView mTypesEditor = null;
     public TextView mAddress = null;
@@ -93,6 +94,7 @@ public class AddReportActivity extends BaseActivity {
     }
 
     public void initView() {
+        mAddressEdittext = (EditText) findViewById(R.id.address_edittext);
         mEditAddress = (TextView) findViewById(R.id.edit_address);
         mTypesEditor = (TextView) findViewById(R.id.lab_report_types);
         mAddress = (TextView) findViewById(R.id.lab_address);
@@ -124,6 +126,8 @@ public class AddReportActivity extends BaseActivity {
         if (isSettedAddress) {
             SPUtils.saveString("add_report_address", mEditAddress.getText().toString());
         }
+
+        SPUtils.saveString("add_report_address", mAddressEdittext.getText().toString());
     }
 
     public void restoreData() {

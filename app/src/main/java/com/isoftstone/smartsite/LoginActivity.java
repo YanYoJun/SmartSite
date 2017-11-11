@@ -400,6 +400,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			}*/
 			if(loginBean.isLoginSuccess()){
 				 boolean mIsSave = false;
+				UserBean userBean = mHttpPost.getLoginUser();
+				HttpPost.mLoginBean.setmUserBean(userBean);
 				 try {
 					 Log.i(TAG, "保存用户列表");
 					 /*for (User user : mUsers) { // 判断本地文档是否有此ID用户

@@ -67,7 +67,6 @@ public class UserLogin {
         return loginBean;
     }
 
-
     public static LoginBean.VideoParameter getVideoConfig(String strurl, OkHttpClient mClient){
         LoginBean.VideoParameter videoParameter = null;
         String funName = "getVideoConfig";
@@ -94,6 +93,7 @@ public class UserLogin {
 
     public static UserBean getLoginUser(String strurl, OkHttpClient mClient,UserBean userBean){
         UserBean userBeanReturn = null;
+        UserBean.Permission permission = null;
         String funName = "getLoginUser";
         try {
             Gson gson = new Gson();
@@ -110,8 +110,12 @@ public class UserLogin {
 
                 String responsebody = response.body().string();
                 LogUtils.i(TAG,funName+" responsebody  "+responsebody);
-                String loginUser = new JSONObject(responsebody).getString("loginUser");
+                JSONObject object = new JSONObject(responsebody);
+                String loginUser = object.getString("loginUser");
+                String privilegeCode = object.getString("privilegeCode");
                 userBeanReturn = gson.fromJson(loginUser,UserBean.class);
+                permission = gson.fromJson(privilegeCode,UserBean.Permission.class);
+                userBeanReturn.setmPermission(permission);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,6 +123,31 @@ public class UserLogin {
             e.printStackTrace();
         }
         return  userBeanReturn;
+    }
+
+    public static UserBean getLoginUserById(String strurl, OkHttpClient mClient){
+        UserBean userBeanReturn = null;
+        UserBean.Permission permission = null;
+        String funName = "getLoginUserById";
+        try {
+            Request request = new Request.Builder()
+                    .url(strurl)
+                    .get()
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            LogUtils.i(TAG,funName+" response code "+response.code());
+            if(response.isSuccessful()){
+
+                String responsebody = response.body().string();
+                LogUtils.i(TAG,funName+" responsebody  "+responsebody);
+                Gson gson = new Gson();
+                userBeanReturn = gson.fromJson(responsebody,UserBean.class);
+                userBeanReturn.setmPermission(HttpPost.mLoginBean.getmUserBean().getmPermission());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return userBeanReturn;
     }
 
     public static  void  userUpdate(String strurl, OkHttpClient mClient,UserBean userBean){

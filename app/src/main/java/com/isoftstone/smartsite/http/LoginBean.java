@@ -11,6 +11,15 @@ public class LoginBean {
     private String mName = "";    //用户登录姓名
     private String mPassword = "";  //用户登录密码
     private VideoParameter mVideoParameter;
+    private UserBean mUserBean = null;      //用户详细信息
+
+    public UserBean getmUserBean() {
+        return mUserBean;
+    }
+
+    public void setmUserBean(UserBean mUserBean) {
+        this.mUserBean = mUserBean;
+    }
 
     public VideoParameter getmVideoParameter() {
         return mVideoParameter;
@@ -117,6 +126,4 @@ public class LoginBean {
                     '}';
         }
     }
-
-
 }

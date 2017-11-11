@@ -31,11 +31,12 @@ import okhttp3.OkHttpClient;
 public class HttpPost {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient  mClient = null;
-    public static String URL = "http://111.47.21.51:19090";//生产
-    //public static String URL = "http://61.160.82.83:19090/ctess";//龙云
+    //public static String URL = "http://111.47.21.51:19090";//生产
+    public static String URL = "http://61.160.82.83:19090/ctess";//龙云
 
     private String LOGIN_URL = URL + "/login";                        //登录
     private String  GET_LOGIN_USER = URL + "/user/getLoginUser";      //获取登录用户信息
+    private String  GET_LOGIN_USER_BYID = URL + "/user/get/";      //获取登录用户信息
     private String   USER_UPDATE = URL + "/user/update";              //用户信息更改
     private String   USER_UPLOAD = URL + "/user/upload";              //用户头像修改
     private String  GET_SYSTEM_CONFIG = URL + "/systemConfig/4";
@@ -292,10 +293,19 @@ public class HttpPost {
     获取用户信息
     */
     public UserBean getLoginUser(){
-        UserBean userBean = new UserBean();
-        userBean.setAccount(mLoginBean.getmName());
-        userBean.setPassword(mLoginBean.getmPassword());
-        return  UserLogin.getLoginUser(GET_LOGIN_USER,mClient,userBean);
+        UserBean userBean = null;
+        if(mLoginBean != null) {
+            if (mLoginBean.getmUserBean() != null) {
+                userBean = UserLogin.getLoginUserById(GET_LOGIN_USER_BYID + mLoginBean.getmUserBean().getId(), mClient);
+            } else {
+                UserBean user = new UserBean();
+                user.setAccount(mLoginBean.getmName());
+                user.setPassword(mLoginBean.getmPassword());
+                userBean =UserLogin.getLoginUser(GET_LOGIN_USER, mClient, user);
+            }
+        }
+        mLoginBean.setmUserBean(userBean);
+        return userBean;
     }
     //更改用户信息
     public void userUpdate(UserBean userBean){

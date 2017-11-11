@@ -33,7 +33,7 @@ public class UserLogin {
         FormBody body = new FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
-                .add("mobileDeviceId",mobileDeviceId)
+                .add("registerId",mobileDeviceId)
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)

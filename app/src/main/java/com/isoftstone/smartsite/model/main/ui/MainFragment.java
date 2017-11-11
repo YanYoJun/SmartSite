@@ -84,9 +84,13 @@ public class MainFragment extends BaseFragment{
     private void initView(){
         mCityTestView = (TextView) rootView.findViewById(R.id.text_city);
         lab_main_unread_num = (TextView) rootView.findViewById(R.id.lab_main_unread_num);  //未查看消息数目
+        lab_main_unread_num.setVisibility(View.INVISIBLE);
         lab_report_unread_num = (TextView) rootView.findViewById(R.id.lab_report_unread_num);  //未查看报告数目
+        lab_report_unread_num.setVisibility(View.INVISIBLE);
         lab_vcr_unread_num = (TextView) rootView.findViewById(R.id.lab_vcr_unread_num);//视频监控设备数
+        lab_vcr_unread_num.setVisibility(View.INVISIBLE);
         lab_air_unread_num = (TextView) rootView.findViewById(R.id.lab_air_unread_num);//环境监控数目
+        lab_air_unread_num.setVisibility(View.INVISIBLE);
         mTemperatureTextView = (TextView)  rootView.findViewById(R.id.text_temperature);
         mUnCheckMsg = (LinearLayout) rootView.findViewById(R.id.textView10);
         mUnCheckMsg.setOnClickListener(new View.OnClickListener() {
@@ -217,21 +221,18 @@ public class MainFragment extends BaseFragment{
         }
         int unreadMessage = mMobileHomeBean.getUnreadMessages();
         if(unreadMessage > 0){
-            lab_main_unread_num.setText(unreadMessage+"");//未查看消息数目
             lab_main_unread_num.setVisibility(View.VISIBLE);
-        }else {
-            lab_main_unread_num.setVisibility(View.INVISIBLE);
+            lab_main_unread_num.setText(unreadMessage+"");
         }
         int unreadPatrols = mMobileHomeBean.getUntreatedPatrols();
         if(unreadPatrols > 0){
-            lab_report_unread_num.setText(unreadPatrols+"");//未查看报告数目
             lab_report_unread_num.setVisibility(View.VISIBLE);
-        }else {
-            lab_report_unread_num.setVisibility(View.INVISIBLE);
+            lab_report_unread_num.setText(unreadPatrols+"");
         }
         lab_vcr_unread_num.setText(mMobileHomeBean.getAllVses()+"");//视频监控设备数
+        lab_vcr_unread_num.setVisibility(View.VISIBLE);
         lab_air_unread_num.setText(mMobileHomeBean.getAllEmes()+"");//环境监控数目
-
+        lab_air_unread_num.setVisibility(View.VISIBLE);
         //设置天气参数
         setWeatherData();
         //设置即使消息

@@ -70,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	private View mPwdView = null;
 	private ImageView mIdImageView = null;
 	private ImageView mPwdImageView = null;
-
+    private String mJpushId;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,7 +92,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			//mHandler.sendMessage(message);
 		}
 		mHttpPost = new HttpPost();
-		String rid = JPushInterface.getRegistrationID(getApplicationContext());
+		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
 	}
 
 
@@ -240,7 +240,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 					new Thread(){
 						@Override
 						public void run() {
-							loggin(mIdString,mPwdString);
+							loggin(mIdString,mPwdString,mJpushId);
 							if(isLogin_1){
 								logginVideo();
 								/*Intent intent = new Intent();
@@ -275,11 +275,10 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 
 		}
 	};
-	private void loggin(String mIdString,String mPwdString){
+	private void loggin(String mIdString,String mPwdString,String jpushId){
 		     // 启动登录
 			 LoginBean loginBean = null;
-			 String mobileDeviceId = ((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-			 loginBean = mHttpPost.login(mIdString,mPwdString,mobileDeviceId);
+			 loginBean = mHttpPost.login(mIdString,mPwdString,jpushId);
              /*
              String day = mHttpPost.carchMonthlyComparison("29","2017-10","1").getBeforeMonth().get(4).getPushTimeOneDay();
              Log.i("test",day);

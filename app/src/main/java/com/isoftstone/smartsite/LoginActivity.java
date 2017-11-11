@@ -42,6 +42,8 @@ import com.uniview.airimos.manager.ServiceManager;
 import com.uniview.airimos.parameter.LoginParam;
 import com.uniview.airimos.service.KeepaliveService;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class LoginActivity extends Activity implements OnClickListener,OnLoginListener ,KeepaliveService.OnKeepaliveListener{
 	protected static final String TAG = "LoginActivity";
 	private LinearLayout mLoginLinearLayout; // 登录内容的容器
@@ -80,7 +82,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		/* 获取已经保存好的用户密码 */
 		mUsers = UserUtils.getUserList(LoginActivity.this);
 
-		/*if (mUsers.size() > 0) {
+		if (mUsers.size() > 0) {
 			//将列表中的第一个user显示在编辑框
 			Log.i("test","mUsers.get(0).getId() ="+mUsers.get(0).getId());
 			mIdEditText.setText(mUsers.get(0).getId());
@@ -88,8 +90,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			//Message message = new Message();
 			//message.what = HANDLER_LOGIN_START;
 			//mHandler.sendMessage(message);
-		}*/
+		}
 		mHttpPost = new HttpPost();
+		String rid = JPushInterface.getRegistrationID(getApplicationContext());
 	}
 
 
@@ -140,8 +143,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		mLoginButton.setOnClickListener(this);
 		setListener();
 
-		mIdEditText.setText("admin");
-		mPwdEditText.setText("bmeB4000");
+		//mIdEditText.setText("admin");
+		//mPwdEditText.setText("bmeB4000");
 
 		mIdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
@@ -239,13 +242,13 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 						public void run() {
 							loggin(mIdString,mPwdString);
 							if(isLogin_1){
-								//logginVideo();
-								Intent intent = new Intent();
+								logginVideo();
+								/*Intent intent = new Intent();
 								intent.setClass(LoginActivity.this,MainActivity.class);
 								LoginActivity.this.startActivity(intent);
 								mLoginResult = "登录成功";
 								Toast.makeText(getApplication(),mLoginResult,Toast.LENGTH_LONG).show();
-								finish();
+								finish();*/
 							}
 
 						}
@@ -413,6 +416,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 					 mUsers.clear();
 					 User user = new User(mIdString, mPwdString);
 					 mUsers.add(user);
+					 UserUtils.saveUserList(getBaseContext(),mUsers);
 				 } catch (Exception e) {
 					 e.printStackTrace();
 				 }

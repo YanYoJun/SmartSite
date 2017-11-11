@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.tripartite.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,20 @@ public class InspectReportAdapter extends BaseAdapter {
     private Context mContext = null;
     private ArrayList<ReportData> mDatas;
     Resources mRes = null;
+    Drawable mRevisitGray;
+    Drawable mRevisitBitmap;
 
     public InspectReportAdapter(Context context, ArrayList<ReportData> datas) {
         mContext = context;
         mDatas = datas;
         mRes = mContext.getResources();
+
+        mRevisitGray = mRes.getDrawable(R.drawable.revisite_gray);
+        mRevisitGray.setBounds(0, 0, mRevisitGray.getIntrinsicWidth(), mRevisitGray.getIntrinsicHeight());
+
+        mRevisitBitmap = mRes.getDrawable(R.drawable.revisite);
+        mRevisitBitmap.setBounds(0, 0, mRevisitBitmap.getIntrinsicWidth(), mRevisitBitmap.getIntrinsicHeight());
+
     }
 
     @Override
@@ -98,6 +108,8 @@ public class InspectReportAdapter extends BaseAdapter {
                 }
 
                 View btnRevisit = view.findViewById(R.id.linear_revisit_report);
+                TextView labRevisit = (TextView)view.findViewById(R.id.lab_revisit);
+
                 if (reportData.getStatus() != ReportData.STATUS_WAITTING_CHECK) {
                     btnRevisit.setClickable(true);
                     btnRevisit.setOnClickListener(new View.OnClickListener() {
@@ -108,9 +120,16 @@ public class InspectReportAdapter extends BaseAdapter {
                             mContext.startActivity(intent);
                         }
                     });
+
+                    labRevisit.setTextColor(mRes.getColor(R.color.mainColor));
+                    labRevisit.setCompoundDrawables(mRevisitBitmap,null,null,null);
                 } else {
                     btnRevisit.setClickable(false);
+
+                    labRevisit.setTextColor(mRes.getColor(R.color.des_text_color));
+                    labRevisit.setCompoundDrawables(mRevisitGray,null,null,null);
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

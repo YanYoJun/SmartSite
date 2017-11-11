@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.model.tripartite.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +29,20 @@ public class CheckReportAdapter extends BaseAdapter {
     private ArrayList<ReportData> mDatas;
     Resources mRes = null;
 
+    Drawable mCheckGray;
+    Drawable mCheckBitmap;
+
     public CheckReportAdapter(Context context, ArrayList<ReportData> datas) {
         mContext = context;
         mDatas = datas;
         mRes = mContext.getResources();
+
+        mCheckGray = mRes.getDrawable(R.drawable.revisite_gray);
+        mCheckGray.setBounds(0, 0, mCheckGray.getIntrinsicWidth(), mCheckGray.getIntrinsicHeight());
+
+        mCheckBitmap = mRes.getDrawable(R.drawable.revisite);
+        mCheckBitmap.setBounds(0, 0, mCheckBitmap.getIntrinsicWidth(), mCheckBitmap.getIntrinsicHeight());
+
     }
 
     @Override
@@ -72,6 +83,7 @@ public class CheckReportAdapter extends BaseAdapter {
                 }
                 imageStatus.setImageDrawable(mRes.getDrawable(TripartiteActivity.STATUS_IMG[status]));
                 View v = view.findViewById(R.id.linear_read);
+                TextView labCheck = (TextView)view.findViewById(R.id.lab_check);
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -91,8 +103,14 @@ public class CheckReportAdapter extends BaseAdapter {
                             mContext.startActivity(intent);
                         }
                     });
+
+                    labCheck.setTextColor(mRes.getColor(R.color.mainColor));
+                    labCheck.setCompoundDrawables(mCheckBitmap,null,null,null);
                 } else {
                     v1.setClickable(false);
+
+                    labCheck.setTextColor(mRes.getColor(R.color.des_text_color));
+                    labCheck.setCompoundDrawables(mCheckGray,null,null,null);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

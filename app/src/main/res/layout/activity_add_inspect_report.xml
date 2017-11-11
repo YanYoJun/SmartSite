@@ -102,12 +102,7 @@
                     android:textColor="@color/des_text_color"
                     android:visibility="gone"/>
                 <EditText
-                    android:layout_toRightOf="@id/lab_address"
-                    android:layout_marginLeft="8dp"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:textSize="14dp"
+                    style="@style/add_report_edittext"
                     android:id="@+id/address_edittext"/>
 
             </RelativeLayout>

@@ -224,13 +224,14 @@ public class RevisitFragment extends BaseFragment {
 //                    private String developmentCompany;//	建设单位
 //                    private String constructionCompany;//	施工单位
 //                    private String supervisionCompany;//		监理单位
-                    String address = mAddReportActivity.mEditAddress.getText().toString();
+//                    String address = mAddReportActivity.mEditAddress.getText().toString();
+                    String address = mAddReportActivity.mAddressEdittext.getText().toString();
                     String company = mAddReportActivity.mEditCompany.getText().toString();
                     String type = mAddReportActivity.mTypes.getText().toString();
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
-                    if (!mAddReportActivity.isSettedAddress || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
+                    if (TextUtils.isEmpty(address) || TextUtils.isEmpty(company) || TextUtils.isEmpty(developmentCompany)
                             || TextUtils.isEmpty(constructionCompany) || TextUtils.isEmpty(supervisionCompany) || !mAddReportActivity.isSettedType) {
                         Toast.makeText(getActivity(), "还有未填写的数据", Toast.LENGTH_SHORT).show();
                         return;
@@ -277,6 +278,7 @@ public class RevisitFragment extends BaseFragment {
                 reportBean.setName(reportName);
                 reportBean.setDate(DateUtils.format2.format(new Date()));
                 reportBean.setVisit(visit);
+
                 reportData.setVisit(visit);
                 if (visit) {
                     reportBean.setVisitDate(parseTime(visitTime));

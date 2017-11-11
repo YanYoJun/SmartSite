@@ -288,7 +288,6 @@ public class ReportOperation {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static  void downloadfile(String downloadUrl,String storagePath,String imageName){

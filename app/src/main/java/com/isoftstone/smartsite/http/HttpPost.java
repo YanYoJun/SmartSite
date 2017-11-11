@@ -118,7 +118,6 @@ public class HttpPost {
                 mLoginBean.setmErrorCode(loginBean.getmErrorCode());
             }
         }
-
         return  mLoginBean;
     }
 
@@ -259,13 +258,6 @@ public class HttpPost {
     public void addPatrolCheck(ReportBean reportBean){
         ReportOperation.addPatrolCheck(ADD_REPORT,mClient,reportBean);
     }
-
-    /*
-    报告上传图片
-     */
-    public  void reportImageUpload(String filepath,int id){
-        ReportOperation.reportImageUpload(IMAGE_UPLOAD,mClient,filepath,id);
-    }
     /*
     报告上传文件
      */
@@ -348,7 +340,7 @@ public class HttpPost {
         return URL + "/"+filename;
     }
 
-    //获取用户图片保存绝对路径
+    //获取用户图片本地保存绝对路径
     public String getImagePath(String imageName){
 
         String sdpath = Environment.getExternalStorageDirectory().getPath();
@@ -356,7 +348,7 @@ public class HttpPost {
         return  storagePath;
     }
 
-    //获取用户图片保存绝对路径
+    //获取报告图片、文件本地保存绝对路径
     public String getReportPath(int id,String imageName){
 
         String sdpath = Environment.getExternalStorageDirectory().getPath();
@@ -374,7 +366,7 @@ public class HttpPost {
     }
 
     /*
-    获取巡查类型列表，此接口暂时不能调用
+    获取巡查类型列表
      */
     public  ArrayList<DictionaryBean> getDictionaryList(String lang){
         return  ReportOperation.getDictionaryList(DICTIONARY_LIST,mClient,lang);
@@ -386,7 +378,9 @@ public class HttpPost {
     public ArrayList<String>   getPatrolAddress(){
         return  ReportOperation.getPatrolAddress(GET_PATROL_ADDRESS,mClient);
     }
-
+    /*
+    获取版本信息，包含版本号、版本下载绝对路径、是否强制更新
+     */
     public InstallBean getSystemConifg(){
         return  UserLogin.getSystemConifg(GET_SYSTEM_CONFIG,mClient);
     }

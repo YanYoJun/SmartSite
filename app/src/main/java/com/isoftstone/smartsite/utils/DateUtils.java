@@ -26,6 +26,7 @@ public class DateUtils {
     public final static SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public final static SimpleDateFormat format3 = new SimpleDateFormat("yyyy年MM月dd日");
+    public final static SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     public final static SimpleDateFormat format_year= new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat format_month= new SimpleDateFormat("MM");
     public final static SimpleDateFormat format_day= new SimpleDateFormat("dd");

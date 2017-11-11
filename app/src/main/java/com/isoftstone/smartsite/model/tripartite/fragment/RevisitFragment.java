@@ -1,7 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -13,7 +12,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -42,10 +40,13 @@ import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.SPUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 回访下面的白嫩及矿
@@ -313,12 +314,13 @@ public class RevisitFragment extends BaseFragment {
 //                    }
 //                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
                 //dialog.show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-                builder.setView(view);
-                AlertDialog dialog = builder.create();
-                initTimePicker(dialog, view, mBeginTime, mLabTime);
-                dialog.show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+//                builder.setView(view);
+//                AlertDialog dialog = builder.create();
+//                initTimePicker(dialog, view, mBeginTime, mLabTime);
+//                dialog.show();
+                showDatePickerDialog(mBeginTime, mLabTime);
             }
 
         });
@@ -338,12 +340,13 @@ public class RevisitFragment extends BaseFragment {
 //                    }
 //                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
 //                dialog.show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-                builder.setView(view);
-                AlertDialog dialog = builder.create();
-                initTimePicker(dialog, view, mEndTime, mLabTime);
-                dialog.show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+//                builder.setView(view);
+//                AlertDialog dialog = builder.create();
+//                initTimePicker(dialog, view, mEndTime, mLabTime);
+//                dialog.show();
+                showDatePickerDialog(mEndTime, mLabTime);
             }
 
         });
@@ -364,12 +367,14 @@ public class RevisitFragment extends BaseFragment {
 //                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
 //
 //                dialog.show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
-                builder.setView(view);
-                AlertDialog dialog = builder.create();
-                initTimePicker(dialog, view, mEditRevisitTime, mRevisitTime);
-                dialog.show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Custom_DatePicker_style);
+//                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time_piker, null);
+//                builder.setView(view);
+//                AlertDialog dialog = builder.create();
+//                initTimePicker(dialog, view, mEditRevisitTime, mRevisitTime);
+//                dialog.show();
+
+                showDatePickerDialog(mEditRevisitTime, mRevisitTime);
             }
 
         });
@@ -693,5 +698,31 @@ public class RevisitFragment extends BaseFragment {
         Log.e(TAG, "yanlog remove end size:" + mData.size());
         Log.e(TAG, "yanlog mData at 0:" + mData.get(0));
         mAttachAdapter.notifyDataSetChanged();
+    }
+
+
+    public void showDatePickerDialog(final TextView editRight, final TextView labLeft) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+
+        CustomDatePicker customDatePicker = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                try {
+                    editRight.setText(DateUtils.format2.format(DateUtils.format4.parse(time)));
+                    labLeft.setCompoundDrawables(mWattingChanged, null, null, null);
+                    editRight.setTextColor(mRes.getColor(R.color.main_text_color));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, "1970-01-01 00:00", "2099-12-12 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker.showSpecificTime(true); // 不显示时和分
+        //customDatePicker.showYearMonth();
+        customDatePicker.setIsLoop(false); // 不允许循环滚动
+        //customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
+        customDatePicker.show(DateUtils.format4.format(new Date()));
     }
 }

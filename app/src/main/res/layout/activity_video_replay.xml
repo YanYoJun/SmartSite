@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background">
@@ -16,6 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
         android:layout_alignParentTop="true"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
         android:background="@color/colorPrimary">
 
         <RelativeLayout
@@ -29,6 +32,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
                 android:background="@drawable/selector_pressed"
                 android:id="@+id/iv_back"/>
 
@@ -62,7 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/play_seekbar_layout_margin_left"
+        android:layout_marginRight="@dimen/play_seekbar_layout_margin_left"
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
@@ -95,6 +100,8 @@
                 android:minHeight="2dp"
                 android:layout_toRightOf="@id/video_stop_for_land"
                 android:layout_toLeftOf="@+id/show_small_screen_view"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/slidicon" />
 
@@ -145,6 +152,8 @@
             android:minHeight="2dp"
             android:layout_toRightOf="@id/video_stop_for_port"
             android:layout_toLeftOf="@id/show_full_screen_view"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:progressDrawable="@drawable/seekbar_style"
             android:thumb="@drawable/slidicon" />
     </RelativeLayout>
@@ -287,8 +296,7 @@
                 android:gravity="center"
                 android:background="@drawable/bg_edittext"
                 android:layout_alignParentRight="true"
-                android:layout_alignBottom="@+id/textView9"
-                android:layout_alignTop="@+id/textView9"
+                android:layout_centerVertical="true"
                 />
         </RelativeLayout>
 

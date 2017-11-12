@@ -70,7 +70,7 @@
     <color name="report_item_title_bg">#fbfbfb</color>
     <color name="back_pressed">#eeeeeeee</color>
     <color name="map_banner_text_color">#424242</color>
-    <color name="map_item_normal">#f9f9f9</color>
+    <color name="map_item_normal">#feffff</color>
     <color name="map_item_press">#dddee0</color>
     <color name="common_press">#11000000</color>
     <!-- map   end -->

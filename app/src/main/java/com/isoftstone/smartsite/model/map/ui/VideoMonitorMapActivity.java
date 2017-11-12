@@ -182,6 +182,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
         if(type == TYPE_CAMERA){
             if(currentCameraDevice.getDeviceCoding().length() >= 10){
                 tv_deviceNumber.setText(currentCameraDevice.getDeviceCoding().substring(0,10));
+            } else {
+                tv_deviceNumber.setText(currentCameraDevice.getDeviceCoding());
             }
             if("0".equals(currentCameraDevice.getDeviceStatus())){
                 tv_isOnline.setText("在线");
@@ -605,6 +607,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                 currentCameraDevice = device;
                 if(device.getDeviceCoding().length() >= 10){
                     tv_deviceNumber.setText(device.getDeviceCoding().substring(0,10));
+                }else {
+                    tv_deviceNumber.setText(device.getDeviceCoding());
                 }
                 if("0".equals(device.getDeviceStatus())){
                     tv_isOnline.setText("在线");

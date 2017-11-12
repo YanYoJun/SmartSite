@@ -528,6 +528,8 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 currentVideoBean = bean;
                 if(bean.getDeviceCoding().length() >= 10){
                     tv_deviceNumber.setText(bean.getDeviceCoding().substring(0,10));
+                } else {
+                    tv_deviceNumber.setText(bean.getDeviceCoding());
                 }
                 if("0".equals(bean.getDeviceStatus())){
                     tv_isOnline.setText("在线");

@@ -12,6 +12,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.CheckReportAdapter;
 import com.isoftstone.smartsite.model.tripartite.data.ReportData;
+import com.isoftstone.smartsite.utils.LogUtils;
 
 import java.util.ArrayList;
 
@@ -49,6 +50,12 @@ public class CheckReportMainFragment extends BaseFragment {
         mDatas.clear();
         //TODO 这个地方不应该是addAll，应该是巡查人员是我的人
         Log.e(TAG, "onDataSetChanged");
+        if(!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()){
+            return;
+        }else{
+            LogUtils.i(TAG,"hash patrol_accept");
+        }
+
         new AsyncTask<Void, Void, Void>() {
 
             @Override

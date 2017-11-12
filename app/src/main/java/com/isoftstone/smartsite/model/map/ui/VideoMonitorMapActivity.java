@@ -69,7 +69,7 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
 
     private LatLng aotiLatLon = new LatLng(30.482348,114.514417);
     private PopupWindow mPopWindow;
-    private List<DataQueryVoBean> envir_devices;
+    private ArrayList<DataQueryVoBean> envir_devices;
     private List<DevicesBean> camera_devices;
 
 
@@ -549,6 +549,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         Intent intent = new Intent();
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
                         intent.putExtra("address",currentEnvirDevice.getDeviceName());
+                        intent.putExtra("devices",envir_devices);
+                        intent.putExtra("position",position);
                         intent.setClass(this, PMDataInfoActivity.class);
                         this.startActivity(intent);
                 }
@@ -578,6 +580,8 @@ public class VideoMonitorMapActivity extends BaseActivity implements View.OnClic
                         //历史数据
                         Intent intent = new Intent();
                         intent.setClass(this, PMHistoryInfoActivity.class);
+                        intent.putExtra("devices",envir_devices);
+                        intent.putExtra("position",position);
                         intent.putExtra("id",currentEnvirDevice.getDeviceId());
                         intent.putExtra("address",currentEnvirDevice.getDeviceName());
                         this.startActivity(intent);

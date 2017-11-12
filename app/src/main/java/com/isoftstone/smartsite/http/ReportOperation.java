@@ -144,6 +144,7 @@ public class ReportOperation {
         try {
             Gson gson = new Gson();
             String json = gson.toJson(reportBean);
+            LogUtils.i(TAG,"addPatrolVisit:"+json);
             RequestBody body = RequestBody.create(HttpPost.JSON, json);
 
             Request request = new Request.Builder()
@@ -175,6 +176,7 @@ public class ReportOperation {
                     .url(strurl)
                     .post(body)
                     .build();
+            LogUtils.i(TAG,"addPatrolReply:"+json);
             Response response = mClient.newCall(request).execute();
             LogUtils.i(TAG,funName+" response code "+response.code());
             if(response.isSuccessful()){
@@ -195,7 +197,7 @@ public class ReportOperation {
             Gson gson = new Gson();
             String json = gson.toJson(reportBean);
             RequestBody body = RequestBody.create(HttpPost.JSON, json);
-
+            LogUtils.i(TAG,"addPatrolCheck:"+json);
             Request request = new Request.Builder()
                     .url(strurl)
                     .post(body)

@@ -49,6 +49,9 @@ public class InspectReportMainFragment extends BaseFragment {
 
     public void onDataSetChanged() {
         Log.e(TAG, "onDataSetChanged");
+        if(!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()){
+            return;
+        }
         new AsyncTask<Void, Void, Void>() {
 
             @Override

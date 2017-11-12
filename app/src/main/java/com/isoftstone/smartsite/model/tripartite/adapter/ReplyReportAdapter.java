@@ -1,7 +1,11 @@
 package com.isoftstone.smartsite.model.tripartite.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,20 +16,23 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.model.tripartite.activity.AddReportActivity;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.data.ReplyReportData;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
+import com.isoftstone.smartsite.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by yanyongjun on 2017/10/29.
@@ -40,17 +47,31 @@ public class ReplyReportAdapter extends BaseAdapter {
     private final static String TAG = "ReplyReportAdapter";
     private String mReportCreator = null;
     private HttpPost mHttpPost = new HttpPost();
+    private Handler mHandler = new Handler();
+    private AttachContentObserver mObserver = new AttachContentObserver();
 
 
     public ReplyReportAdapter(Context context, ReplyReportData data) {
         mContext = context;
         replyReportData = data;
+        mContext.getContentResolver().registerContentObserver(Uri.parse("content://downloads/my_downloads"), true,
+                mObserver);
         if (data.getPatrolBean() == null) {
+            Log.e(TAG,"yanlog data.getPatrolBean == null,return");
             return;
         }
         mData = data.getPatrolBean().getReports();
         mReportCreator = data.getPatrolBean().getCreator().getName();
         mReportData = data.getPatrolBean();
+    }
+
+    public void unRegister() {
+        try {
+            Log.e(TAG,"yanlog unregister content observer");
+            mContext.getContentResolver().unregisterContentObserver(mObserver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -113,7 +134,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_sub_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format2.parse(date));
+            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,7 +164,7 @@ public class ReplyReportAdapter extends BaseAdapter {
 //        TextView lab_next_visit_time = (TextView) v.findViewById(R.id.lab_next_visit_time);
 //        String visitTime = "下次回访时间：" + mReportData.getVisitDate();
 //        try {
-//            visitTime = "下次回访时间：" + DateUtils.format3.format(DateUtils.format2.parse(mReportData.getVisitDate()));
+//            visitTime = "下次回访时间：" + DateUtils.format_yyyy_MM_dd_china.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(mReportData.getVisitDate()));
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
@@ -164,7 +185,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format2.parse(date));
+            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -193,7 +214,7 @@ public class ReplyReportAdapter extends BaseAdapter {
         TextView time = (TextView) v.findViewById(R.id.lab_time);
         String date = data.getDate();
         try {
-            date = DateUtils.format1.format(DateUtils.format2.parse(date));
+            date = DateUtils.format1.format(DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,38 +246,36 @@ public class ReplyReportAdapter extends BaseAdapter {
         }
         final ArrayList<Object> datas = new ArrayList<Object>();
         final ArrayList<String> path = data.getReportFiles();
-       // if (farent != null) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
-            switch (path.size()) {
-                case 1:
-                    gridView.setNumColumns(1);
-                    params.width = 160;
-                    break;
-                case 2:
-                    gridView.setNumColumns(2);
-                    params.width = 380;
-                    break;
-                case 3:
-                    gridView.setNumColumns(3);
-                    params.width = 580;
-                    break;
-                case 4:
-                default:
-                    gridView.setNumColumns(4);
-                    //params.width = 700;
-            }
-            gridView.setLayoutParams(params);
-       // }
+        // if (farent != null) {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+        switch (path.size()) {
+            case 1:
+                gridView.setNumColumns(1);
+                params.width = 160;
+                break;
+            case 2:
+                gridView.setNumColumns(2);
+                params.width = 380;
+                break;
+            case 3:
+                gridView.setNumColumns(3);
+                params.width = 580;
+                break;
+            case 4:
+            default:
+                gridView.setNumColumns(4);
+                //params.width = 700;
+        }
+        gridView.setLayoutParams(params);
+        // }
 
         for (String temp : path) {
             String formatPath = FilesUtils.getFormatString(temp);
             if (TripartiteActivity.mImageList.contains(formatPath)) {
                 String filePath = mHttpPost.getReportPath(data.getId(), temp);
                 if (new File(filePath).exists()) {
-                    Log.e(TAG, "yanlog file exists,no need to download");
                     datas.add(mHttpPost.getReportPath(data.getId(), temp));
                 } else {
-                    Log.e(TAG,"yanlog add image");
                     datas.add(TripartiteActivity.mAttach.get(".image"));
                 }
 
@@ -277,23 +296,28 @@ public class ReplyReportAdapter extends BaseAdapter {
         //mAttachAdapter = new SimpleAdapter(getActivity(), mData, R.layout.add_attach_grid_item, new String[]{"image"}, new int[]{R.id.image});
         final AttachGridViewAdatper attachAdapter = new AttachGridViewAdatper(mContext, datas, true);
         gridView.setAdapter(attachAdapter);
+        attachAdapter.setAllPath(path);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Log.e(TAG, "yanlog click:" + position);
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... voids) {
-                        Object object = datas.get(position);
                         try {
                             String localPath = mHttpPost.getReportPath(data.getId(), path.get(position));
                             if (new File(localPath).exists()) {
+                                Intent intent = FilesUtils.getOpenIntent(new File(localPath),localPath);
+                                mContext.startActivity(intent);
                                 return localPath;
                             } else {
+                                mObserver.addPath(localPath, attachAdapter,path.get(position));
                                 mHttpPost.downloadReportFile(data.getId(), path.get(position));
                                 return localPath;
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                             return null;
                         }
                     }
@@ -302,9 +326,9 @@ public class ReplyReportAdapter extends BaseAdapter {
                     protected void onPostExecute(String aBoolean) {
                         super.onPostExecute(aBoolean);
                         if (aBoolean == null) {
-                            Toast.makeText(mContext, "文件下载失败，请重试", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(mContext, "文件下载失败，请重试", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(mContext, "文件开始下载，路径为:" + aBoolean, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(mContext, "文件开始下载，路径为:" + aBoolean, Toast.LENGTH_LONG).show();
                         }
                     }
                 }.execute();
@@ -335,5 +359,68 @@ public class ReplyReportAdapter extends BaseAdapter {
 //                attachAdapter.notifyDataSetChanged();
 //            }
 //        }.execute();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
+
+    public class AttachContentObserver extends ContentObserver {
+        HashMap<String, AttachGridViewAdatper> mMap = new HashMap<>();
+        HashMap<String,String> mPath = new HashMap<>();
+
+        public AttachContentObserver() {
+            super(mHandler);
+        }
+
+        public synchronized void addPath(String path, AttachGridViewAdatper adapter,String oPath) {
+            mMap.put(path, adapter);
+            mPath.put(path,oPath);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            Log.e(TAG, "yanlog uri file change");
+            super.onChange(selfChange, uri);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            Log.e(TAG, "yanlog onChange");
+            super.onChange(selfChange);
+            synchronized (AttachContentObserver.this) {
+                Iterator<String> iterator = mMap.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String path = iterator.next();
+                    final AttachGridViewAdatper adapter = mMap.get(path);
+                    ArrayList<String> allPath = adapter.getAllPath();
+                    ArrayList<Object> allData = adapter.getAllData();
+                    if (new File(path).exists()) {
+                        String oPath = mPath.get(path);
+                        Log.e(TAG,"yanlog allPathsize:"+allPath.size());
+                        Log.e(TAG,"yanlog oPath:"+oPath);
+                        for (int i = 0; i < allPath.size(); i++) {
+                            Log.e(TAG,"yanlog i:"+i+" curPath:"+allPath.get(i));
+                            String formatPath = FilesUtils.getFormatString(oPath);
+                            if (TripartiteActivity.mImageList.contains(formatPath) && allPath.get(i).equals(oPath)) {
+                                allData.remove(i);
+                                allData.add(i, path);
+                                break;
+                            }
+                        }
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        },1000);
+                        mMap.remove(path);
+                        ToastUtils.showShort("下载完成");
+                    }
+                }
+
+            }
+        }
     }
 }

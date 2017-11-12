@@ -212,7 +212,7 @@ public class CheckFragment extends BaseFragment {
         }
         if (mRadioYes.isChecked()) {
             try {
-                DateUtils.format2.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
+                DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -230,11 +230,11 @@ public class CheckFragment extends BaseFragment {
         //reportBean.setCreator(mHttpPost.mLoginBean.getmName());
         reportBean.setContent(mEditContent.getText().toString()); //TODO
         reportBean.setVisit(mRadioYes.isChecked());
-        reportBean.setDate(DateUtils.format2.format(new Date()));
+        reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
         if (mRadioYes.isChecked()) {
             String visitTime = mEditRevisitTime.getText().toString();
             try {
-                visitTime = DateUtils.format2.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
+                visitTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

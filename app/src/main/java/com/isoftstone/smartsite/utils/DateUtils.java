@@ -24,12 +24,12 @@ import java.util.TimeZone;
 
 public class DateUtils {
     public final static SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-    public final static SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public final static SimpleDateFormat format3 = new SimpleDateFormat("yyyy年MM月dd日");
-    public final static SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    public final static SimpleDateFormat format_year= new SimpleDateFormat("yyyy");
-    public final static SimpleDateFormat format_month= new SimpleDateFormat("MM");
-    public final static SimpleDateFormat format_day= new SimpleDateFormat("dd");
+    public final static SimpleDateFormat format_yyyy_MM_dd_HH_mm_ss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public final static SimpleDateFormat format_yyyy_MM_dd_china = new SimpleDateFormat("yyyy年MM月dd日");
+    public final static SimpleDateFormat format_yyyy_MM_dd_HH_mm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public final static SimpleDateFormat format_yyyy = new SimpleDateFormat("yyyy");
+    public final static SimpleDateFormat format_MM = new SimpleDateFormat("MM");
+    public final static SimpleDateFormat format_dd = new SimpleDateFormat("dd");
     public final static SimpleDateFormat format_hour= new SimpleDateFormat("HH");
     public final static SimpleDateFormat format_min= new SimpleDateFormat("mm");
 

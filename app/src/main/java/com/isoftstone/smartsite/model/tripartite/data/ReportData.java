@@ -66,7 +66,7 @@ public class ReportData extends PatrolBean {
             return mRevisitDate;
         }
         try{
-            mRevisitDate = DateUtils.format2.parse(getVisitDate());
+            mRevisitDate = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(getVisitDate());
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -23,6 +23,7 @@ public class AttachGridViewAdatper extends BaseAdapter {
     private Resources mRes = null;
     private final static String TAG = "AttachGridViewAdapter";
     private boolean mIsPath = false;
+    private ArrayList<String> mAllPath = new ArrayList<>();
 
     public AttachGridViewAdatper(Context context, ArrayList<Object> datas) {
         mDatas = datas;
@@ -73,4 +74,17 @@ public class AttachGridViewAdatper extends BaseAdapter {
         }
         return convertView;
     }
+
+    public void setAllPath(ArrayList<String> path){
+        mAllPath = path;
+    }
+    public ArrayList<String> getAllPath(){
+        return mAllPath;
+    }
+
+    public ArrayList<Object> getAllData(){
+        return mDatas;
+    }
+
+
 }

@@ -142,8 +142,8 @@ public class RevisitFragment extends BaseFragment {
 
     private String parseTime(String time) {
         try {
-            Date date = DateUtils.format2.parse(time);
-            String result = DateUtils.format2.format(date);
+            Date date = DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(time);
+            String result = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(date);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +242,7 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setDevelopmentCompany(developmentCompany);
                     reportData.setConstructionCompany(constructionCompany);
                     reportData.setSupervisionCompany(supervisionCompany);
-                    reportData.setDate(DateUtils.format2.format(new Date()));
+                    reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                     //
                     UserBean user = new UserBean();
                     reportData.setCreator(user);
@@ -277,7 +277,7 @@ public class RevisitFragment extends BaseFragment {
                 reportBean.setContent(reportMsg);
                 reportBean.setCategory(1);
                 reportBean.setName(reportName);
-                reportBean.setDate(DateUtils.format2.format(new Date()));
+                reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
                 reportBean.setVisit(visit);
 
                 reportData.setVisit(visit);
@@ -470,13 +470,13 @@ public class RevisitFragment extends BaseFragment {
         Date curData = new Date();
         year.setMinValue(2016);
         year.setMaxValue(2099);
-        year.setValue(Integer.parseInt(DateUtils.format_year.format(curData)));
+        year.setValue(Integer.parseInt(DateUtils.format_yyyy.format(curData)));
         month.setMaxValue(12);
         month.setMinValue(1);
-        month.setValue(Integer.parseInt(DateUtils.format_month.format(curData)));
+        month.setValue(Integer.parseInt(DateUtils.format_MM.format(curData)));
         day.setMaxValue(31);
         day.setMinValue(1);
-        day.setValue(Integer.parseInt(DateUtils.format_day.format(curData)));
+        day.setValue(Integer.parseInt(DateUtils.format_dd.format(curData)));
         month.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -589,7 +589,7 @@ public class RevisitFragment extends BaseFragment {
                 //mRevisitData.setCreator(mReportData.getCreator());
 
             }
-            mRevisitData.setDate(DateUtils.format2.format(new Date()));
+            mRevisitData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
             mRevisitData.setStatus(2);
             mHttpPost.addPatrolVisit(mRevisitData);
 
@@ -710,7 +710,7 @@ public class RevisitFragment extends BaseFragment {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
                 try {
-                    editRight.setText(DateUtils.format2.format(DateUtils.format4.parse(time)));
+                    editRight.setText(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(time)));
                     labLeft.setCompoundDrawables(mWattingChanged, null, null, null);
                     editRight.setTextColor(mRes.getColor(R.color.main_text_color));
                 } catch (Exception e) {
@@ -723,6 +723,6 @@ public class RevisitFragment extends BaseFragment {
         //customDatePicker.showYearMonth();
         customDatePicker.setIsLoop(false); // 不允许循环滚动
         //customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
-        customDatePicker.show(DateUtils.format4.format(new Date()));
+        customDatePicker.show(DateUtils.format_yyyy_MM_dd_HH_mm.format(new Date()));
     }
 }

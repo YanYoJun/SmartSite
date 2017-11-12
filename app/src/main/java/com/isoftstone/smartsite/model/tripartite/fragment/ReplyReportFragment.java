@@ -122,7 +122,7 @@ public class ReplyReportFragment extends BaseFragment {
         reportBean.setPatrol(tempBean);
         //reportBean.setCreator(mHttpPost.mLoginBean.getmName());
         reportBean.setContent(mEditContent.getText().toString()); //TODO
-        reportBean.setDate(DateUtils.format2.format(new Date()));
+        reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
         reportBean.setCategory(2);
         reportBean.setStatus(mActivity.getReportData().getStatus());
         return reportBean;

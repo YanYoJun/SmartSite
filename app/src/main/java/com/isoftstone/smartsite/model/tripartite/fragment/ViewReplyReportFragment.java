@@ -48,4 +48,9 @@ public class ViewReplyReportFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onDestroy() {
+        mAdapter.unRegister();
+        super.onDestroy();
+    }
 }

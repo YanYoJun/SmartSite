@@ -29,6 +29,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
@@ -207,7 +208,7 @@ public class CheckFragment extends BaseFragment {
         if (TextUtils.isEmpty(mEditContent.getText())) {
             return false;
         }
-        if(mReportData.isVisit()){
+        if (mReportData.isVisit()) {
             return true;
         }
         if (mRadioYes.isChecked()) {
@@ -229,18 +230,25 @@ public class CheckFragment extends BaseFragment {
         reportBean.setPatrol(tempBeam);
         //reportBean.setCreator(mHttpPost.mLoginBean.getmName());
         reportBean.setContent(mEditContent.getText().toString()); //TODO
-        reportBean.setVisit(mRadioYes.isChecked());
+
         reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
-        if (mRadioYes.isChecked()) {
-            String visitTime = mEditRevisitTime.getText().toString();
-            try {
-                visitTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (!mReportData.isVisit()) {
+            if (mRadioYes.isChecked()) {
+                String visitTime = "";
+                try {
+                    visitTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                reportBean.setVisitDate(visitTime);
             }
-            reportBean.setVisitDate(visitTime);
+            reportBean.setVisit(mRadioYes.isChecked());
         }
         reportBean.setCategory(3);
+        UserBean userBean = new UserBean();
+        userBean.setId(mHttpPost.mLoginBean.getmUserBean().getId());
+        Log.e(TAG,"yanlog checkid:"+mHttpPost.mLoginBean.getmUserBean().getId()+" checkName:"+mHttpPost.mLoginBean.getmUserBean().getAccount());
+        reportBean.setCreator(userBean);
         return reportBean;
     }
 
@@ -264,6 +272,7 @@ public class CheckFragment extends BaseFragment {
         if (mLoginingDlg != null && mLoginingDlg.isShowing())
             mLoginingDlg.dismiss();
     }
+
     private class DealTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {

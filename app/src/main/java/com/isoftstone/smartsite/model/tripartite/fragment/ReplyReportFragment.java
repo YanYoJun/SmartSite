@@ -21,6 +21,7 @@ import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.http.ReportBean;
+import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.model.tripartite.activity.TripartiteActivity;
 import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
@@ -125,6 +126,9 @@ public class ReplyReportFragment extends BaseFragment {
         reportBean.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
         reportBean.setCategory(2);
         reportBean.setStatus(mActivity.getReportData().getStatus());
+        UserBean userBean = new UserBean();
+        userBean.setId(mHttpPost.mLoginBean.getmUserBean().getId());
+        tempBean.setCreator(userBean);
         return reportBean;
     }
 

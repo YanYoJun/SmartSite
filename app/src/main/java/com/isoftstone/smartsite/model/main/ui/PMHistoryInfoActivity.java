@@ -32,7 +32,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DataQueryVoBean;
+import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.PMDevicesDataBean;
 import com.isoftstone.smartsite.http.PMDevicesDataInfoBean;
@@ -45,7 +47,7 @@ import java.util.ArrayList;
  * Created by gone on 2017/10/21.
  */
 
-public class PMHistoryInfoActivity extends Activity {
+public class PMHistoryInfoActivity extends BaseActivity {
     private ImageButton mImageView_back = null;
     private ImageButton mImageView_icon = null;
     private TextView toolbar_title = null;
@@ -62,11 +64,18 @@ public class PMHistoryInfoActivity extends Activity {
     private String address;
     private String[] data = {"5分钟","1小时","24小时","1个月"};
     private Spinner mJiangeSpinner;
-    private String type = "1";
+    private int position;
+    private ArrayList<DataQueryVoBean> mData  = null;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_pmhistoryinfo);
+    protected int getLayoutRes() {
+        return R.layout.activity_pmhistoryinfo;
+    }
+
+    @Override
+    protected void afterCreated(Bundle savedInstanceState) {
+        position = getIntent().getIntExtra("position",0);
+        mData = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
         devicesId = getIntent().getIntExtra("id",0);
         address = getIntent().getStringExtra("address");
         init();
@@ -116,12 +125,14 @@ public class PMHistoryInfoActivity extends Activity {
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int posit, long id) {
                 if(list != null){
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(),PMDataInfoActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("devicesbean",list.get(position));
+                    intent.putExtra("devicesbean",list.get(posit));
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("position",position);
                     getApplicationContext().startActivity(intent);
                 }
             }
@@ -133,10 +144,17 @@ public class PMHistoryInfoActivity extends Activity {
         mGotoMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //跳转到地图
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(),VideoMonitorMapActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                if(mData != null){
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("position",position);
+                    intent.putExtra("type",VideoMonitorMapActivity.TYPE_ENVIRONMENT);
+                    intent.setClass(getBaseContext(),VideoMonitorMapActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(intent);
+                }
+
             }
         });
     }
@@ -146,6 +164,7 @@ public class PMHistoryInfoActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HANDLER_GET_DATA_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -157,6 +176,7 @@ public class PMHistoryInfoActivity extends Activity {
                 break;
                 case  HANDLER_GET_DATA_END:{
                     setmListViewData();
+                    closeDlg();
                 }
                 break;
             }

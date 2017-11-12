@@ -180,7 +180,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 		mLoginingDlg = new Dialog(this, R.style.loginingDlg);
 		mLoginingDlg.setContentView(R.layout.logining_dlg);
 
-		mLoginingDlg.setCanceledOnTouchOutside(true); // 设置点击Dialog外部任意区域关闭Dialog
+		mLoginingDlg.setCanceledOnTouchOutside(false); // 设置点击Dialog外部任意区域关闭Dialog
 	}
 
 	/* 显示正在登录对话框 */

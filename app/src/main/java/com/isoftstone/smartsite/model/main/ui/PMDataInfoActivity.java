@@ -31,6 +31,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.gson.internal.bind.DateTypeAdapter;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.DataQueryVoBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.model.main.listener.OnConvertViewClickListener;
@@ -46,7 +47,7 @@ import java.util.Date;
  * Created by gone on 2017/10/21.
  */
 
-public class PMDataInfoActivity extends Activity {
+public class PMDataInfoActivity extends BaseActivity {
     private HttpPost mHttpPsot = new HttpPost();
     private LineChart mLineChart = null;
     private TextView mDevicesName = null;
@@ -81,12 +82,18 @@ public class PMDataInfoActivity extends Activity {
     private Spinner shujuSpinner = null;
     private String[] name = {"PM2.5","PM10","co2"};
     private String begintime = "";
+    private int position;
+    private ArrayList<DataQueryVoBean> mData  = null;
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_pmdatainfo;
+    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_pmdatainfo);
+    protected void afterCreated(Bundle savedInstanceState) {
         DataQueryVoBean dataQueryVoBean = (DataQueryVoBean)getIntent().getSerializableExtra("devicesbean");
+        position = getIntent().getIntExtra("position",0);
+        mData = (ArrayList<DataQueryVoBean>) getIntent().getSerializableExtra("devices");
         if(dataQueryVoBean != null){
             devicesId = dataQueryVoBean.getDeviceId();
             address = dataQueryVoBean.getDeviceName();
@@ -96,11 +103,9 @@ public class PMDataInfoActivity extends Activity {
             address = getIntent().getStringExtra("address");
             begintime = "";
         }
-
         init();
         setOnCliceked();
         mHandler.sendEmptyMessage(HANDLER_GET_DATA_START);
-        mHandler.sendEmptyMessage(HANDLER_GET_24DATA_START);
     }
 
     private void init(){
@@ -170,6 +175,7 @@ public class PMDataInfoActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HANDLER_GET_DATA_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -181,9 +187,12 @@ public class PMDataInfoActivity extends Activity {
                 break;
                 case  HANDLER_GET_DATA_END:{
                     setData();
+                    closeDlg();
+                    mHandler.sendEmptyMessage(HANDLER_GET_24DATA_START);
                 }
                 break;
                 case HANDLER_GET_24DATA_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -195,6 +204,7 @@ public class PMDataInfoActivity extends Activity {
                 break;
                 case  HANDLER_GET_24DATA_END:{
                     setLineChart();
+                    closeDlg();
                 }
                 break;
             }
@@ -230,9 +240,14 @@ public class PMDataInfoActivity extends Activity {
             public void onClick(View v) {
                 //跳转到地图
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(),VideoMonitorMapActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                if(mData != null){
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("type",VideoMonitorMapActivity.TYPE_ENVIRONMENT);
+                    intent.putExtra("position",position);
+                    intent.setClass(getBaseContext(),VideoMonitorMapActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(intent);
+                }
             }
         });
     }

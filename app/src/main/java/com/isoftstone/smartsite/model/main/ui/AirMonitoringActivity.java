@@ -58,6 +58,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.isoftstone.smartsite.R;
+import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.http.EQIRankingBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.MonthlyComparisonBean;
@@ -81,7 +82,7 @@ import java.util.Random;
  * modifed by zhangyinfu on 2017/10/19
  */
 
-public class AirMonitoringActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class AirMonitoringActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private HttpPost mHttpPost = new HttpPost();
     private String getEqiDataRankingTime;    //
     private String geteqiDataRankingarchid = "1";
@@ -136,16 +137,19 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
     private ListView checkBoxListView;
     private MyCheckboxAdapter checkboxAdapter;
     private PopupWindow mCheckBoxPopWindow;
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_airmonitoring;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_airmonitoring);
+    protected void afterCreated(Bundle savedInstanceState) {
         init();
         setOnCliceked();
         initDatePicker();
         mHandler.sendEmptyMessage(HANDLER_GET_RANKING_START);
     }
+
     private void init(){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
         mRankTime = (TextView)findViewById(R.id.date);
@@ -252,6 +256,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HANDLER_GET_RANKING_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -273,9 +278,11 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                     setHorizontalBarChart();
                     setSpinnerData();
                     mHandler.sendEmptyMessage(HANDLER_GET_QUYUDUIBI_START);
+                    closeDlg();
                 }
                 break;
                 case HANDLER_GET_DAYS_PROPORTION_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -292,6 +299,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 }
                 break;
                 case HANDLER_GET_COMPARISON_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -306,9 +314,11 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 case HANDLER_GET_COMPARISON_END:{
                     setLineChart();
                     setLineChart_quyu();
+                    closeDlg();
                 }
                 break;
                 case HANDLER_GET_QUYUDUIBI_START:{
+                    showDlg("数据加载中，请稍等");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -323,6 +333,7 @@ public class AirMonitoringActivity extends Activity implements View.OnClickListe
                 break;
                 case HANDLER_GET_QUYUDUIBI_END:{
                     setLineChart_quyu();
+                    closeDlg();
                 }
                 break;
             }

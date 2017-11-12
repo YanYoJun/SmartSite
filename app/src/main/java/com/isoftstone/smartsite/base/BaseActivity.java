@@ -1,10 +1,13 @@
 package com.isoftstone.smartsite.base;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
+import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.common.AppManager;
 import com.isoftstone.smartsite.http.PatrolBean;
 import com.isoftstone.smartsite.utils.StatusViewUtils;
@@ -12,6 +15,8 @@ import com.isoftstone.smartsite.utils.StatusViewUtils;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected String TAG = this.getClass().getSimpleName();
+    private Dialog mLoginingDlg; // 显示正在登录的Dialog
+    private TextView dlg_textview = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         StatusViewUtils.initStatusBar(this);
 
         afterCreated(savedInstanceState);
+
+        initLoginingDlg();
 
     }
 
@@ -70,5 +77,27 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public PatrolBean getReportData(){
         return null;
+    }
+
+    private void initLoginingDlg() {
+
+        mLoginingDlg = new Dialog(this, R.style.loginingDlg);
+        mLoginingDlg.setContentView(R.layout.logining_dlg);
+        dlg_textview = (TextView) mLoginingDlg.findViewById(R.id.dlg_textview);
+        mLoginingDlg.setCanceledOnTouchOutside(false); // 设置点击Dialog外部任意区域关闭Dialog
+    }
+
+    /* 显示正在登录对话框 */
+    public void showDlg(String text) {
+        if (mLoginingDlg != null){
+            dlg_textview.setText(text);
+            mLoginingDlg.show();
+        }
+    }
+
+    /* 关闭正在登录对话框 */
+    public void closeDlg() {
+        if (mLoginingDlg != null && mLoginingDlg.isShowing())
+            mLoginingDlg.dismiss();
     }
 }

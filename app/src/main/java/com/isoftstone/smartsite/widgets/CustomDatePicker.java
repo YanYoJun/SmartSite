@@ -4,8 +4,10 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -125,6 +127,21 @@ public class CustomDatePicker {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
                 handler.handle(sdf.format(selectedCalender.getTime()));
                 datePickerDialog.dismiss();
+            }
+        });
+        datePickerDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN){
+                    switch (keyCode){
+                        case KeyEvent.KEYCODE_BACK:{
+                            datePickerDialog.dismiss();
+                            return  true;
+                        }
+                    }
+                }
+
+                return false;
             }
         });
     }

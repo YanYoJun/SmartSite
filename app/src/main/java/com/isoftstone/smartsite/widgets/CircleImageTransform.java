@@ -53,4 +53,6 @@ public class CircleImageTransform extends BitmapTransformation {
         canvas.drawCircle(r, r, r, paint);
         return result;
     }
+
+
 }

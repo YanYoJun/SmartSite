@@ -52,7 +52,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
 
 
     private LayoutInflater mInflater;
-    private ArrayList<DataQueryVoBean> mData = new ArrayList<DataQueryVoBean>();
+    private  ArrayList<DataQueryVoBean> mData = new ArrayList<DataQueryVoBean>();
     private Context mContext = null;
     private final String IMAGE_TYPE = "image/*";
 
@@ -157,6 +157,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
         String no2 = "NO2：<font color='" + COLOR_0 + "'>" + pm_so2 + "</font>";
         holder.NO2.setText(Html.fromHtml(no2));
 
+        final int map_position = position;
         holder.button_1.setOnClickListener(new OnConvertViewClickListener(convertView, position) {
 
             @Override
@@ -166,6 +167,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 if(null != viewHolder) {
                     //实时数据
                     Intent intent = new Intent();
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("position",map_position);
                     intent.putExtra("id",devices.getDeviceId());
                     intent.putExtra("address","设备名称"+devices.getDeviceName());
                     intent.setClass(mContext, PMDataInfoActivity.class);
@@ -186,6 +189,8 @@ public class PMDevicesListAdapter extends BaseAdapter {
                     //历史数据
                     Intent intent = new Intent();
                     intent.setClass(mContext, PMHistoryInfoActivity.class);
+                    intent.putExtra("devices",mData);
+                    intent.putExtra("position",map_position);
                     intent.putExtra("id",devices.getDeviceId());
                     intent.putExtra("address","设备名称"+devices.getDeviceName());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -196,7 +201,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
             }
         });
 
-        final int map_position = position;
+
         holder.gotomap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -73,11 +73,12 @@ public class HttpPost {
 
 
     public static  LoginBean mLoginBean = null;
-    private static HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+    public static CookiesManager mCookiesManager = null;
     public HttpPost(){
         if (mClient == null){
+            mCookiesManager = new CookiesManager(App.getAppContext());
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(new CookiesManager(App.getAppContext()))
+                    .cookieJar(mCookiesManager)
                     .build();
         }
     }
@@ -102,6 +103,8 @@ public class HttpPost {
     登录专用接口，传入用户名，密码，以及设备ID号
      */
     public LoginBean login(String username, String password, String mobileDeviceId){
+
+        mCookiesManager.removeAll();
 
         if (mLoginBean == null)
         {

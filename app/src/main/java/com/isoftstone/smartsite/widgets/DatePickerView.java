@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -338,5 +339,4 @@ public class DatePickerView extends View {
     public void setIsLoop(boolean isLoop) {
         loop = isLoop;
     }
-
 }

@@ -128,7 +128,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
     private PopupWindow mPopWindow;
     private Marker roundMarker;
 
-    private float zoom = 12f;
+    private float zoom = 13f;
     private CameraPosition mCameraPosition;
     private double mLat,mLon = 0;
 
@@ -526,7 +526,9 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             if(marker.getObject() instanceof DevicesBean){
                 DevicesBean bean = (DevicesBean) marker.getObject();
                 currentVideoBean = bean;
-                tv_deviceNumber.setText(bean.getDeviceCoding());
+                if(bean.getDeviceCoding().length() >= 10){
+                    tv_deviceNumber.setText(bean.getDeviceCoding().substring(0,10));
+                }
                 if("0".equals(bean.getDeviceStatus())){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);
@@ -538,7 +540,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_bad);
                 }
                 tv_deviceTime.setText("安装日期：" + bean.getInstallTime().substring(0,10));
-                tv_deviceAddress.setText(bean.getArch().getName());
+                tv_deviceAddress.setText(bean.getDeviceName());
                 if("0".equals(bean.getDeviceStatus())){
                     videoView.setClickable(true);
                     videoView.setEnabled(true);
@@ -580,7 +582,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
             }else if(marker.getObject() instanceof DataQueryVoBean){
                 DataQueryVoBean bean = (DataQueryVoBean) marker.getObject();
                 currentEnvirBean = bean;
-                tv_deviceNumber.setText(bean.getDeviceCoding() + "");
+                tv_deviceNumber.setText(bean.getDeviceCoding());
                 if(0 == bean.getDeviceStatus()){
                     tv_isOnline.setText("在线");
                     tv_isOnline.setBackgroundResource(R.drawable.shape_map_online);

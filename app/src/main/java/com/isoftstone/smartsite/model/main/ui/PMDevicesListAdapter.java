@@ -196,6 +196,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
             }
         });
 
+        final int map_position = position;
         holder.gotomap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,6 +204,7 @@ public class PMDevicesListAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.putExtra("devices",mData);
                 intent.putExtra("type",VideoMonitorMapActivity.TYPE_ENVIRONMENT);
+                intent.putExtra("position",map_position);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);

@@ -79,7 +79,7 @@ public class VideoMonitorAdapter extends BaseAdapter {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder = null;
         if (null == convertView) {
@@ -177,10 +177,9 @@ public class VideoMonitorAdapter extends BaseAdapter {
             public void onClick(View v) {
                 //跳转到地图
                 Intent intent = new Intent();
-                ArrayList<DevicesBean> beans = new ArrayList<DevicesBean>();
-                beans.add(devicesBean);
                 intent.putExtra("type",TYPE_CAMERA);
-                intent.putExtra("devices",beans);
+                intent.putExtra("devices",mData);
+                intent.putExtra("position",position);
                 intent.setClass(mContext,VideoMonitorMapActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);

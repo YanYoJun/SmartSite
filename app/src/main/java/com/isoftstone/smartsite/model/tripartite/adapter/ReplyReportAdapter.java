@@ -308,7 +308,7 @@ public class ReplyReportAdapter extends BaseAdapter {
                         try {
                             String localPath = mHttpPost.getReportPath(data.getId(), path.get(position));
                             if (new File(localPath).exists()) {
-                                Intent intent = FilesUtils.getOpenIntent(new File(localPath),localPath);
+                                Intent intent = FilesUtils.getOpenIntent(mContext,new File(localPath),localPath);
                                 mContext.startActivity(intent);
                                 return localPath;
                             } else {

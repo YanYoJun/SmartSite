@@ -4,5 +4,8 @@
         name="download"
         path="download"
         ></external-path>
-
+    <external-path
+        name="external_storage_root"
+        path="isoftstone"
+        ></external-path>
 </paths>

@@ -35,10 +35,13 @@ import com.isoftstone.smartsite.model.tripartite.adapter.AttachGridViewAdatper;
 import com.isoftstone.smartsite.utils.DateUtils;
 import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.widgets.CustomDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 点击验收后，下面验收的编辑框
@@ -156,16 +159,17 @@ public class CheckFragment extends BaseFragment {
         mEditRevisitTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                        //mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
-                        mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
-                        mLabRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
-                    }
-                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
-                dialog.show();
+//                DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        mEditRevisitTime.setText("" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+//                        //mRevisitDate = new ITime(year, monthOfYear + 1, dayOfMonth);
+//                        mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
+//                        mLabRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
+//                    }
+//                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH));
+//                dialog.show();
+                showDatePickerDialog();
             }
         });
     }
@@ -213,7 +217,8 @@ public class CheckFragment extends BaseFragment {
         }
         if (mRadioYes.isChecked()) {
             try {
-                DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
+                Log.e(TAG,"yanlog checkfrag" + mEditRevisitTime.getText().toString());
+                DateUtils.format_yyyy_MM_dd_HH_mm_ss.parse(mEditRevisitTime.getText().toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -236,7 +241,7 @@ public class CheckFragment extends BaseFragment {
             if (mRadioYes.isChecked()) {
                 String visitTime = "";
                 try {
-                    visitTime = DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format1.parse(mEditRevisitTime.getText().toString()));
+                    visitTime = mEditRevisitTime.getText().toString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -373,5 +378,30 @@ public class CheckFragment extends BaseFragment {
         mAttachAdapter.notifyDataSetChanged();
         mAttachView.requestLayout();
         mAttachView.setMinimumHeight(600);
+    }
+
+    public void showDatePickerDialog() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date());
+
+        CustomDatePicker customDatePicker = new CustomDatePicker(getActivity(), new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                try {
+                    mEditRevisitTime.setText(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(DateUtils.format_yyyy_MM_dd_HH_mm.parse(time)));
+                    mLabRevisitTime.setCompoundDrawables(mWattingChanged, null, null, null);
+                    mEditRevisitTime.setTextColor(mRes.getColor(R.color.main_text_color));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, "1970-01-01 00:00", "2099-12-12 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker.showSpecificTime(true); // 不显示时和分
+        //customDatePicker.showYearMonth();
+        customDatePicker.setIsLoop(false); // 不允许循环滚动
+        //customDatePicker.show(dateText.getText().toString() + " " + timeText.getText().toString());
+        customDatePicker.show(DateUtils.format_yyyy_MM_dd_HH_mm.format(new Date()));
     }
 }

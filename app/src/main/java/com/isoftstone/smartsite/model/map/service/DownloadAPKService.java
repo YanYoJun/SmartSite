@@ -109,9 +109,11 @@ public class DownloadAPKService extends Service {
             folder.mkdirs();
         }
         File[] files = folder.listFiles();
-        for(File file:files){
-            if(file.getName().startsWith("smartsite")){
-                file.delete();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().startsWith("smartsite")) {
+                    file.delete();
+                }
             }
         }
         request.setDestinationInExternalPublicDir("Download", apk_file_name);

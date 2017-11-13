@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.http;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -90,7 +91,14 @@ public class ReportOperation {
         if(visitDate != null && !visitDate.equals("")){
             builder.add("visitDate",visitDate);
         }
+
+        String category = reportBean.getCategory();
+        if(!TextUtils.isEmpty(category)){
+            builder.add("category",category);
+        }
+
         FormBody body =builder.build();
+        Log.e(TAG,"addPatrolReport:"+body);
         Request request = new Request.Builder()
                 .url(strurl)
                 .post(body)

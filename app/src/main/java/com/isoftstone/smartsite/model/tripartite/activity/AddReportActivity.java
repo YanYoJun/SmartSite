@@ -50,7 +50,7 @@ public class AddReportActivity extends BaseActivity {
     public TextView mTypesEditor = null;
     public TextView mAddress = null;
     public TextView mCompany = null;
-    public TextView mTypes = null;
+    public TextView mLabTypes = null;
     public TextView mBuildCompany = null;
     public TextView mConsCompany = null;
     public TextView mSuperCompany = null;
@@ -61,6 +61,7 @@ public class AddReportActivity extends BaseActivity {
     public EditText mEditSuperCompany = null;
     public boolean isSettedType = false;
     public RevisitFragment mRevisitFrag = null;
+    public String mTypes = "1";
 
     public ArrayList<String> mAddressList = new ArrayList<>();
     public ArrayList<String> mTypesList = new ArrayList<>();
@@ -99,7 +100,7 @@ public class AddReportActivity extends BaseActivity {
         mTypesEditor = (TextView) findViewById(R.id.lab_report_types);
         mAddress = (TextView) findViewById(R.id.lab_address);
         mCompany = (TextView) findViewById(R.id.lab_company);
-        mTypes = (TextView) findViewById(R.id.lab_types);
+        mLabTypes = (TextView) findViewById(R.id.lab_types);
         mBuildCompany = (TextView) findViewById(R.id.lab_build_company);
         mConsCompany = (TextView) findViewById(R.id.lab_cons_company);
         mSuperCompany = (TextView) findViewById(R.id.lab_super_company);
@@ -110,7 +111,7 @@ public class AddReportActivity extends BaseActivity {
         mEditSuperCompany = (EditText) findViewById(R.id.edit_super_company);
         mTypesEditor.setTextColor(getResources().getColor(R.color.des_text_color));
         mEditAddress.setTextColor(getResources().getColor(R.color.des_text_color));
-        mRevisitFrag = (RevisitFragment)getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
+        mRevisitFrag = (RevisitFragment) getSupportFragmentManager().findFragmentById(R.id.frag_reply_inspect_report);
     }
 
     public void saveData() {
@@ -136,15 +137,15 @@ public class AddReportActivity extends BaseActivity {
         mEditConsCompany.setText(SPUtils.getString("add_report_cons_company", ""));
         mEditSuperCompany.setText(SPUtils.getString("add_report_super_company", ""));
 
-        String type = SPUtils.getString("add_report_type","");
+        String type = SPUtils.getString("add_report_type", "");
         if (!TextUtils.isEmpty(type)) {
             mTypesEditor.setText(type);
             isSettedType = true;
-            mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
+            mLabTypes.setCompoundDrawables(mWattingChanged, null, null, null);
             mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
         }
 
-        String address = SPUtils.getString("add_report_address","");
+        String address = SPUtils.getString("add_report_address", "");
         if (!TextUtils.isEmpty(address)) {
             mEditAddress.setText(address);
             isSettedAddress = true;
@@ -173,7 +174,8 @@ public class AddReportActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mTypesEditor.setText(mTypesList.get(position));
                         isSettedType = true;
-                        mTypes.setCompoundDrawables(mWattingChanged, null, null, null);
+                        mTypes = position + 1 + "";
+                        mLabTypes.setCompoundDrawables(mWattingChanged, null, null, null);
                         mTypesEditor.setTextColor(getResources().getColor(R.color.main_text_color));
                         dialog.dismiss();
                     }
@@ -335,7 +337,7 @@ public class AddReportActivity extends BaseActivity {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             mAddressList = mHttpPost.getPatrolAddress();
             ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
-            for(DictionaryBean temp:tempLists){
+            for (DictionaryBean temp : tempLists) {
                 mTypesList.add(temp.getContent());
             }
             return null;

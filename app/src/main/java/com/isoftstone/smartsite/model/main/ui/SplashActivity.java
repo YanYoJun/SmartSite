@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.main.ui;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,8 +15,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import com.isoftstone.smartsite.LoginActivity;
 import com.isoftstone.smartsite.R;
@@ -58,6 +62,16 @@ public class SplashActivity extends BaseActivity{
                     break;
 
                 case SHOW_UPDATE_APP_DIALOG:
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        int checkPermission = ContextCompat.checkSelfPermission(SplashActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                        int writePermission = ContextCompat.checkSelfPermission(SplashActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (checkPermission != PackageManager.PERMISSION_GRANTED || writePermission != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{
+                                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS}, 0);
+                            return;
+                        }
+                    }
                     showToUpdateVersionDialog();
                     break;
             }
@@ -102,6 +116,15 @@ public class SplashActivity extends BaseActivity{
     protected void onResume() {
         super.onResume();
         checkeNetWork();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            //Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            showToUpdateVersionDialog();
+            return;
+        }
     }
 
     private void checkeNetWork(){

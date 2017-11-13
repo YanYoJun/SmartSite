@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.tripartite.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -7,7 +8,10 @@ import android.widget.TextView;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.base.BaseActivity;
 import com.isoftstone.smartsite.base.BaseFragment;
+import com.isoftstone.smartsite.http.DictionaryBean;
 import com.isoftstone.smartsite.http.PatrolBean;
+
+import java.util.ArrayList;
 
 /**
  * Created by yanyongjun on 2017/10/19.
@@ -26,6 +30,7 @@ public class ReadReportFrag extends BaseFragment {
     private TextView mSupCompany = null;
     private TextView mLabVisit = null;
     private View mView = null;
+    private ArrayList<String> mTypesList = new ArrayList<>();
 
     @Override
     protected int getLayoutRes() {
@@ -50,6 +55,7 @@ public class ReadReportFrag extends BaseFragment {
         mCosCompany = (TextView) mView.findViewById(R.id.inspect_report_construction_company);
         mSupCompany = (TextView) mView.findViewById(R.id.inspect_report_supervision_company);
         mLabVisit = (TextView) mView.findViewById(R.id.lab_inspect_report_revisit_time);
+        new QueryReportTypeTask().execute();
     }
 
     private void initViewData() {
@@ -59,19 +65,49 @@ public class ReadReportFrag extends BaseFragment {
         if (status > 1) {
             status--;
         }
-        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]); //TODO
-        //mLabTypes.setText(mData.get()); //TODO
+        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
+
         mBuildCompany.setText(mData.getDevelopmentCompany());
         mCosCompany.setText(mData.getConstructionCompany());
         mSupCompany.setText(mData.getSupervisionCompany());
-        if(mData.isVisit()){
+        if (mData.isVisit()) {
             mLabVisit.setText(mData.getVisitDate());
+        }
+
+        try {
+            int category = Integer.parseInt(mData.getCategory());
+            mLabTypes.setText(mTypesList.get(category -1));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void notifyDataChanged() {
         mData = mActivity.getReportData();
         initViewData();
+    }
+
+    private class QueryReportTypeTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+//            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
+            ArrayList<DictionaryBean> tempLists = mHttpPost.getDictionaryList("zh");
+            for (DictionaryBean temp : tempLists) {
+                mTypesList.add(temp.getContent());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                int category = Integer.parseInt(mData.getCategory());
+                mLabTypes.setText(mTypesList.get(category -1 ));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            super.onPostExecute(s);
+        }
     }
 
 

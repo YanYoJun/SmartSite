@@ -228,7 +228,7 @@ public class RevisitFragment extends BaseFragment {
 //                    String address = mAddReportActivity.mEditAddress.getText().toString();
                     String address = mAddReportActivity.mAddressEdittext.getText().toString();
                     String company = mAddReportActivity.mEditCompany.getText().toString();
-                    String type = mAddReportActivity.mTypes.getText().toString();
+                    String type = mAddReportActivity.mTypesEditor.getText().toString();
                     String developmentCompany = mAddReportActivity.mEditBuildCompany.getText().toString();
                     String constructionCompany = mAddReportActivity.mEditConsCompany.getText().toString();
                     String supervisionCompany = mAddReportActivity.mEditSuperCompany.getText().toString();
@@ -243,7 +243,7 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setConstructionCompany(constructionCompany);
                     reportData.setSupervisionCompany(supervisionCompany);
                     reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
-                    reportData.setCategory(type);
+                    reportData.setCategory(mAddReportActivity.mTypes);
                     //
                     UserBean user = new UserBean();
                     reportData.setCreator(user);

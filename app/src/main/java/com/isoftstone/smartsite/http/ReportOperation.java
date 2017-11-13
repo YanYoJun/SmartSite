@@ -92,9 +92,13 @@ public class ReportOperation {
             builder.add("visitDate",visitDate);
         }
 
-//
+        String category = reportBean.getCategory();
+        if(!TextUtils.isEmpty(category)){
+            builder.add("category",category);
+        }
 
         FormBody body =builder.build();
+        Log.e(TAG,"addPatrolReport:"+body);
         Request request = new Request.Builder()
                 .url(strurl)
                 .post(body)

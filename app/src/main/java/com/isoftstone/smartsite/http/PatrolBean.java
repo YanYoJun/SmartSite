@@ -18,6 +18,7 @@ public class PatrolBean {
     private String supervisionCompany;//		监理单位
     private boolean needVisit;  //	是否回访
     private String visitDate;  //	date(yyyy-MM-dd HH:mm:ss)	回访时间
+    private String category;  //巡查类型
     private ArrayList<ReportBean> reports;
 
     public ArrayList<ReportBean> getReports() {
@@ -114,5 +115,21 @@ public class PatrolBean {
 
     public void setVisitDate(String visitDate) {
         this.visitDate = visitDate;
+    }
+
+    public boolean isNeedVisit() {
+        return needVisit;
+    }
+
+    public void setNeedVisit(boolean needVisit) {
+        this.needVisit = needVisit;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

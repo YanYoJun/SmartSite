@@ -130,7 +130,7 @@ public class EQIMonitoring {
         ArrayList<DataQueryVoBean> list = null;
         String funName = "onePMDevicesDataList";
         FormBody body = new FormBody.Builder()
-                .add("size",500+"")
+                .add("size",300+"")
                 .add("deviceIdsStr", deviceIdsStr)
                 .add("dataType",dataType)
                 .add("beginTime",beginTime)
@@ -222,6 +222,7 @@ public class EQIMonitoring {
                 .add("deviceType", deviceType)
                 .add("deviceName", deviceName)
                 .add("archId", archId)
+                .add("size",300+"")
                 .add("deviceStatus", deviceStatus)
                 .build();
         Request request = new Request.Builder()

@@ -64,7 +64,8 @@ public class SplashActivity extends BaseActivity{
                 case SHOW_UPDATE_APP_DIALOG:
                     if (Build.VERSION.SDK_INT >= 23) {
                         int checkPermission = ContextCompat.checkSelfPermission(SplashActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
-                        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                        int writePermission = ContextCompat.checkSelfPermission(SplashActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (checkPermission != PackageManager.PERMISSION_GRANTED || writePermission != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(SplashActivity.this, new String[]{
                                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                     Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS}, 0);

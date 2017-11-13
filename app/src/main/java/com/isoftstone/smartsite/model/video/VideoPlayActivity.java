@@ -261,7 +261,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if(!isTouched) {
-                            ToastUtils.showShort("touch down to the down");
+                            ToastUtils.showShort("向下");
                             ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTDOWN);
                             isTouched = true;
                         }
@@ -294,7 +294,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if(!isTouched) {
-                            ToastUtils.showShort("touch down to the left");
+                            ToastUtils.showShort("向左");
                             ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANLEFT);
                             isTouched = true;
                         }
@@ -327,7 +327,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if(!isTouched) {
-                            ToastUtils.showShort("touch down to the up");
+                            ToastUtils.showShort("向上");
                             ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.TILTUP);
                             isTouched = true;
                         }
@@ -360,7 +360,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if(!isTouched) {
-                            ToastUtils.showShort("touch down to the right");
+                            ToastUtils.showShort("向右");
                             ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.PANRIGHT);
                             isTouched = true;
                         }

@@ -283,7 +283,7 @@ public class PMDataInfoActivity extends BaseActivity {
         text_airpressure.setVisibility(View.INVISIBLE);
 
         text_temp.setText("温度:"+doubleToString(dataQueryVoBean.getAirTemperature()));
-        text_humidity.setText("气压:"+doubleToString(dataQueryVoBean.getAirHumidity()));
+        text_humidity.setText("湿度:"+doubleToString(dataQueryVoBean.getAirHumidity()));
         text_precipitation.setText("雨量:"+doubleToString(dataQueryVoBean.getRainfall()));
 
     }

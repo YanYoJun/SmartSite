@@ -77,7 +77,7 @@ public class InstantMessageAdapter extends BaseAdapter {
         }else if(messageBean.getInfoType().getInfoTypeCode().startsWith("2")){
             holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
         }else if(messageBean.getInfoType().getInfoTypeCode().startsWith("3")){
-            //holder.type.setBackground(mContext.getDrawable(R.drawable.main_shiping_icon));
+            holder.type.setBackground(mContext.getDrawable(R.drawable.thirdmessage));
         }
         return convertView;
     }

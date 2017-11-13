@@ -55,6 +55,7 @@ import com.isoftstone.smartsite.model.main.ui.PMDataInfoActivity;
 import com.isoftstone.smartsite.model.main.ui.PMHistoryInfoActivity;
 import com.isoftstone.smartsite.model.map.adapter.ChooseCameraAdapter;
 import com.isoftstone.smartsite.model.video.VideoPlayActivity;
+import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
 import com.isoftstone.smartsite.utils.DensityUtils;
 import com.isoftstone.smartsite.utils.LogUtils;
@@ -461,8 +462,29 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                 markerOption.draggable(false);//设置Marker可拖动
                 //0在线，1离线，2故障
                 if(0 == bean.getDeviceStatus()){
-                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                            .decodeResource(getResources(),R.drawable.environment_blue)));
+                    double pm10 = bean.getPm10();
+                    if(pm10 <= 0){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_blue)));
+                    }else if(pm10 <= 50){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_green)));
+                    }else if(pm10 <= 150){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_yellow)));
+                    }else if(pm10 <= 250){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_orange)));
+                    }else if(pm10 <= 350){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_red)));
+                    }else if(pm10 <= 420){
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_pink)));
+                    }else {
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                .decodeResource(getResources(),R.drawable.environment_dark)));
+                    };
                 }else if(1 == bean.getDeviceStatus()){
                     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(),R.drawable.environment_gray)));
@@ -704,7 +726,7 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putString("resCode", currentVideoBean.getDeviceCoding());
-                    bundle.putInt("resSubType", currentVideoBean.getDeviceType());
+                    bundle.putInt("resSubType", currentVideoBean.getCameraType());
                     intent.putExtras(bundle);
                     intent.setClass(getActivity(), VideoPlayActivity.class);
                     startActivity(intent);
@@ -727,14 +749,15 @@ public class MapMainFragment extends BaseFragment implements AMap.OnMarkerClickL
                     Intent intent1 = new Intent();
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("resCode", currentVideoBean.getDeviceCoding());
-                    bundle1.putInt("resSubType", currentVideoBean.getDeviceType());
+                    bundle1.putString("resSubType", currentVideoBean.getCameraType() + "");
                     bundle1.putString("resName", currentVideoBean.getDeviceName());
                     bundle1.putBoolean("isOnline", "0".equals(currentVideoBean.getDeviceStatus()));
                     bundle1.putString("beginTime", beginTime);
                     bundle1.putString("endTime", endTime);
+                    bundle1.putInt("position", 0);
                     //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
                     intent1.putExtras(bundle1);
-                    intent1.setClass(getActivity(), VideoRePlayListActivity.class);
+                    intent1.setClass(getActivity(), VideoRePlayActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     this.startActivity(intent1);
                 } else if("历史数据".equals(tv_history.getText())){

@@ -445,7 +445,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
             ServiceManager.login(params, LoginActivity.this);
         }else{
             isLogin_2 = false;
-            mLoginResult = "登录失败：获取视频参数失败";
+            mLoginResult = "登录失败：与后台服务连接异常";
             mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
             Message message = new Message();
             message.what = HANDLER_LOGIN_END;

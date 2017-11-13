@@ -18,7 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        CrashReport.initCrashReport(getAppContext(),"5ba8f42531",true);
+        CrashReport.initCrashReport(getAppContext(),"5ba8f42531",false);
     }
 
     public static Context getAppContext(){

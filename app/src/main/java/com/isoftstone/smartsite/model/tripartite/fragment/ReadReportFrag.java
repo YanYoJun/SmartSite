@@ -59,8 +59,8 @@ public class ReadReportFrag extends BaseFragment {
         if (status > 1) {
             status--;
         }
-        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]); //TODO
-        //mLabTypes.setText(mData.get()); //TODO
+        mLabStatus.setText(getActivity().getResources().getStringArray(R.array.status_array)[status]);
+        mLabTypes.setText(mData.getCategory());
         mBuildCompany.setText(mData.getDevelopmentCompany());
         mCosCompany.setText(mData.getConstructionCompany());
         mSupCompany.setText(mData.getSupervisionCompany());

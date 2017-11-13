@@ -3,6 +3,7 @@ package com.isoftstone.smartsite.http;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -90,6 +91,9 @@ public class ReportOperation {
         if(visitDate != null && !visitDate.equals("")){
             builder.add("visitDate",visitDate);
         }
+
+//
+
         FormBody body =builder.build();
         Request request = new Request.Builder()
                 .url(strurl)

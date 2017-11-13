@@ -243,6 +243,7 @@ public class RevisitFragment extends BaseFragment {
                     reportData.setConstructionCompany(constructionCompany);
                     reportData.setSupervisionCompany(supervisionCompany);
                     reportData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
+                    reportData.setCategory(type);
                     //
                     UserBean user = new UserBean();
                     reportData.setCreator(user);
@@ -575,38 +576,43 @@ public class RevisitFragment extends BaseFragment {
         protected Boolean doInBackground(String... params) {
 //            ArrayList<MessageBean> msgs = mHttpPost.getPatrolReportList("", "", "", "1");
             Log.e(TAG, "yanlog addReport");
-            int id = -1;
-            if (mIsAddReport) {
-                PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
-                //mRevisitData.setPatrol(reponse);
-                PatrolBean temp = new PatrolBean();
-                temp.setId(reponse.getId());
-                id = reponse.getId();
-                mRevisitData.setPatrol(temp);
-                //mRevisitData.setCreator(reponse.getCreator());
-            } else {
-                PatrolBean temp = new PatrolBean();
-                temp.setId(mReportData.getId());
-                mRevisitData.setPatrol(temp);
-                id = mReportData.getId();
-                //mRevisitData.setPatrol(mReportData);
-                //mRevisitData.setCreator(mReportData.getCreator());
+            try {
+                int id = -1;
+                if (mIsAddReport) {
+                    PatrolBean reponse = mHttpPost.addPatrolReport(mReportData);
+                    //mRevisitData.setPatrol(reponse);
+                    PatrolBean temp = new PatrolBean();
+                    temp.setId(reponse.getId());
+                    id = reponse.getId();
+                    mRevisitData.setPatrol(temp);
+                    //mRevisitData.setCreator(reponse.getCreator());
+                } else {
+                    PatrolBean temp = new PatrolBean();
+                    temp.setId(mReportData.getId());
+                    mRevisitData.setPatrol(temp);
+                    id = mReportData.getId();
+                    //mRevisitData.setPatrol(mReportData);
+                    //mRevisitData.setCreator(mReportData.getCreator());
 
-            }
-            mRevisitData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
-            mRevisitData.setStatus(2);
-            mHttpPost.addPatrolVisit(mRevisitData);
-
-            PatrolBean report = mHttpPost.getPatrolReport(id + "");
-            if (report.getStatus() == 2) {
-                ArrayList<ReportBean> reports = report.getReports();
-
-                int reportId = reports.get(reports.size() - 1).getId();
-                for (String path : mFilesPath) {
-                    mHttpPost.reportFileUpload(path, reportId);
                 }
-                return true;
-            } else {
+                mRevisitData.setDate(DateUtils.format_yyyy_MM_dd_HH_mm_ss.format(new Date()));
+                mRevisitData.setStatus(2);
+                mHttpPost.addPatrolVisit(mRevisitData);
+
+                PatrolBean report = mHttpPost.getPatrolReport(id + "");
+                if (report.getStatus() == 2) {
+                    ArrayList<ReportBean> reports = report.getReports();
+
+                    int reportId = reports.get(reports.size() - 1).getId();
+                    for (String path : mFilesPath) {
+                        mHttpPost.reportFileUpload(path, reportId);
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }

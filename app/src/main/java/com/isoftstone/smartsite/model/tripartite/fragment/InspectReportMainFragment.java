@@ -49,7 +49,7 @@ public class InspectReportMainFragment extends BaseFragment {
 
     public void onDataSetChanged() {
         Log.e(TAG, "onDataSetChanged");
-        if(!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()){
+        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
             return;
         }
         new AsyncTask<Void, Void, Void>() {
@@ -63,9 +63,7 @@ public class InspectReportMainFragment extends BaseFragment {
                     }
                     ArrayList<ReportData> sourceData = mActivity.getDatas();
                     for (ReportData temp : sourceData) {
-                        if (mAccountName.equals(temp.getCreator().getAccount())) {
-                            mDatas.add(temp);
-                        }
+                        mDatas.add(temp);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

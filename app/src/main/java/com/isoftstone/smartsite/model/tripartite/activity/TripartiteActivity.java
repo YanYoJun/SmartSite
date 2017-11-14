@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.isoftstone.smartsite.R;
@@ -50,26 +51,28 @@ public class TripartiteActivity extends BaseActivity {
     private View mDefaultBar = null; //the default bar at the title
     private View mSearchBar = null; // the search bar show if click the search button in default bar
     private HttpPost mHttpPost = null;
+    private FragmentPagerAdapter mPagerAdapter = null;
 
 
     private ArrayList<ReportData> mDatas = new ArrayList<>();
 
     public static final int[] STATUS_IMG = new int[]{R.drawable.pending, R.drawable.pending,
             R.drawable.waitvisiting, R.drawable.sendback, R.drawable.pass};
-    public static final HashMap<String,Integer> mAttach = new HashMap<>();
+    public static final HashMap<String, Integer> mAttach = new HashMap<>();
     public static final ArrayList<String> mDocList = new ArrayList<>();
     public static final ArrayList<String> mPdfList = new ArrayList<>();
     public static final ArrayList<String> mPptList = new ArrayList<>();
     public static final ArrayList<String> mVideoList = new ArrayList<>();
     public static final ArrayList<String> mXlsList = new ArrayList<>();
     public static final ArrayList<String> mImageList = new ArrayList<>();
+
     static {
-        mAttach.put(".doc",R.drawable.doc);
-        mAttach.put(".pdf",R.drawable.pdf);
-        mAttach.put(".ppt",R.drawable.ppt);
-        mAttach.put(".video",R.drawable.video);
-        mAttach.put(".xls",R.drawable.xls);
-        mAttach.put(".image",R.drawable.pic);
+        mAttach.put(".doc", R.drawable.doc);
+        mAttach.put(".pdf", R.drawable.pdf);
+        mAttach.put(".ppt", R.drawable.ppt);
+        mAttach.put(".video", R.drawable.video);
+        mAttach.put(".xls", R.drawable.xls);
+        mAttach.put(".image", R.drawable.pic);
 
         mDocList.add(".doc");
         mDocList.add(".docx");
@@ -136,7 +139,6 @@ public class TripartiteActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_tripartite;
@@ -155,6 +157,33 @@ public class TripartiteActivity extends BaseActivity {
         //init the default view state
         mDefaultBar.setVisibility(View.VISIBLE);
         mSearchBar.setVisibility(View.GONE);
+
+
+    }
+
+    /**
+     * 当没有巡查报告
+     */
+    private void hideFrag() {
+        if (mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT() && mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
+            return;
+        }
+        LinearLayout linearSwitch = (LinearLayout) findViewById(R.id.linear_switch);
+        LinearLayout linearSwtichImg = (LinearLayout)findViewById(R.id.linear_switch_img);
+        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_ACCEPT()) {
+            linearSwitch.setVisibility(View.GONE);
+            linearSwtichImg.setVisibility(View.GONE);
+            mFragList.remove(1);
+            mPagerAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
+        }
+        if (!mHttpPost.mLoginBean.getmUserBean().getmPermission().isM_PATROL_REPORT()) {
+            linearSwitch.setVisibility(View.GONE);
+            linearSwtichImg.setVisibility(View.GONE);
+            mFragList.remove(0);
+            mPagerAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
+        }
     }
 
     private void init() {
@@ -166,7 +195,7 @@ public class TripartiteActivity extends BaseActivity {
         mFragList.add(inspectFrag);
         mFragList.add(checkFrag);
 
-        FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return mFragList.get(position);
@@ -177,7 +206,7 @@ public class TripartiteActivity extends BaseActivity {
                 return mFragList.size();
             }
         };
-        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.setAdapter(mPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -227,6 +256,8 @@ public class TripartiteActivity extends BaseActivity {
         chooseFrag(0);
         initTitleOnClickListener(0);
         mViewPager.setCurrentItem(0);
+
+        hideFrag();
     }
 
     @Override

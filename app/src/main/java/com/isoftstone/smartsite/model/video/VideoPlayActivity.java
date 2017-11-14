@@ -73,6 +73,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     private boolean isNormalShow = true;//true 标识正常显示, false 标识反向显示
     private Button mZoomTeleView;
     private Button mZoomWideView;
+    private boolean isZoomTeleTouched = false;
+    private boolean isZoomWideTouched = false;
+
 
 
     @Override
@@ -113,15 +116,21 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mChangePositionView.setOnClickListener(this);
         mZoomTeleView = (Button) findViewById(R.id.zoom_tele);
         mZoomWideView = (Button) findViewById(R.id.zoom_wide);
+        LinearLayout zoomLayout = (LinearLayout) findViewById(R.id.zoom_layout);
+
         //mZoomTeleView.setOnClickListener(this);
         mZoomTeleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELE);
+                    if (!isZoomTeleTouched) {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELE);
+                        isZoomTeleTouched = true;
+                    }
                 }
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELESTOP);
+                    isZoomTeleTouched = false;
                 }
                 return  true;
             }
@@ -131,10 +140,14 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDE);
+                    if (!isZoomWideTouched) {
+                        ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDE);
+                        isZoomWideTouched = true;
+                    }
                 }
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDESTOP);
+                    isZoomWideTouched = false;
                 }
                 return  true;
             }
@@ -156,9 +169,11 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             //初始化摇杆控件
             mRoundMenuView.setVisibility(View.VISIBLE);
             initRoundMenuView();
+            zoomLayout.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG,"--------------zyf----GONE---");
             mRoundMenuView.setVisibility(View.GONE);
+            zoomLayout.setVisibility(View.GONE);
         }
         //startLive(mCameraCode);
     }
@@ -206,9 +221,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             StartLiveParam p = new StartLiveParam();
             p.setCameraCode(cameraCode);
             p.setUseSecondStream(true); //使用辅流
-            p.setBitrate(64 * 8);   //64KB的码率
-            p.setFramerate(15);     //25帧率
-            p.setResolution(4);     //4CIF分辨率
+            p.setBitrate(64* 8);   //32KB的码率
+            p.setFramerate(15);     //15帧率
+            p.setResolution(2);     //4CIF分辨率
 
             //启动实况
             ServiceManager.startLive(p, listener);

@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.utils.DateUtils;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.isoftstone.smartsite.widgets.CustomDatePicker;
 import com.uniview.airimos.Player;
@@ -487,7 +488,8 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 break;
             case R.id.capture_replay_view:
                 //抓拍图片，返回路径
-                String path = mPlayer.snatch(null);
+                //String path = mPlayer.snatch(null);
+                String path = mPlayer.snatch(FilesUtils.getSnatchPath(mResCode));
                 if (null != path) {
                     Toast.makeText(VideoRePlayActivity.this, path, Toast.LENGTH_SHORT).show();
                 }

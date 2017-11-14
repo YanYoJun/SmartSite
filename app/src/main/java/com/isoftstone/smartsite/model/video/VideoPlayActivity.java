@@ -31,6 +31,7 @@ import com.isoftstone.smartsite.R;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.LoginBean;
 import com.isoftstone.smartsite.model.main.view.RoundMenuView;
+import com.isoftstone.smartsite.utils.FilesUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
 import com.uniview.airimos.Player;
 import com.uniview.airimos.listener.OnLoginListener;
@@ -515,10 +516,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.capture_view:
-                //boolean sdCardExist = Environment.getExternalStorageState().equals("mounted");
-                //ToastUtils.showShort("sdCardExist ? " + sdCardExist);
                 //抓拍图片，返回路径
-                String path = mPlayer.snatch(null);
+                String path = mPlayer.snatch(FilesUtils.getSnatchPath(mCameraCode));
                 if (null != path) {
                     Toast.makeText(VideoPlayActivity.this, path, Toast.LENGTH_SHORT).show();
                 }

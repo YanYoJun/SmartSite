@@ -325,8 +325,8 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                 p.setCameraCode(cameraCode);
                 p.setRecodeInfo(currentRecord);
                 p.setBitrate(64 * 8);  //64KB码率
-                p.setFramerate(15);     //20帧率
-                p.setResolution(4);     //4CIF分辨率
+                p.setFramerate(15);     //15帧率
+                p.setResolution(2);     //4CIF分辨率
 
 
                 OnStartReplayListener listener = new OnStartReplayListener() {

@@ -155,14 +155,10 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             Log.i(TAG,"--------------zyf----VISIBLE---");
             //初始化摇杆控件
             mRoundMenuView.setVisibility(View.VISIBLE);
-            mZoomTeleView.setVisibility(View.VISIBLE);
-            mZoomWideView.setVisibility(View.VISIBLE);
             initRoundMenuView();
         } else {
             Log.i(TAG,"--------------zyf----GONE---");
             mRoundMenuView.setVisibility(View.GONE);
-            mZoomTeleView.setVisibility(View.GONE);
-            mZoomWideView.setVisibility(View.GONE);
         }
         //startLive(mCameraCode);
     }

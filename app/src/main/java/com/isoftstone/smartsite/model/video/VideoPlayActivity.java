@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -112,10 +113,33 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         mChangePositionView.setOnClickListener(this);
         mZoomTeleView = (Button) findViewById(R.id.zoom_tele);
         mZoomWideView = (Button) findViewById(R.id.zoom_wide);
-        mZoomTeleView.setOnClickListener(this);
-        mZoomTeleView.setVisibility(View.GONE);
-        mZoomWideView.setOnClickListener(this);
-        mZoomWideView.setVisibility(View.GONE);
+        //mZoomTeleView.setOnClickListener(this);
+        mZoomTeleView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELE);
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMTELESTOP);
+                }
+                return  true;
+            }
+        });
+        //mZoomWideView.setOnClickListener(this);
+        mZoomWideView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDE);
+                }
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ZOOMWIDESTOP);
+                }
+                return  true;
+            }
+        });
+
 
 
         /*获取Intent中的Bundle对象*/
@@ -169,6 +193,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                         //收流线程启动
                         mRecvStreamThread = new RecvStreamThread(mPlayer, playSession);
                         mRecvStreamThread.start();
+                        Log.i(TAG,"--------------zyf----mRecvStreamThread---");
                     }else{
                         Toast.makeText(VideoPlayActivity.this,errorDesc,Toast.LENGTH_SHORT).show();
                     }
@@ -181,9 +206,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             StartLiveParam p = new StartLiveParam();
             p.setCameraCode(cameraCode);
             p.setUseSecondStream(true); //使用辅流
-            p.setBitrate(32 * 8);   //64KB的码率
-            p.setFramerate(12);     //25帧率
-            p.setResolution(2);     //4CIF分辨率
+            p.setBitrate(64 * 8);   //64KB的码率
+            p.setFramerate(15);     //25帧率
+            p.setResolution(4);     //4CIF分辨率
 
             //启动实况
             ServiceManager.startLive(p, listener);
@@ -539,7 +564,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private   double nLenStart = 0;
+    /*private   double nLenStart = 0;
     public boolean onTouchEvent(MotionEvent event) {
 
         int nCnt = event.getPointerCount();
@@ -604,6 +629,6 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
             }
         }
         return super.onTouchEvent(event);
-    }
+    }*/
 
 }

@@ -38,9 +38,9 @@ public class ReportOperation {
         ArrayList<PatrolBean> list = null;
         String funName = "getPatrolList";
         FormBody body = new FormBody.Builder()
-                .add("status", ""+status)
-                .add("size", ""+500)
-                .add("creator.departmentId",departmentId)
+                .add("status", "" + status)
+                .add("size", "" + 500)
+                .add("creator.departmentId", departmentId == null ? "" : departmentId)
                 .build();
         Request request = new Request.Builder()
                 .url(strurl)

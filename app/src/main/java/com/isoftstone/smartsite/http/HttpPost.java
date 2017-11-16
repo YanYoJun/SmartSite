@@ -397,4 +397,12 @@ public class HttpPost {
     public InstallBean getSystemConifg(){
         return  UserLogin.getSystemConifg(GET_SYSTEM_CONFIG,mClient);
     }
+
+    /*
+    获取公司列表
+     */
+    public  ArrayList<CompanyBean> getCompanyList(String lang){
+        return  UserLogin.getCompanyList(DICTIONARY_LIST,mClient,lang);
+    }
+
 }

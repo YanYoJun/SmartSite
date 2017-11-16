@@ -73,7 +73,7 @@ public class SnapPicturesActivity extends Activity {
 					//申请权限
 					intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 					//getUriForFile的第二个参数就是Manifest中的authorities
-					imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.isoftstone.smartsite.fileProvider", file);
+					imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.isoftstone.smartsite.fileprovider", file);
 				} else {
 					imageUri = Uri.fromFile(file);//Uri.parse(pictureFilepath)
 				}

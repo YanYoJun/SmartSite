@@ -559,9 +559,9 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
     class surfaceCallback implements SurfaceHolder.Callback {
 
         public void surfaceCreated(SurfaceHolder holder) {
-            Log.d(TAG, "===== surfaceCreated =====");
+            Log.i(TAG, "===== surfaceCreated =====");
             if (null != mPlayer && !mPlayer.AVIsPlaying()) {
-                startLive(mCameraCode);
+               // startLive(mCameraCode);
             }
         }
 
@@ -573,8 +573,8 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void surfaceDestroyed(SurfaceHolder arg0) {
-            Log.d(TAG, "===== surfaceDestroyed =====");
-            stopLive();
+            Log.i(TAG, "===== surfaceDestroyed =====");
+            //stopLive();
         }
     }
 

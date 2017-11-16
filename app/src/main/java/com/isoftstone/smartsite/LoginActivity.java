@@ -92,6 +92,7 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			//mHandler.sendMessage(message);
 		}
 		mHttpPost = new HttpPost();
+		HttpPost.mLoginBean = null;
 		mJpushId = JPushInterface.getRegistrationID(getApplicationContext());
 	}
 
@@ -223,11 +224,6 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 	@Override
 	public void onPause() {
 		super.onPause();
-		try {
-			UserUtils.saveUserList(LoginActivity.this, mUsers);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private Handler mHandler = new Handler() {
@@ -422,15 +418,15 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 					 e.printStackTrace();
 				 }
 				 isLogin_1 = true;
-			 }else{
+			}else{
 				 mLoginResult = loginBean.getmErrorInfo();
 				 if(mLoginResult == null){
 					 mLoginResult = "登录失败";
 				 }
 				 isLogin_1 = false;
-				mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
-				mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-			 }
+				 mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+				 mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+			}
 
 	}
 
@@ -447,10 +443,9 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
         }else{
             isLogin_2 = false;
             mLoginResult = "登录失败：与后台服务连接异常";
-            mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-            Message message = new Message();
-            message.what = HANDLER_LOGIN_END;
-            mHandler.sendMessage(message);
+			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
+            mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
+
         }
 	}
 	/**
@@ -473,12 +468,8 @@ public class LoginActivity extends Activity implements OnClickListener,OnLoginLi
 			isLogin_2 = false;
 			HttpPost.mVideoIsLogin = false;
 			mHandler.sendEmptyMessage(HANDLER_SHOW_TOAST);
-
-
 		}
-		Message message = new Message();
-		message.what = HANDLER_LOGIN_END;
-		mHandler.sendMessage(message);
+		mHandler.sendEmptyMessage(HANDLER_LOGIN_END);
 	}
 
 	//启动保活服务

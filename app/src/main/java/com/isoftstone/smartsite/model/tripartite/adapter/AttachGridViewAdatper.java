@@ -78,10 +78,19 @@ public class AttachGridViewAdatper extends BaseAdapter {
     public void setAllPath(ArrayList<String> path){
         mAllPath = path;
     }
+
+    /**
+     * 所有附件的相对路径
+     * @return
+     */
     public ArrayList<String> getAllPath(){
         return mAllPath;
     }
 
+    /**
+     * 真正要显示的数据，可能是Uri，可能是绝对路径，也可能是图片的id
+     * @return
+     */
     public ArrayList<Object> getAllData(){
         return mDatas;
     }

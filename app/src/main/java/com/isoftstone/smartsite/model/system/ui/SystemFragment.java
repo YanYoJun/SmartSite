@@ -25,6 +25,7 @@ import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.UserBean;
 import com.isoftstone.smartsite.utils.ImageUtils;
 import com.isoftstone.smartsite.utils.ToastUtils;
+import com.isoftstone.smartsite.utils.Utils;
 
 
 /**
@@ -50,6 +51,7 @@ public class SystemFragment extends BaseFragment{
 
     private static final  int HANDLER_GET_USER_INFO = 1;
     private Handler mHandler = null;
+    private TextView mAppVersionView;
 
     @Override
     protected int getLayoutRes() {
@@ -80,6 +82,9 @@ public class SystemFragment extends BaseFragment{
 
         registerLinearLayoutOnClickListener();
         mCurrentFrame = SystemFragment.this;
+
+        mAppVersionView = (TextView) rootView.findViewById(R.id.app_version);
+        mAppVersionView.setText("Version " + Utils.getAppVersionName(getActivity().getPackageManager(), getActivity().getPackageName()));
     }
 
     private void registerLinearLayoutOnClickListener() {

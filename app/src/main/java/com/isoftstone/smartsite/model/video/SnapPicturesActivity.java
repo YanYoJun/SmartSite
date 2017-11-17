@@ -79,10 +79,6 @@ public class SnapPicturesActivity extends Activity {
 				}
 				intent.setDataAndType(imageUri, "image/*");
 				startActivity(intent);
-
-				//打开系统相册浏览照片  
-				/**Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
-				startActivity(intent2);*/
 			}
 		});
 		gridView.setOnScrollListener(new OnScrollListener() {

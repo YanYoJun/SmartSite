@@ -427,7 +427,7 @@ public class VideoPlayActivity extends Activity implements View.OnClickListener{
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ToastUtils.showShort("onClick the centre of a circle");
+                        //ToastUtils.showShort(" ");
                         ptzCommand(mCameraCode, PtzCommandParam.PTZ_CMD.ALLSTOP);
                     }
                 }, new View.OnTouchListener() {

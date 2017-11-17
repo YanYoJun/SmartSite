@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.isoftstone.smartsite.LoginActivity;
@@ -102,7 +103,7 @@ public class SplashActivity extends BaseActivity{
                     //apk_url = "http://download.sj.qq.com/upload/connAssitantDownload/upload/MobileAssistant_1.apk";
                     androidType = installBean.getAndroid_type();
                     apk_version = installBean.getAndroid_version();
-                    if(getAppVersionName() != null && !getAppVersionName().equals(versionName)){
+                    if(getAppVersionName() != null && getAppVersionName().compareTo(versionName) < 0){
                         mHandler.removeMessages(GO_TO_LOGIN);
                         mHandler.sendEmptyMessage(SHOW_UPDATE_APP_DIALOG);
                     }

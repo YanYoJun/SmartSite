@@ -9,5 +9,5 @@
         path="isoftstone"
         ></external-path>
 
-    <external-path path="isoftstone/" name="camera_photos" />
+   <external-path path="isoftstone/" name="camera_photos" />
 </paths>

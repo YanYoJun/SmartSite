@@ -47,6 +47,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <!--tools:replace="android:icon, android:label, android:theme"-->
     <application
@@ -266,6 +267,7 @@
         <activity android:name=".model.video.VideoRePlayListActivity" android:configChanges="orientation|keyboardHidden|screenSize" android:launchMode="singleTask"/>
 
         <activity android:name=".model.video.SnapPicturesActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

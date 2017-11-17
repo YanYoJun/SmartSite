@@ -1,5 +1,6 @@
 package com.isoftstone.smartsite.model.main.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
@@ -31,6 +32,8 @@ import com.isoftstone.smartsite.common.widget.AlertView;
 import com.isoftstone.smartsite.http.DevicesBean;
 import com.isoftstone.smartsite.http.HttpPost;
 import com.isoftstone.smartsite.http.VideoMonitorBean;
+import com.isoftstone.smartsite.model.system.ui.PermissionsActivity;
+import com.isoftstone.smartsite.model.system.ui.PermissionsChecker;
 import com.isoftstone.smartsite.model.video.SnapPicturesActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayActivity;
 import com.isoftstone.smartsite.model.video.VideoRePlayListActivity;
@@ -65,9 +68,6 @@ import java.util.List;
 public class VideoMonitoringActivity extends Activity implements VideoMonitorAdapter.AdapterViewOnClickListener,View.OnClickListener{
     private static final String TAG = "VideoMonitoringActivity";
     public HttpPost mHttpPost = new HttpPost();
-	
-    private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
-    private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
 
     private ListView mListView = null;
     private Context mContext;
@@ -168,13 +168,21 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             /**Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);*/
-			
-			mListImageInfo.clear();
-            mlistPhotoInfo.clear();
-            new ImageAsyncTask().execute();
+            PermissionsChecker mPermissionsChecker = new PermissionsChecker(getBaseContext());
+            if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
+                PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+            }else {
+                mListImageInfo.clear();
+                mlistPhotoInfo.clear();
+                new ImageAsyncTask().execute();
+            }
         }
 
     }
+    private static final int REQUEST_CODE = 100; // 权限检查请求码
+    static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
 
 
@@ -185,22 +193,6 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
         String beginTime = formatter.format(now) + " 00:00:00";
         String endTime = formatter2.format(now);
 
-        /*Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-
-        bundle.putString("resCode", mDevicesBean.getDeviceCoding());
-        bundle.putInt("resSubType", mDevicesBean.getCameraType());
-        bundle.putString("resName", mDevicesBean.getDeviceName());
-        boolean isOnLine = mDevicesBean.getDeviceStatus().equals("0");
-        bundle.putBoolean("isOnline", isOnLine);
-
-        bundle.putString("beginTime", beginTime);
-        bundle.putString("endTime", endTime);
-        //Toast.makeText(mContext, "ViewHolder: " +  ((ViewHolder)rootView.getTag()).name.getText().toString(), Toast.LENGTH_SHORT).show();
-        intent.putExtras(bundle);
-        intent.setClass(mContext, VideoRePlayListActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);*/
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("resCode", mDevicesBean.getDeviceCoding());
@@ -245,7 +237,8 @@ public class VideoMonitoringActivity extends Activity implements VideoMonitorAda
             break;
         }
     }
-
+    private List<PhotoInfo> mlistPhotoInfo = new ArrayList<PhotoInfo>();
+    private List<AlbumInfo> mListImageInfo = new ArrayList<AlbumInfo>();
     private class ImageAsyncTask extends AsyncTask<Void, Void, Object> {
         @Override
         protected Object doInBackground(Void... params) {

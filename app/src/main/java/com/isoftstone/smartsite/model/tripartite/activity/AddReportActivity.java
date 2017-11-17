@@ -361,8 +361,13 @@ public class AddReportActivity extends BaseActivity {
                 }
 
                 ArrayList<CompanyBean> companyList = mHttpPost.getCompanyList("zh");
-                int myid = Integer.parseInt(mHttpPost.mLoginBean.getmUserBean().getDepartmentId());
-                mCompanyName = companyList.get(myid).getContent();
+                String myid = mHttpPost.mLoginBean.getmUserBean().getDepartmentId();
+                for (int i = 0 ; i < companyList.size(); i++){
+                    String value = companyList.get(i).getValue();
+                    if(value != null && value.equals(myid+"")){
+                        mCompanyName = companyList.get(i).getContent();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

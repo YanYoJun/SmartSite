@@ -184,6 +184,10 @@ public class TripartiteActivity extends BaseActivity {
                 mFragList.remove(0);
                 mPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(0);
+
+                //hide the add report button
+                View v = findViewById(R.id.btn_add);
+                v.setVisibility(View.INVISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();

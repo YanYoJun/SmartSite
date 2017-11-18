@@ -336,6 +336,9 @@ public class VideoRePlayActivity extends Activity implements  View.OnClickListen
                     @Override
                     public void onStartReplayResult(long errorCode, String errorDesc, String playSession) {
                         //设播放会话给Player
+                        if (mPlayer == null) {
+                            return;
+                        }
                         mPlayer.setPlaySession(playSession);
 
                         //先停掉已有的播放

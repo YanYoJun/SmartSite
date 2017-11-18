@@ -147,7 +147,7 @@ public class SystemFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("zzz", "onResume.........................");
+
         new Thread(){
             @Override
             public void run() {
@@ -221,14 +221,5 @@ public class SystemFragment extends BaseFragment{
         public void run() {
             initUserInfo(userBean);
         }
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.d("zzz", "onHiddenChanged.........................");
-        /**if (mHeadImageView != null) {
-            mHeadImageView.invalidate();
-        }*/
     }
 }

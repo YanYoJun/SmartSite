@@ -66,14 +66,20 @@
         <!-- For test only 测试的主程序-->
         <activity
             android:name="com.isoftstone.smartsite.jpush.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
         <!-- For test only 测试高级功能 -->
-        <activity android:name="com.isoftstone.smartsite.jpush.PushSetActivity" android:label="@string/app_name"></activity>
+        <activity android:name="com.isoftstone.smartsite.jpush.PushSetActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <!-- For test only 测试设置 -->
-        <activity android:name="com.isoftstone.smartsite.jpush.SettingActivity" android:label="@string/app_name"></activity>
+        <activity android:name="com.isoftstone.smartsite.jpush.SettingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <!-- For test only 测试状态通知栏，需要打开的Activity -->
-        <activity android:name="com.isoftstone.smartsite.jpush.TestActivity" android:exported="false">
+        <activity android:name="com.isoftstone.smartsite.jpush.TestActivity" android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="jpush.testAction" />
                 <category android:name="jpush.testCategory" />
@@ -83,7 +89,8 @@
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
         </activity>
 
         <!-- Required SDK核心功能-->
@@ -91,7 +98,8 @@
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -188,10 +196,14 @@
         <activity android:name=".LoginActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".model.main.ui.AirMonitoringActivity"/>
-        <activity android:name=".model.main.ui.PMDevicesListActivity"/>
-        <activity android:name=".model.main.ui.PMDataInfoActivity"/>
-        <activity android:name=".model.main.ui.PMHistoryInfoActivity"/>
+        <activity android:name=".model.main.ui.AirMonitoringActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".model.main.ui.PMDevicesListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".model.main.ui.PMDataInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".model.main.ui.PMHistoryInfoActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".LoginActivity2"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
@@ -202,7 +214,10 @@
             </intent-filter>-->
         </activity>
 
-        <activity android:name=".model.main.ui.VideoMonitoringActivity" android:configChanges="orientation|keyboardHidden|screenSize" android:launchMode="singleTask"/>
+        <activity android:name=".model.main.ui.VideoMonitoringActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
         <!--  guowei -->
         <activity android:name=".MainActivity"
@@ -212,45 +227,63 @@
         <!--yanyongjun begin-->
         <activity
             android:name=".model.message.ui.DetailsActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity
             android:name=".model.tripartite.activity.TripartiteActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
         </activity>
 
         <activity android:name=".model.tripartite.activity.CheckReportActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.VcrActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.EnvironActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.TripartiteMsgActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.message.ui.UnReadMsgActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.activity.AddReportActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.activity.ReadReportActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.activity.ReplyReportActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
         <activity android:name=".model.tripartite.activity.RevistReportActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"></activity>
 
         <!--yanyongjun end-->
 
         <!--zhangyinfu begin-->
-        <activity android:name=".model.system.ui.PermissionsActivity"></activity>
+        <activity android:name=".model.system.ui.PermissionsActivity"
+            android:screenOrientation="portrait"></activity>
 
         <service android:name="com.uniview.airimos.service.KeepaliveService"/>
 
         <service android:name=".common.NewKeepAliveService"/>
 
-        <activity android:name=".model.system.ui.AboutUsActivity" android:launchMode="singleTask"></activity>
+        <activity android:name=".model.system.ui.AboutUsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
 
-        <activity android:name=".model.system.ui.OpinionFeedbackActivity" android:launchMode="singleTask"></activity>
+        <activity android:name=".model.system.ui.OpinionFeedbackActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
 
-        <activity android:name=".model.system.ui.SettingsActivity" android:launchMode="singleTask"></activity>
+        <activity android:name=".model.system.ui.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" ></activity>
 
 
         <activity android:name=".model.video.VideoPlayActivity"
@@ -264,9 +297,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".model.video.VideoRePlayListActivity" android:configChanges="orientation|keyboardHidden|screenSize" android:launchMode="singleTask"/>
+        <activity android:name=".model.video.VideoRePlayListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"/>
 
-        <activity android:name=".model.video.SnapPicturesActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
+
+        <activity android:name=".model.video.SnapPicturesActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
 
         <provider

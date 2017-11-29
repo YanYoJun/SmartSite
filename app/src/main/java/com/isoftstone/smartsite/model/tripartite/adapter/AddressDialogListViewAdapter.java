@@ -13,14 +13,14 @@ import com.isoftstone.smartsite.http.DictionaryBean;
 import java.util.ArrayList;
 
 /**
- * Created by yanyongjun on 2017/11/4.
+ * Created by yanyongjun on 2017/11/29.
  */
 
-public class DialogListViewAdapter extends BaseAdapter {
+public class AddressDialogListViewAdapter extends BaseAdapter {
     private Context mContext = null;
-    private ArrayList<DictionaryBean> mList = new ArrayList<>();
+    private ArrayList<String> mList = new ArrayList<>();
 
-    public DialogListViewAdapter(Context context, ArrayList<DictionaryBean> list) {
+    public AddressDialogListViewAdapter(Context context, ArrayList<String> list) {
         mContext = context;
         mList = list;
     }
@@ -47,7 +47,7 @@ public class DialogListViewAdapter extends BaseAdapter {
         }
         if (view != null) {
             TextView item = (TextView) view.findViewById(R.id.lab_listview_add_report_dialog);
-            item.setText(mList.get(position).getContent());
+            item.setText(mList.get(position));
         }
         return view;
     }

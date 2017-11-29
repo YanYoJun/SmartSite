@@ -6,11 +6,11 @@ package com.isoftstone.smartsite.http;
 
 public class CompanyBean {
     private String content;
-    private  String value;
-    private  String code;
-    private  String id;
-    private  String lang;
-    private  String category;
+    private String value;
+    private String code;
+    private String id;
+    private String lang;
+    private String category;
 
     public String getContent() {
         return content;
@@ -58,5 +58,10 @@ public class CompanyBean {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "content:" + content + " value:" + value + " code:" + code + " id:" + id + " lang:" + lang + " category:" + category;
     }
 }

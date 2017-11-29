@@ -59,4 +59,9 @@ public class DictionaryBean {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return "content:" + content + " value:" + value + " code:" + code + " id:" + id + " lang:" + lang + " category:" + category;
+    }
 }
